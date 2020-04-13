@@ -1,0 +1,21 @@
+*  Playing from text file, with .txt file following these guidlines:
+* 
+*  Letters grouped together will be played at the same time
+*
+*  Spaces/new lines must be inserted between letters to signal them to be played seperately, creating 'words'
+*
+*  ## followed by number indicates speed; the higher the number, the slower it plays. 
+*  This is used in the following way:
+*  After a call to playNote() for all notes in a 'word', call in a loop ringNotes() and StdAudio.play() from i = 0 to speed
+*  This notation can appear anywhere and any number of times in the file to signal a tempo change
+*
+*  @@ signifies any text to be outputted to user (lyrics, title, etc).
+*
+*  Any 'word' that contains only a '/' will be treated as a rest (i.e. calling in a loop ringNotes() and 
+*                   StdAudio.play() from i = 0 to speed to let the notes currently playing ring out, but
+*                   no call to playNote() is made)
+*
+*  To use the bass sound, all bass notes are wapped in a LLxxxxx/yyyy, where LL signals the player to enable LowMode,
+*     the xxxxx represents notes to be played on the bass, the / disables LowMode, and the yyyy are notes to be played
+*     on the normal guitar/piano/drum.
+*
