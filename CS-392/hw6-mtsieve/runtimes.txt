@@ -1,0 +1,17 @@
+
+/*******************************************************************************
+* Author      : Mohammad Khan
+* Date        : 6/29/20
+* Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
+ ******************************************************************************/
+./mtsieve -s100 -e200000000 -t1 : 0m3.328s
+./mtsieve -s100 -e200000000 -t2 : 0m2.664s
+./mtsieve -s100 -e200000000 -t3 : 0m2.675s
+./mtsieve -s100 -e200000000 -t4 : 0m2.931s
+
+My CPU model : Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz
+
+From the data above, there is a significant decrease in time required when 2 threads 
+are used instead of 1. However, time required appears to increase as number of threads 
+is increased above 2, which I assume rises from the overhead of handling multiple 
+threads.
