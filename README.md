@@ -7,4 +7,5 @@ These courses are:
 3) CS-385: Algorithms [C++]
 4) CS-392: Systems Programming [C] [Shell]
 5) CS-496: Principles of Programming Languages [OCaml]
+6) CS-561: Database Management Systems I [PostgreSQL]
 
