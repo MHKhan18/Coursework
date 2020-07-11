@@ -1,0 +1,176 @@
+
+/*
+Author: Mohammad Khan
+Pledge: I pledge my honor that I have abided by Stevens Honor System.
+Date  : 06/26/20
+*/
+=========================================================================
+
+
+QUERY#1:
+=========
+
+WITH part1 as(
+	select cust, min(quant) as MIN_Q, max(quant) as MAX_Q , sum(quant)/count(quant) as AVG_Q
+	from sales
+	group by cust),
+	
+	part2 as(
+	select 	part1.cust as CUSTOMER, part1.min_q as MIN_Q, sales.prod as MIN_PROD, 
+			sales.day as MIN_DAY, sales.month as MIN_MONTH, sales.year as MIN_YEAR, 
+			sales.state as ST, part1.max_q as MAX_Q, part1.avg_q as AVG_Q  
+	from part1, sales
+	where part1.cust = sales.cust and part1.min_q = sales.quant)
+	
+	select 	part2.customer as CUSTOMER, part2.min_q as MIN_Q, part2.min_prod as MIN_PROD, 
+			part2.min_day as MIN_DAY, part2.min_month as MIN_MONTH, part2.min_year as MIN_YEAR, 
+			part2.st as MIN_ST, part2.max_q as MAX_Q,
+			sales.prod as MAX_PROD, sales.day as MAX_DAY, sales.month as MAX_MONTH, sales.year as MAX_YEAR,
+			sales.state as MAX_ST,part2.avg_q as AVG_Q
+	from part2, sales
+	where part2.customer = sales.cust and part2.max_q = sales.quant ;
+
+
+======================================================================================================================
+
+
+QUERY#2:
+=========
+
+with NY_sales as (
+	select cust, prod, max(quant) as NY_MAX
+	from sales
+	where state='NY'
+	group by cust, prod),
+	NY_part as (
+	select NY_sales.cust,NY_sales.prod, NY_sales.NY_MAX, sales.day, sales.month, sales.year 
+	from NY_sales , sales
+	where NY_sales.NY_MAX = sales.quant and NY_sales.cust=sales.cust and NY_sales.prod=sales.prod and sales.state='NY' ),
+	
+	NJ_sales as (
+	select cust, prod, min(quant) as NJ_MIN
+	from sales
+	where state='NJ' and year > 2000
+	group by cust, prod ),
+	NJ_part as (
+	select NJ_sales.cust,NJ_sales.prod, NJ_sales.NJ_MIN, sales.day, sales.month, sales.year 
+	from NJ_sales , sales
+	where NJ_sales.NJ_MIN = sales.quant and NJ_sales.cust=sales.cust and NJ_sales.prod=sales.prod  and sales.state='NJ' ),
+	
+	
+	CT_sales as (
+	select cust, prod, min(quant) as CT_MIN
+	from sales
+	where state='CT' and year > 2000
+	group by cust, prod ),
+	CT_part as (
+	select CT_sales.cust,CT_sales.prod, CT_sales.CT_MIN, sales.day, sales.month, sales.year 
+	from CT_sales , sales
+	where CT_sales.CT_MIN = sales.quant and CT_sales.cust=sales.cust and CT_sales.prod=sales.prod and sales.state='CT'  )
+	
+	select NY_part.cust as CUSTOMER , NY_part.prod as PRODUCT ,
+		   NY_part.NY_MAX, NY_part.day as NY_day, NY_part.month as NY_month, NY_part.year as NY_year,
+		   NJ_part.NJ_MIN, NJ_part.day as NJ_day, NJ_part.month as NJ_month, NJ_part.year as NJ_year,
+		   CT_part.CT_MIN, CT_part.day as CT_day, CT_part.month as CT_month, CT_part.year as CT_year
+	
+	from NY_part, NJ_part, CT_part
+	where NY_part.cust = NJ_part.cust and NY_part.prod = NJ_part.prod and NJ_part.cust = CT_part.cust and NJ_part.prod = CT_part.prod ;
+
+
+=============================================================================================================================================
+
+
+QUERY#3:
+=========
+
+with q1 as (
+	select prod, sum(quant) as Q1_TOTAL
+	from sales
+	where month <= 3
+	group by prod ),
+	
+	q2 as (
+	select prod, sum(quant) as Q2_TOTAL
+	from sales
+	where month > 3 and month <= 6
+	group by prod ),
+	
+	q3 as (
+	select prod, sum(quant) as Q3_TOTAL
+	from sales
+	where month > 6 and month <= 9
+	group by prod ),
+	
+	q4 as (
+	select prod, sum(quant) as Q4_TOTAL
+	from sales
+	where month > 9 and month <= 12
+	group by prod )
+	
+	select q1.prod as PRODUCT , q1.Q1_TOTAL, q2.Q2_TOTAL, q3.Q3_TOTAL , q4.Q4_TOTAL
+	from q1,q2,q3,q4
+	where q1.prod = q2.prod and q2.prod = q3.prod and q3.prod = q4.prod ;
+
+==============================================================================================================================================
+
+
+QUERY#4:
+=========
+
+with all_combs as (
+	select prod, month
+	from sales
+	group by prod , month ),
+
+before_average as(
+	select all_combs.prod , all_combs.month , sum(sales.quant)/count(sales.quant) as BEFORE_AVG
+	from all_combs, sales 
+	where all_combs.prod = sales.prod and   sales.month = all_combs.month - 1
+	group by all_combs.prod , all_combs.month ),
+
+after_average as(
+	select all_combs.prod , all_combs.month , sum(sales.quant)/count(sales.quant) as AFTER_AVG
+	from all_combs, sales 
+	where all_combs.prod = sales.prod and sales.month = all_combs.month + 1
+	group by all_combs.prod , all_combs.month )
+
+select prod as PRODUCT, MONTH, BEFORE_AVG, AFTER_AVG
+from all_combs natural full outer join before_average natural full outer join after_average ;
+
+==============================================================================================================================================
+
+	
+QUERY#5:
+=========
+
+with all_combs as (
+	select prod, month
+	from sales
+	group by prod , month ),
+
+avg_sales as (
+	select all_combs.prod , all_combs.month , avg(sales.quant) as AVG_SALE
+	from all_combs, sales
+	where all_combs.prod = sales.prod and all_combs.month = sales.month
+	group by all_combs.prod , all_combs.month ),
+
+before_sales as(
+	select avg_sales.prod , avg_sales.month , count(sales.quant) as BEFORE_TOT
+	from avg_sales, sales 
+	where avg_sales.prod = sales.prod and  sales.month = avg_sales.month-1 and sales.quant > avg_sales.AVG_SALE
+	group by avg_sales.prod , avg_sales.month ),
+
+after_sales as (
+	select avg_sales.prod , avg_sales.month , count(sales.quant) as AFTER_TOT
+	from avg_sales, sales 
+	where avg_sales.prod = sales.prod and sales.month = avg_sales.month+1 and sales.quant > avg_sales.AVG_SALE
+	group by avg_sales.prod , avg_sales.month )
+	
+select prod as PRODUCT , MONTH, BEFORE_TOT , AFTER_TOT
+from all_combs natural full outer join before_sales natural full outer join after_sales ;
+
+
+======================================================================================================================================== 
+
+		
+	
