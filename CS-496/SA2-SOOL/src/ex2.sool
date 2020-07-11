@@ -1,0 +1,34 @@
+
+class Counter extends Object {
+   field s
+   method initialize(i) { set s=i }
+   method bump(i) { send self setc(s+i) } 
+   method setc(i) { set s = i } 
+   method read(d) { s }
+}
+
+class ResetCounter extends Counter {
+  method reset(d) { set s=0 }
+}
+
+class BackupResetCounter extends ResetCounter {
+  field b
+  method initialize(i) { 
+    begin
+      set b = i;
+      super initialize(0)
+    end
+  }
+  method backup(d) { set b = s }
+  method restore(d) { set s = b }
+}
+
+(* main expression *)
+
+let c=new BackupResetCounter(7) in 
+begin
+  send c bump(2);
+  send c reset(0);
+  send c restore(0); 
+  send c read(0)
+end
