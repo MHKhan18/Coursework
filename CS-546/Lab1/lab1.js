@@ -65,7 +65,7 @@ const questionTwo = function questionTwo(arr) {
 
     let raisedFive = Math.pow(squaredSum , 5);
     let root = Math.sqrt(raisedFive)
-    let ans = root.toFixed(2);
+    let ans = parseFloat(root.toFixed(2));
     return ans;
 
 }
@@ -122,7 +122,7 @@ const questionFour = function questionFour(principal , interestRate , years) {
     let n = years*12;
     let multiplier = Math.pow((1+i) , n);
     let pmt = (principal*i*multiplier)/(multiplier-1);
-    let ans =  pmt.toFixed(2);
+    let ans =  parseFloat(pmt.toFixed(2));
     return ans;
 
 }
