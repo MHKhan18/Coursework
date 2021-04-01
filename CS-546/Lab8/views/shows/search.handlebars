@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+<h2>{{query}}</h2>
+
+<ul>
+    {{#each shows}}
+    <li>
+        <a href="/shows/{{this.id}}">{{this.name}}</a>
+    </li>
+    {{/each}}
+</ul>
+
+<a href="/">Make another search</a>
