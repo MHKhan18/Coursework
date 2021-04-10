@@ -36,3 +36,7 @@ node_modules
 .DS_Store
 
 Scratch
+
+
+# jupyter notebook
+.ipynb_checkpoints/
