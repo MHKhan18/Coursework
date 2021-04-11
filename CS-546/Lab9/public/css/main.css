@@ -1,0 +1,48 @@
+:root {
+  --red: #ff3d00;
+  --green: #00e676;
+}
+
+.is-prime {
+  color: var(--green);
+}
+
+.not-prime {
+  color: var(--red);
+}
+
+h1 {
+  padding-top: 5%;
+}
+h1,
+#main-form {
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+#query {
+  border-radius: 8px;
+}
+
+#submit {
+  background-color: blueviolet;
+  color: white;
+}
+
+#formLabel {
+  color: blue;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: block;
+  border-top: dotted;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  font-size: small;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: italic;
+}
