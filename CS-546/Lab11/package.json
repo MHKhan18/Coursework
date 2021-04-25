@@ -2,7 +2,7 @@
   "name": "cs-546-lab-11",
   "version": "1.0.0",
   "description": "",
-  "main":"app.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
