@@ -1,0 +1,19 @@
+{
+  "name": "cs-554-lab-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "seed": "node ./tasks/seed.js"
+  },
+  "keywords": [],
+  "author": "Mohammad Khan 10438167",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mongodb": "^4.1.1"
+  }
+}
