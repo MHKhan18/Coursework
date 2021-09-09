@@ -6,6 +6,7 @@ const data = require('../data');
 
 const router = express.Router();
 const userData = data.users;
+const blogData = data.blogs;
 
 const saltRounds = 16;
 
@@ -94,6 +95,75 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
     req.session.destroy();
     res.json({ message: "You have been successfully logged out!" });
+});
+
+router.post('/', async (req, res) => {
+
+    const blogInfo = req.body;
+
+    const title = blogInfo.title;
+    const body = blogInfo.body;
+
+    // TODO : validation
+
+    const postAuthor = req.session.user;
+
+    try {
+        const newBlog = await blogData.insertBlog(title, body, postAuthor);
+        res.json(newBlog);
+    } catch (e) {
+        res.status(500).json({ error: e });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            res.status(400).json({ error: 'invalid id' });
+            return;
+        }
+
+        if (typeof id !== 'string' || id.trim().length === 0) {
+            res.status(400).json({ error: 'invalid id' });
+            return;
+        }
+        let parsedId;
+        try {
+            parsedId = ObjectId(id);
+        } catch (error) {
+            res.status(400).json({ error: 'invalid id' });
+            return;
+        }
+
+        const blog = await blogData.getBlog(id);
+        res.json(blog);
+
+    } catch (e) {
+        res.status(404).json({ error: 'Blog not found' });
+    }
+});
+
+router.get('/', async (req, res) => {
+
+    let skip = 0;
+    let take = 20;
+
+    skip = req.query.skip;
+    take = req.query.take;
+
+    //  TO DO : validation
+
+    take = Math.min(take, 100);
+
+    try {
+        const blogsList = await blogData.getNumBlogs(take, skip);
+        res.json(blogsList);
+    } catch (e) {
+        res.status(500).json({ error: e });
+    }
+
+
 });
 
 module.exports = router;
