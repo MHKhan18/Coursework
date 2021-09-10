@@ -39,7 +39,22 @@ async function getBlog(id) {
 async function insertBlog(title, body, postAuthor) {
 
 
-    // TODO : input validation 
+    if (!title || typeof title !== 'string' || title.trim().length === 0) {
+        throw 'title is a required non-empty string parameter.';
+    }
+
+    if (!body || typeof body !== 'string' || body.trim().length === 0) {
+        throw 'title is a required non-empty string parameter.';
+    }
+
+    if (!postAuthor || typeof postAuthor !== 'object' || Array.isArray(postAuthor)) {
+        throw 'postAuthor is a required object parameter.';
+    }
+
+    if (!postAuthor.id || !postAuthor.userName) {
+        throw 'postAuthor is missing id or userName';
+    }
+
     const blogsCollection = await blogs();
     const newBlog = {
         title: title,
@@ -100,9 +115,55 @@ async function getNumBlogs(num, skip) {
 
     return blogsList;
 }
+
+async function updateBlog(id, updatedBlog) {
+
+    if (!id) {
+        throw 'Id parameter must be supplied';
+    }
+
+    if (typeof id !== 'string' || id.trim().length === 0) {
+        throw "Id must be a non-empty string";
+    }
+
+    let parsedId;
+    try {
+        parsedId = ObjectId(id);
+    } catch (error) {
+        throw `Received invalid id: ${id}`;
+    }
+
+    const blogCollection = await blogs();
+
+    const updatedBlogData = {};
+
+    if (updatedBlog.title) {
+        if (typeof (updatedBlog.title) !== 'string' || updatedBlog.title.trim().length === 0) {
+            throw 'title must be a non-empty string parameter.';
+        }
+        updatedBlogData.title = updatedBlog.title;
+    }
+
+    if (updatedBlog.body) {
+        if (typeof (updatedBlog.body) !== 'string' || updatedBlog.body.trim().length === 0) {
+            throw 'title must be a non-empty string parameter.';
+        }
+        updatedBlogData.title = updatedBlog.title;
+    }
+
+    await blogCollection.updateOne({ _id: parsedId }, { $set: updatedBlogData });
+
+    const result = await getBlog(id);
+
+    return result;
+}
+
+
+
 module.exports = {
     getBlog,
     insertBlog,
     getAllBlogs,
-    getNumBlogs
+    getNumBlogs,
+    updateBlog
 }

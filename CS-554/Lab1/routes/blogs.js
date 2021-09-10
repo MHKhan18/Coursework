@@ -5,8 +5,10 @@ let { ObjectId } = require('mongodb');
 const data = require('../data');
 
 const router = express.Router();
+
 const userData = data.users;
 const blogData = data.blogs;
+const commentData = data.comments;
 
 const saltRounds = 16;
 
@@ -100,13 +102,29 @@ router.get('/logout', async (req, res) => {
 router.post('/', async (req, res) => {
 
     const blogInfo = req.body;
-
     const title = blogInfo.title;
     const body = blogInfo.body;
-
-    // TODO : validation
-
     const postAuthor = req.session.user;
+
+    if (!title || typeof title !== 'string' || title.trim().length === 0) {
+        res.status(400).json({ error: 'title is in invalid format' });
+        return;
+    }
+
+    if (!body || typeof body !== 'string' || body.trim().length === 0) {
+        res.status(400).json({ error: 'body is in invalid format' });
+        return;
+    }
+
+    if (!postAuthor || typeof postAuthor !== 'object' || Array.isArray(postAuthor)) {
+        res.status(400).json({ error: 'postAuthor is in invalid format' });
+        return;
+    }
+
+    if (!postAuthor.id || !postAuthor.userName) {
+        res.status(400).json({ error: 'postAuthor is in invalid format' });
+        return;
+    }
 
     try {
         const newBlog = await blogData.insertBlog(title, body, postAuthor);
@@ -152,7 +170,16 @@ router.get('/', async (req, res) => {
     skip = req.query.skip;
     take = req.query.take;
 
-    //  TO DO : validation
+    if (take && (typeof take !== 'number' || (!Number.isInteger(take)) || take <= 0)) {
+        res.status(400).json({ error: `Invalid take: ${take}` });
+        return;
+    }
+
+    if (skip && (typeof skip !== 'number' || (!Number.isInteger(skip)) || skip <= 0)) {
+        res.status(400).json({ error: `Invalid skip: ${skip}` });
+        return;
+    }
+
 
     take = Math.min(take, 100);
 
@@ -163,6 +190,216 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: e });
     }
 
+
+});
+
+router.put('/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    const blogInfo = req.body;
+    const title = blogInfo.title;
+    const body = blogInfo.body;
+
+
+    if (!id) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (typeof id !== 'string' || id.trim().length === 0) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+    let parsedId;
+    try {
+        parsedId = ObjectId(id);
+    } catch (error) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (!title || typeof title !== 'string' || title.trim().length === 0) {
+        res.status(400).json({ error: 'title is in invalid format' });
+        return;
+    }
+
+    if (!body || typeof body !== 'string' || body.trim().length === 0) {
+        res.status(400).json({ error: 'body is in invalid format' });
+        return;
+    }
+
+    const updatedBlog = {
+        title,
+        body
+    }
+
+    try {
+        const blog = await blogData.updateBlog(id, updatedBlog);
+        res.json(blog);
+    } catch (e) {
+        res.status(500).json({ error: `${e}` });
+    }
+
+
+});
+
+router.patch('/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    const blogInfo = req.body;
+    const title = blogInfo.title;
+    const body = blogInfo.body;
+
+    if (!id) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (typeof id !== 'string' || id.trim().length === 0) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+    let parsedId;
+    try {
+        parsedId = ObjectId(id);
+    } catch (error) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (title && (typeof title !== 'string' || title.trim().length === 0)) {
+        res.status(400).json({ error: 'title is in invalid format' });
+        return;
+    }
+
+    if (body && (typeof body !== 'string' || body.trim().length === 0)) {
+        res.status(400).json({ error: 'body is in invalid format' });
+        return;
+    }
+
+    const oldBlog = await blogData.getBlog(id);
+    let changeCount = 0;
+    if (body && body !== oldBlog.body) { changeCount++ }
+    if (title && title !== oldBlog.title) { changeCount++ }
+
+    if (changeCount === 0) {
+        res.status(400).json({
+            error:
+                'No fields have been changed from their inital values, so no update has occurred'
+        });
+    }
+
+    const updatedBlog = {}
+    if (body) { updatedBlog.body = body }
+    if (title) { updatedBlog.title = title }
+
+    try {
+        const blog = await blogData.updateBlog(id, updatedBlog);
+        res.json(blog);
+    } catch (e) {
+        res.status(500).json({ error: `${e}` });
+    }
+
+
+});
+
+router.post('/:id/comments', async (req, res) => {
+
+    const blogId = req.params.id;
+    const commentBody = req.body.comment;
+    const commentAuthor = req.session.user;
+
+    if (!blogId) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (typeof blogId !== 'string' || blogId.trim().length === 0) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+    let parsedId;
+    try {
+        parsedId = ObjectId(blogId);
+    } catch (error) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (!commentBody || typeof commentBody !== 'string' || commentBody.trim().length === 0) {
+        res.status(400).json({ error: 'commentBody is in invalid format' });
+        return;
+    }
+
+    if (!commentAuthor || typeof commentAuthor !== 'object' || Array.isArray(commentAuthor)) {
+        res.status(400).json({ error: 'commentAuthor is in invalid format' });
+        return;
+    }
+
+    if (!commentAuthor.id || !commentAuthor.userName) {
+        res.status(400).json({ error: 'commentAuthor is in invalid format' });
+        return;
+    }
+
+    try {
+        const commentObj = await commentData.createComment(commentBody, commentAuthor);
+        const updatedBlog = await commentData.insertComment(blogId, commentObj);
+        res.json(updatedBlog);
+    } catch (e) {
+        res.status(500).json({ error: `${e}` });
+    }
+
+});
+
+router.delete('/:blogId/:commentId', async (req, res) => {
+
+    const blogId = req.params.blogId;
+    const commentId = req.params.commentId;
+
+    // TO DO: validation
+    if (!blogId) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (typeof blogId !== 'string' || blogId.trim().length === 0) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    try {
+        ObjectId(blogId);
+    } catch (error) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+    ////////////////
+    if (!commentId) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    if (typeof commentId !== 'string' || commentId.trim().length === 0) {
+        res.status(400).json({ error: 'invalid id' });
+        return;
+    }
+
+    try {
+        ObjectId(commentId);
+    } catch (error) {
+        res.status(400).json({ error: 'invalid commentId' });
+        return;
+    }
+
+
+    try {
+        const commentDeletedBlog = await commentData.deleteComment(blogId, commentId);
+        res.json(commentDeletedBlog);
+    } catch (e) {
+        res.status(500).json({ error: `${e}` });
+    }
 
 });
 
