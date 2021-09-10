@@ -92,8 +92,26 @@ async function deleteComment(blogId, commentId) {
 
 }
 
+async function getCommentCreator(blogId, commentId) {
+    const parsedBlogId = validateId(blogId);
+    const parsedCommentId = validateId(commentId);
+
+    const blog = await blogsData.getBlog(blogId);
+
+    const comments = blog.comments;
+
+    for (let comment of comments) {
+        if (comment._id === commentId) {
+            return comment.userThatPostedComment;
+        }
+    }
+
+    return null;
+}
+
 module.exports = {
     createComment,
     insertComment,
-    deleteComment
+    deleteComment,
+    getCommentCreator
 }
