@@ -31,14 +31,16 @@ app.use('/blog', (req, res, next) => {
 
 app.use('/blog/:id', async (req, res, next) => {
 
-    if (req.path === `/${req.params.id}` && (req.method === 'PUT' || req.method === 'PATCH')) {
+
+    if ((req.method === 'PUT' || req.method === 'PATCH')) {
         if (!(req.session.user)) {
             res.status(403).json({ error: 'Login Required' });
             return;
         }
 
+        let blog;
         try {
-            const blog = await blogData.getBlog(req.params.id);
+            blog = await blogData.getBlog(req.params.id);
         } catch (e) {
             res.status(500).json({ error: e });
             return;
@@ -58,7 +60,7 @@ app.use('/blog/:id', async (req, res, next) => {
 
 app.use('/blog/:id/comments', (req, res, next) => {
 
-    if (req.path === `/${req.params.id}/comments` && (req.method === 'POST' && !(req.session.user))) {
+    if ((req.method === 'POST' && !(req.session.user))) {
         res.status(403).json({ error: 'Login Required' });
         return;
     } else {
@@ -68,7 +70,7 @@ app.use('/blog/:id/comments', (req, res, next) => {
 
 app.use('/blog/:blogId/:commentId', async (req, res, next) => {
 
-    if (req.path === `/${req.params.blogId}/${req.params.commentId}` && req.method === 'DELETE') {
+    if (req.method === 'DELETE') {
         if (!(req.session.user)) {
             res.status(403).json({ error: 'Login Required' });
             return;
@@ -77,8 +79,9 @@ app.use('/blog/:blogId/:commentId', async (req, res, next) => {
         const blogId = req.params.blogId;
         const commentId = req.params.commentId;
 
+        let commentCreator;
         try {
-            const commentCreator = await commentData.getCommentCreator(blogId, commentId);
+            commentCreator = await commentData.getCommentCreator(blogId, commentId);
         } catch (e) {
             res.status(500).json({ error: e });
             return;

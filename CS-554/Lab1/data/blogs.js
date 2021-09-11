@@ -95,11 +95,11 @@ async function getAllBlogs() {
 
 async function getNumBlogs(num, skip) {
 
-    if (!num || typeof num !== 'number' || (!Number.isInteger(num)) || num <= 0) {
+    if (!num || typeof num !== 'number' || !(Number.isInteger(num)) || num <= 0) {
         throw 'num must be a positive integer';
     }
 
-    if (!skip || typeof skip !== 'number' || (!Number.isInteger(skip)) || skip <= 0) {
+    if (skip === undefined || typeof skip !== 'number' || !(Number.isInteger(skip)) || skip < 0) {
         throw 'skip must be a positive integer';
     }
 
@@ -148,7 +148,7 @@ async function updateBlog(id, updatedBlog) {
         if (typeof (updatedBlog.body) !== 'string' || updatedBlog.body.trim().length === 0) {
             throw 'title must be a non-empty string parameter.';
         }
-        updatedBlogData.title = updatedBlog.title;
+        updatedBlogData.body = updatedBlog.body;
     }
 
     await blogCollection.updateOne({ _id: parsedId }, { $set: updatedBlogData });

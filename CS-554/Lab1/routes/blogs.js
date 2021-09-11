@@ -167,15 +167,15 @@ router.get('/', async (req, res) => {
     let skip = 0;
     let take = 20;
 
-    skip = req.query.skip;
-    take = req.query.take;
+    if (req.query.skip) { skip = parseInt(req.query.skip); }
+    if (req.query.take) { take = parseInt(req.query.take); }
 
-    if (take && (typeof take !== 'number' || (!Number.isInteger(take)) || take <= 0)) {
+    if (req.query.take && (typeof take !== 'number' || (!Number.isInteger(take)) || take <= 0)) {
         res.status(400).json({ error: `Invalid take: ${take}` });
         return;
     }
 
-    if (skip && (typeof skip !== 'number' || (!Number.isInteger(skip)) || skip <= 0)) {
+    if (req.query.skip && (typeof skip !== 'number' || (!Number.isInteger(skip)) || skip < 0)) {
         res.status(400).json({ error: `Invalid skip: ${skip}` });
         return;
     }
@@ -230,8 +230,8 @@ router.put('/:id', async (req, res) => {
     }
 
     const updatedBlog = {
-        title,
-        body
+        title: title,
+        body: body
     }
 
     try {
