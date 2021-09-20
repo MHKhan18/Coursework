@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
             delete matchedUser.password;
             res.json(matchedUser);
         } else {
-            res.status(401).json({ error: 'Invalid credentials' });
+            res.status(403).json({ error: 'Invalid credentials' });
             return;
         }
     } catch (e) {
@@ -324,7 +324,7 @@ router.post('/:id/comments', async (req, res) => {
     try {
         parsedId = ObjectId(blogId);
     } catch (error) {
-        res.status(400).json({ error: 'invalid id' });
+        res.status(404).json({ error: 'invalid id' });
         return;
     }
 
