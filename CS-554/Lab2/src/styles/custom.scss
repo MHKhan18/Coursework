@@ -1,0 +1,55 @@
+@import "variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+body,
+html {
+	background: $body-background;
+	color: darken($brand-primary, 20%);
+	font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+	font-size: $primary-font-size;
+	background-clip: border-box;
+}
+
+.myCardImage{
+    height: 190px;
+}
+
+.myCard{
+    margin-top: 15px;
+    height: $card-height;
+    background-color: $card-bg;
+    
+}
+
+.myNav{
+    float: left;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+
+.wrapper{
+    display: flex;
+    flex-direction: row;
+
+    @media screen and (max-width: 540px) {
+        flex-direction: column;
+    }
+}
+
+.myNav{
+
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+   
+
+    @media screen and (max-width: 540px) {
+        flex-direction: row;
+    }
+
+}
+
+.nav-item{
+    list-style-type: none;
+}
