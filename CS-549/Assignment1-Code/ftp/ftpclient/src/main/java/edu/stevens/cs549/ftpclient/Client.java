@@ -5,10 +5,12 @@
 
 package edu.stevens.cs549.ftpclient;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +21,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -29,6 +33,7 @@ import java.util.logging.Logger;
 // import org.apache.log4j.PropertyConfigurator;
 
 import edu.stevens.cs549.ftpinterface.IServer;
+import edu.stevens.cs549.ftpinterface.IServerFactory;
 
 /**
  * 
@@ -141,7 +146,9 @@ public class Client {
 			 * TODO: Get a server proxy.
 			 */
 			
-			IServer server = null;
+			Registry registry = LocateRegistry.getRegistry(serverAddr , serverPort);
+			IServerFactory serverFactory = (IServerFactory)registry.lookup(serverName);
+			IServer server = serverFactory.createServer();  // each client gets separate server object
 			
 			/*
 			 * Start CLI.  Second argument should be server proxy.
@@ -317,6 +324,23 @@ public class Client {
 					 * TODO: Complete this thread.
 					 */
 					Socket xfer = dataChan.accept();
+					InputStream is = xfer.getInputStream();
+					
+					byte[] buf = new byte[512];
+					int nbytes = is.read(buf, 0, 512);
+					
+					while (nbytes > 0) {
+						file.write(buf, 0, nbytes);
+						nbytes = is.read(buf, 0, 512);
+					}
+					
+					try {
+						is.close(); 
+						file.close();
+						xfer.close();
+					} catch (Exception e) {
+						msgln("Error is teardown: " + e);
+					}
 
 					/*
 					 * End TODO
@@ -333,12 +357,30 @@ public class Client {
 				try {
 					if (mode == Mode.PASSIVE) {
 						svr.get(inputs[1]);
-						OutputStream f = new BufferedOutputStream(new FileOutputStream(inputs[1]));
+						FileOutputStream f = new FileOutputStream(inputs[1]);
 						log.info("Client connecting to server at address "+serverAddress);
 						Socket xfer = new Socket(serverAddress, serverSocket.getPort());
 						/*
 						 * TODO: connect to server socket to transfer file.
 						 */
+						InputStream is = xfer.getInputStream();
+						
+						byte[] buf = new byte[512];
+						int nbytes = is.read(buf , 0 , 512);
+						
+						while (nbytes > 0) {
+							f.write(buf , 0 , nbytes);
+							nbytes = is.read(buf , 0 , 512);
+						}
+						
+						try {
+							f.close();
+							is.close();
+							xfer.close();
+						} catch (Exception e) {
+							msgln("Error is teardown: " + e);
+						}
+						
 					} else if (mode == Mode.ACTIVE) {
 						FileOutputStream f = new FileOutputStream(inputs[1]);
 						new Thread(new GetThread(dataChan, f)).start();
@@ -351,13 +393,92 @@ public class Client {
 				}
 			}
 		}
+		
+		
+		private class PutThread implements Runnable {
+			/*
+			 * This client-side thread runs when the server is active mode and a
+			 * file upload is initiated. This thread listens for a connection
+			 * request from the server. The client-side server socket (...)
+			 * should have been created when the port command put the server in
+			 * active mode.
+			 */
+			private ServerSocket dataChan = null;
+			private FileInputStream file = null;
+
+			public PutThread(ServerSocket s, FileInputStream f) {
+				dataChan = s;
+				file = f;
+			}
+
+			public void run() {
+				try {
+					Socket xfer = dataChan.accept();
+					OutputStream os = xfer.getOutputStream();
+					
+					byte[] buf = new byte[512];
+					int nbytes = file.read(buf, 0, 512);
+					
+					while (nbytes > 0) {
+						os.write(buf, 0, nbytes);
+						nbytes = file.read(buf, 0, 512);
+					}
+					
+					try {
+						os.close(); 
+						file.close();
+						xfer.close();	
+					} catch (Exception e) {
+						msgln("Error is teardown: " + e);
+					}
+					
+				} catch (IOException e) {
+					msg("Exception: " + e);
+					e.printStackTrace();
+				}
+			}
+		}
 
 		public void put(String[] inputs) {
 			if (inputs.length == 2) {
 				try {
-					/*
-					 * TODO: Finish put (both ACTIVE and PASSIVE mode supported).
-					 */
+					if (mode == Mode.PASSIVE) {
+						
+						svr.put(inputs[1]);
+						FileInputStream f = new FileInputStream(inputs[1]);
+						log.info("Client connecting to server at address "+serverAddress);
+						
+						Socket xfer = new Socket(serverAddress, serverSocket.getPort());
+						OutputStream os = xfer.getOutputStream();
+						
+						byte[] buf = new byte[512];
+						int nbytes = f.read(buf , 0 , 512);
+						
+						while (nbytes > 0) {
+							os.write(buf , 0 , nbytes);
+							nbytes = f.read(buf , 0 , 512);
+						}
+						
+						try {
+							f.close();
+							os.close();
+							xfer.close();
+						} catch (Exception e) {
+							msgln("Error is teardown: " + e);
+						}
+						
+						
+						
+						
+					} else if (mode == Mode.ACTIVE) {
+						FileInputStream f = new FileInputStream(inputs[1]);
+						new Thread(new PutThread(dataChan, f)).start();
+						svr.put(inputs[1]);
+						
+						
+					} else {
+						msgln("PUT: No mode set--use port or pasv command.");
+					}
 				} catch (Exception e) {
 					err(e);
 				}
