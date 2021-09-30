@@ -14,7 +14,6 @@
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.4",
-    "flat": "^5.0.2",
     "redis": "^3.1.2"
   },
   "devDependencies": {
