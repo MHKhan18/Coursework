@@ -1,9 +1,7 @@
 const axios = require('axios');
 const bluebird = require('bluebird');
 const redis = require('redis');
-const flat = require('flat');
 
-const unflatten = flat.unflatten;
 const client = redis.createClient();
 
 
@@ -63,7 +61,7 @@ const constructorMethod = (app) => {
             );
 
         } catch (e) {
-            res.status(500);
+            res.status(404);
             res.render('shows/error');
         }
     });
@@ -140,7 +138,7 @@ const constructorMethod = (app) => {
             );
 
         } catch (e) {
-            res.status(500);
+            res.status(404); // API Broke
             res.render('shows/error');
         }
 
@@ -161,6 +159,7 @@ const constructorMethod = (app) => {
 
         const cachedSearchDetails = await client.hgetAsync('searchResults', userQuery);
         if (cachedSearchDetails) {
+            const _ = await client.zincrbyAsync('searchCounter', 1, userQuery); // increment count by 1
             res.send(cachedSearchDetails);
             console.log('Sent cached search result');
         } else {
@@ -193,6 +192,9 @@ const constructorMethod = (app) => {
                 return;
             }
 
+            // new entry in 'searchCounter'
+            const _ = await client.zaddAsync('searchCounter', 1, userQuery);
+
             let shows = [];
             for (let i = 0; i < data.length; i++) {
                 shows.push({ id: data[i].show.id, name: data[i].show.name });
@@ -224,13 +226,22 @@ const constructorMethod = (app) => {
             );
 
         } catch (e) {
-            res.status(500);
+            res.status(404);
             res.render('shows/error');
         }
 
     });
 
     app.get('/popularsearches', async (req, res) => {
+
+        const orderedSearchTerms = await client.zrevrangeAsync('searchCounter', 0, -1); // -1 for last index
+        const numItems = Math.min(orderedSearchTerms.length, 10);
+        const searchTerms = []
+        for (let i = 0; i < numItems; i++) {
+            searchTerms.push(orderedSearchTerms[i]);
+        }
+
+        res.render('shows/popularsearches', { searchTerms });
 
     });
 
