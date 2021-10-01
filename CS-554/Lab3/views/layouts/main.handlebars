@@ -9,14 +9,16 @@
 
 <body>
     <main>
-        <form method="POST" action="/search">
-            <label for="user-query">Find Show:</label>
-            <br>
-            <input id="user-query" type="text" name="searchTerm" placeholder="Your Movie" value="" required />
-            <br>
-            <button id="search-btn" type="submit">Search</button>
-        </form>
-        {{{body}}}
+        <div>
+            <form method="POST" action="/search">
+                <label for="user-query">Find Show:</label>
+                <br>
+                <input id="user-query" type="text" name="searchTerm" placeholder="Your Movie" value="" required />
+                <br>
+                <button id="search-btn" type="submit">Search</button>
+            </form>
+            {{{body}}}
+        </div>
     </main>
 </body>
 
