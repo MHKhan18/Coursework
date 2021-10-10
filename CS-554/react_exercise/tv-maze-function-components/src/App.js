@@ -16,7 +16,7 @@ const App = () => {
 					<Link className='showlink' to='/'>
 						Home
 					</Link>
-					<Link className='showlink' to='/shows'>
+					<Link className='showlink' to='/shows/page/0 '>
 						Shows
 					</Link>
 				</header>
@@ -24,8 +24,8 @@ const App = () => {
 				<br />
 				<div className='App-body'>
 					<Route exact path='/' component={Home} />
-					<Route exact path='/shows' component={ShowList} />
-					<Route exact path='/shows/:id' component={Show} />
+					<Route exact path='/shows/page/:pagenum' component={ShowList} />
+					<Route exact path='/show/:id' component={Show} />
 				</div>
 			</div>
 		</Router>

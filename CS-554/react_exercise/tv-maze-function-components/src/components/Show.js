@@ -34,12 +34,12 @@ const useStyles = makeStyles({
 });
 
 const Show = (props) => {
-	const [ showData, setShowData ] = useState(undefined);
-	const [ loading, setLoading ] = useState(true);
+	const [showData, setShowData] = useState(undefined);
+	const [loading, setLoading] = useState(true);
 	const classes = useStyles();
 	const tConvert = (time) => {
 		// Check correct time format and split into components
-		time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [ time ];
+		time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
 		if (time.length > 1) {
 			// If time format correct
@@ -57,7 +57,7 @@ const Show = (props) => {
 	};
 	useEffect(
 		() => {
-			console.log ("useEffect fired")
+			console.log("useEffect fired")
 			async function fetchData() {
 				try {
 					const { data: show } = await axios.get(`http://api.tvmaze.com/shows/${props.match.params.id}`);
@@ -70,7 +70,7 @@ const Show = (props) => {
 			}
 			fetchData();
 		},
-		[ props.match.params.id ]
+		[props.match.params.id]
 	);
 
 	let summary = null;
@@ -189,7 +189,7 @@ const Show = (props) => {
 								<dd>{summary}</dd>
 							</p>
 						</dl>
-						<Link to='/shows'>Back to all shows...</Link>
+						<Link to='/shows/page/0'>Back to all shows...</Link>
 					</Typography>
 				</CardContent>
 			</Card>

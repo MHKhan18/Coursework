@@ -34,28 +34,38 @@ const useStyles = makeStyles({
 		fontSize: 12
 	}
 });
-const ShowList = () => {
+const ShowList = (props) => {
 	const regex = /(<([^>]+)>)/gi;
 	const classes = useStyles();
-	const [ loading, setLoading ] = useState(true);
-	const [ searchData, setSearchData ] = useState(undefined);
-	const [ showsData, setShowsData ] = useState(undefined);
-	const [ searchTerm, setSearchTerm ] = useState('');
+	const [loading, setLoading] = useState(true);
+	const [searchData, setSearchData] = useState(undefined);
+	const [showsData, setShowsData] = useState(undefined);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [nextExist, setNextExist] = useState(true);
 	let card = null;
- 
+
 	useEffect(() => {
-		console.log('on load useeffect');
 		async function fetchData() {
 			try {
-				const { data } = await axios.get('http://api.tvmaze.com/shows');
+				const { data } = await axios.get(`http://api.tvmaze.com/shows?page=${props.match.params.pagenum}`);
 				setShowsData(data);
 				setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}
+
+			try {
+				const { next_data } = await axios.get(`http://api.tvmaze.com/shows?page=${parseInt(props.match.params.pagenum) + 1}`);
+				setNextExist(true);
+			} catch (e) {
+				setNextExist(false);
+				console.log(e);
+			}
 		}
 		fetchData();
-	}, []);
+	},
+		[props.match.params.pagenum]
+	);
 
 	useEffect(
 		() => {
@@ -71,11 +81,11 @@ const ShowList = () => {
 				}
 			}
 			if (searchTerm) {
-				console.log ('searchTerm is set')
+				console.log('searchTerm is set')
 				fetchData();
 			}
 		},
-		[ searchTerm ]
+		[searchTerm]
 	);
 
 
@@ -88,7 +98,7 @@ const ShowList = () => {
 			<Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={show.id}>
 				<Card className={classes.card} variant='outlined'>
 					<CardActionArea>
-						<Link to={`/shows/${show.id}`}>
+						<Link to={`/show/${show.id}`}>
 							<CardMedia
 								className={classes.media}
 								component='img'
@@ -127,7 +137,9 @@ const ShowList = () => {
 			});
 	}
 
-	if (loading) {
+	if (parseInt(props.match.params.pagenum) < 0 || parseInt(props.match.params.pagenum) > 233) {
+		return (<p>Requested Page does not exist.</p>);
+	} else if (loading) {
 		return (
 			<div>
 				<h2>Loading....</h2>
@@ -138,6 +150,10 @@ const ShowList = () => {
 			<div>
 				<SearchShows searchValue={searchValue} />
 				<br />
+				<div className="pagination">
+					{parseInt(props.match.params.pagenum) > 0 && <Link to={`/shows/page/${parseInt(props.match.params.pagenum) - 1}`}>Previous</Link>}
+					{nextExist && <Link to={`/shows/page/${parseInt(props.match.params.pagenum) + 1}`}>Next</Link>}
+				</div>
 				<br />
 				<Grid container className={classes.grid} spacing={5}>
 					{card}

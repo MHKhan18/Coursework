@@ -128,3 +128,9 @@ dd {
 	display: inline;
 	margin-left: 5px;
 }
+
+.pagination{
+	display: flex;
+	justify-content: space-between;
+	margin: 20px;
+  }
