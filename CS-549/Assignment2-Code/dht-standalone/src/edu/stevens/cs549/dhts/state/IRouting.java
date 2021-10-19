@@ -11,7 +11,7 @@ import edu.stevens.cs549.dhts.activity.NodeInfo;
 
 public interface IRouting extends Remote {
 
-	public static final boolean USE_FINGER_TABLE = false;
+	public static final boolean USE_FINGER_TABLE = true;
 	
 	public static final int NFINGERS = 6;
 	

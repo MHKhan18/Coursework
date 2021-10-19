@@ -1,6 +1,9 @@
 package edu.stevens.cs549.dhts.state;
 
 import java.io.IOException;
+
+
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.logging.Logger;
 
 import edu.stevens.cs549.dhts.activity.NodeInfo;
 import edu.stevens.cs549.dhts.resource.TableRep;
+import edu.stevens.cs549.dhts.activity.DHTBase;
 
 /**
  * 
@@ -170,13 +174,14 @@ public class State implements IState, IRouting {
 		/*
 		 * TODO: Set the ith finger.
 		 */
+		finger[i] = info;
 	}
 
 	public synchronized NodeInfo getFinger(int i) {
 		/*
 		 * TODO: Get the ith finger.
 		 */
-		return null;
+		return finger[i];
 	}
 
 	public synchronized NodeInfo closestPrecedingFinger(int id) {
@@ -184,7 +189,13 @@ public class State implements IState, IRouting {
 		 * TODO: Get closest preceding finger for id, to continue search at that
 		 * node. Hint: See DHTBase.inInterval()
 		 */
-		return null;
+		for(int i = NFINGERS-1; i>= 0; i--) {
+			if(DHTBase.inInterval(finger[i].id , info.id , id , false)) {
+				return finger[i];
+			}
+		}
+		
+		return info;
 	}
 
 	public synchronized void routes() {

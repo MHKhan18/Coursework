@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 
 import edu.stevens.cs549.dhts.activity.DHT;
 import edu.stevens.cs549.dhts.activity.DHTBase.Failed;
+import edu.stevens.cs549.dhts.activity.DHTBase.Invalid;
 import edu.stevens.cs549.dhts.activity.IDHTResource;
 import edu.stevens.cs549.dhts.activity.NodeInfo;
 import edu.stevens.cs549.dhts.main.Log;
@@ -97,6 +98,46 @@ public class NodeService {
 			error("findSuccessor", e);
 			throw new WebApplicationException(Response.Status.SERVICE_UNAVAILABLE);
 		}
+	}
+	
+	//==============================================
+	
+	public Response getBindings(String key) throws Invalid{
+		
+		Log.weblog(TAG, "getBindings()");
+		String[] vals = dht.get(key);
+		TableRow tr = new TableRow(key , vals);
+		return response(tr);
+		
+	}
+	
+	public Response addBindings(String key, String val) throws Invalid{
+		
+		Log.weblog(TAG, "addBindings()");
+		dht.add(key, val);
+		return response();
+	}
+	
+	public Response deleteBindings(String key, String val) throws Invalid{
+		
+		Log.weblog(TAG, "deleteBindings()");
+		dht.delete(key, val);
+		return response();
+	}
+	
+	public Response getSucc() {
+		
+		Log.weblog(TAG, "getSucc()");
+		NodeInfo succ =  dht.getSucc();
+		return response(succ);
+	}
+	
+	public Response getFinger(int id) {
+		
+		Log.weblog(TAG, "getFinger()");
+		NodeInfo closestPrecedingFinger = dht.closestPrecedingFinger(id);
+		return response(closestPrecedingFinger);
+		
 	}
 	
 }

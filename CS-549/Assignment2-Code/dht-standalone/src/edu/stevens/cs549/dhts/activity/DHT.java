@@ -108,7 +108,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 			return getSucc();
 		} else {
 			// TODO: Do the Web service call
-			return null;
+			return client.getSucc(info);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 			/*
 			 * TODO: Do the Web service call
 			 */
-			return null;
+			return client.getPred(info);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 				/*
 				 * TODO: Do the Web service call to the remote node.
 				 */
-				return null;
+				return client.getClosestPrecedingFinger(info, id);
 			} else {
 				/*
 				 * Without finger tables, just use the successor pointer.
@@ -463,7 +463,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 			 * 
 			 * TODO: Do the Web service call.
 			 */
-			return null;
+			return client.get(n, k);
 		}
 	}
 
@@ -490,7 +490,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 			/*
 			 * TODO: Do the Web service call.
 			 */
-
+			client.add(n, k, v);
 		}
 	}
 
@@ -501,6 +501,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 	public void add(String k, String v) throws Invalid {
 		/*
 		 * Validate that this binding can be stored here.
+		 * 
 		 */
 		int kid = DHTBase.NodeKey(k);
 		NodeInfo info = getNodeInfo();
@@ -543,7 +544,7 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 			/*
 			 * TODO: Do the Web service call.
 			 */
-
+			client.delete(n, k, v);
 		}
 	}
 
@@ -628,8 +629,18 @@ public class DHT extends DHTBase implements IDHTResource, IDHTNode, IDHTBackgrou
 		 * that it keeps its own bindings, to which it adds those it transfers
 		 * from us.
 		 */
-
 		
+		URI addr = null;
+		try {
+			addr = new URI(uri);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			throw new Invalid(uri + " does not exist.");
+		}
+		
+		succ = findSuccessor(addr , info.id);
+		setSucc(succ);
+		stabilize();		
 	}
 
 	/*
