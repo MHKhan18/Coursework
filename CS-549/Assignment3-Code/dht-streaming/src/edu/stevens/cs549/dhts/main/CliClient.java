@@ -17,6 +17,7 @@ import org.glassfish.jersey.media.sse.EventListener;
 import org.glassfish.jersey.media.sse.InboundEvent;
 
 import edu.stevens.cs549.dhts.activity.DHT;
+import edu.stevens.cs549.dhts.activity.DHTBase.Failed;
 import edu.stevens.cs549.dhts.activity.IDHTBackground;
 import edu.stevens.cs549.dhts.activity.IDHTNode;
 import edu.stevens.cs549.dhts.activity.NodeInfo;
@@ -53,7 +54,7 @@ public class CliClient {
 		System.out.print(m);;
 	}
 
-	protected void msgln(String m) {
+	public static void msgln(String m) {
 		System.out.println(m);
 		System.out.flush();
 	}
@@ -136,6 +137,7 @@ public class CliClient {
 	        @Override
 	        public void onEvent(InboundEvent ev) {
 	            msgln(String.format("** Binding event (%s): %s -> %s", ev.getName(), key, ev.readData(String.class)));
+	          
 	        }
 	    };
 	}

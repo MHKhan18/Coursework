@@ -90,8 +90,11 @@ public class State implements IState, IRouting {
 
 	public synchronized void delete(String k, String v) {
 		List<String> vs = dict.get(k);
-		if (vs != null)
+		if (vs != null) {
 			vs.remove(v);
+			
+		}
+			
 	}
 
 	public synchronized void clear() {
@@ -117,7 +120,12 @@ public class State implements IState, IRouting {
 	 * Successor: Drop the bindings that are transferred to the predecessor.
 	 */
 	public synchronized void dropBindings(int predId) {
-		Persist.dropBindings(dict, predId, getNodeInfo().id);
+		List<String> removedKeys = Persist.dropBindings(dict, predId, getNodeInfo().id);
+		
+		for(String key: removedKeys) {
+			broadcastDeletion(key);
+		}
+		
 	}
 
 	/*
@@ -184,13 +192,14 @@ public class State implements IState, IRouting {
 		/*
 		 * TODO: Set the ith finger.
 		 */
+		finger[i] = info;
 	}
 
 	public synchronized NodeInfo getFinger(int i) {
 		/*
 		 * TODO: Get the ith finger.
 		 */
-		return null;
+		return finger[i];
 	}
 
 	public synchronized NodeInfo closestPrecedingFinger(int id) {
@@ -198,8 +207,13 @@ public class State implements IState, IRouting {
 		 * TODO: Get closest preceding finger for id, to continue search at that
 		 * node. Hint: See DHTBase.inInterval()
 		 */
-
-		return null;
+		for(int i = NFINGERS-1; i>= 0; i--) {
+			if(DHTBase.inInterval(finger[i].id , info.id , id , false)) {
+				return finger[i];
+			}
+		}
+		
+		return info;
 	}
 
 	public synchronized void routes() {
@@ -287,12 +301,46 @@ public class State implements IState, IRouting {
 	
 	public void removeListener(int id, String key) {
 		// TODO Close the event output stream.
+		
+		if (listeners.containsKey(key)) {
+			EventOutput os = outputs.get(id).get(key);
+			
+			try {
+				os.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			listeners.get(key).remove(os);
+			outputs.get(id).remove(key);
+		}
 
 	}
 	
 	private void broadcastAddition(String key, String value) {
 		// TODO broadcast an added binding (use IDHTNode.NEW_BINDING_EVENT for event name).
-
+		if(listeners.containsKey(key)) {
+			OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+			OutboundEvent event = eventBuilder
+									.name(IDHTNode.NEW_BINDING_EVENT)
+									.data(String.class , value)
+									.build();
+			listeners.get(key).broadcast(event);	
+		}
+	}
+	
+	
+	// TODO: missing operation!!
+	private void broadcastDeletion(String key) {
+		if(listeners.containsKey(key)) {
+			OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+			OutboundEvent event = eventBuilder
+									.name(IDHTNode.MOVED_BINDING_EVENT)
+									.data(String.class , key)
+									.build();
+			listeners.get(key).broadcast(event);	
+		}
 	}
 	
 	/*
@@ -309,6 +357,14 @@ public class State implements IState, IRouting {
 	public void removeCallback(String key) {
 		// TODO remove an existing callback (if any) for bindings on key.
 		// Be sure to close the event stream from the broadcaster.
+		
+		EventSource es = callbacks.get(key);
+		
+		if (es != null) {
+			callbacks.remove(key);
+			es.close();
+		}
+		
 
 	}
 	
@@ -333,6 +389,26 @@ public class State implements IState, IRouting {
 	@Override
 	public void addListener(int id, String key, EventOutput os) {
 		// TODO Auto-generated method stub
+		
+		if(listeners.containsKey(key)) {
+			listeners.get(key).add(os);
+		}else {
+			SseBroadcaster broadcaster = new SseBroadcaster();
+			broadcaster.add(os);
+			listeners.put(key, broadcaster);
+		}
+		
+//		if (outputs.containsKey(id)) {
+//			outputs.get(id).put(key, os);
+//		}else {
+//			Map<String , EventOutput> keyToOs = new HashMap<String , EventOutput>();
+//			keyToOs.put(key, os);
+//			outputs.put(id, keyToOs);
+//		}
+		
+		recordOutput(id, key , os);
+		
+		
 		
 	}
 }

@@ -106,4 +106,63 @@ public class NodeService {
 		}
 	}
 	
+	//==============================================
+	
+		public Response getBindings(String key) throws Invalid{
+			
+			Log.weblog(TAG, "getBindings()");
+			String[] vals = dht.get(key);
+			TableRow tr = new TableRow(key , vals);
+			return response(tr);
+			
+		}
+		
+		public Response addBindings(String key, String val) throws Invalid{
+			
+			Log.weblog(TAG, "addBindings()");
+			dht.add(key, val);
+			return response();
+		}
+		
+		public Response deleteBindings(String key, String val) throws Invalid{
+			
+			Log.weblog(TAG, "deleteBindings()");
+			dht.delete(key, val);
+			return response();
+		}
+		
+		public Response getSucc() {
+			
+			Log.weblog(TAG, "getSucc()");
+			NodeInfo succ =  dht.getSucc();
+			return response(succ);
+		}
+		
+		public Response getFinger(int id) {
+			
+			Log.weblog(TAG, "getFinger()");
+			NodeInfo closestPrecedingFinger = dht.closestPrecedingFinger(id);
+			return response(closestPrecedingFinger);
+			
+		}
+		
+		//==============================================
+		//==============================================
+		
+		public Response listenForBindings(int id , String key) {
+			
+			Log.weblog(TAG, "listenForBindings()");
+			EventOutput e = dht.listenForBindings(id , key);
+			return response(e);
+			
+		}
+		
+		public Response listenOff(int id , String key) {
+			
+			Log.weblog(TAG, "listenOff()");
+			dht.stopListening(id, key);
+			return response();
+			
+		}
+	
 }

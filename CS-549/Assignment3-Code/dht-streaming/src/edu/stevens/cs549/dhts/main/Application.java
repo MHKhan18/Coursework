@@ -1,6 +1,7 @@
 package edu.stevens.cs549.dhts.main;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class Application extends ResourceConfig {
@@ -9,6 +10,7 @@ public class Application extends ResourceConfig {
         .register(ObjectMapperProvider.class)
         .register(JacksonFeature.class)
         // TODO register SseFeature
+        .register(SseFeature.class)
 
         ;
     }

@@ -274,18 +274,24 @@ public class Persist {
 		return toTableDB(info, succ, table);
 	}
 	
-	public static void dropBindings(Table table, int predId, int id) {
+	public static List<String> dropBindings(Table table, int predId, int id) {
 		/*
 		 * Drop the bindings <= pred id from the successor node.
 		 */
+		
+		List<String> removedKeys = new ArrayList<String>();
 		Enumeration<String> keys = table.keys();
 		while (keys.hasMoreElements()) {
 			String k = keys.nextElement();
 			// if (DHTBase.NodeKey(k) <= predId) {
 			if (!DHTBase.inInterval(DHTBase.NodeKey(k), predId, id)) {
 				table.remove(k);
+				removedKeys.add(k);
 			}
 		}
+		
+		return removedKeys;
+		
 	}
 	
 	public static Table installBindings(Table table, TableRep db) {

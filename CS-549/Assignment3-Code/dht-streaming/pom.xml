@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Where to distribute jar files (using mvn package). -->
-		<server.home>${user.home}</server.home>
+		<server.home>C:/Users/Dipro/Desktop/CS-549</server.home>
 		<server.testdir>${server.home}/tmp/cs549/dht-test</server.testdir>
 		<server.dist>${server.testdir}</server.dist>
 		<server.name>dht</server.name>
