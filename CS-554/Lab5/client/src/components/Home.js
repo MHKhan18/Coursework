@@ -11,21 +11,14 @@ import DisplayImage from './DisplayImage';
 
 function Home() {
 
-
-
     const [pageFetched, setPageFetched] = useState(2);
-    // console.log(queries.EDIT_IMAGE);
     const [editImage, { editData, editLoading, editError }] = useMutation(queries.EDIT_IMAGE, {
         refetchQueries: [
             'GET_IMAGES'
         ]
     });
 
-
-
-
     const { loading, error, data, fetchMore } = useQuery(queries.GET_IMAGES,
-
         {
             nextFetchPolicy: "cache-first",
             variables: {
@@ -43,7 +36,6 @@ function Home() {
 
     function getMore() {
         setPageFetched(pageFetched + 1);
-        console.log(pageFetched)
         fetchMore({
             variables: {
                 pageNum: pageFetched
@@ -82,9 +74,6 @@ function Home() {
 
         const { unsplashImages } = data;
 
-        // console.log("here");
-        // console.log(unsplashImages)
-
         let body = unsplashImages.map((image) =>
             <DisplayImage
                 key={image.id}
@@ -95,6 +84,7 @@ function Home() {
                 removeBin={image.binned}
                 addHandler={() => addBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
                 removeHandler={() => removeBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
+                binRoute={false}
             />
         );
 

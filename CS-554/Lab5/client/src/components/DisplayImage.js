@@ -19,29 +19,35 @@ function DisplayImage(props) {
         setAddBin(true);
     }
 
-    return (
-        <li>
-            <div className="card">
-                <div className="card-body">
-                    <img src={props.link} className="card-img-top imageSize" alt="thumbnail" />
-                    <p>{props.desc || "N/A"}</p>
-                    <p>By: {props.author}</p>
-                    {
-                        showAddBin &&
-                        <button onClick={addBinHandler}>
-                            Add To Bin
-                        </button>
-                    }
-                    {
-                        showRemoveBin &&
-                        <button onClick={removeBinHandler}>
-                            Remove From Bin
-                        </button>
-                    }
+    if (!props.binRoute || showRemoveBin) {
+        return (
+            < li >
+                <div className="card">
+                    <div className="card-body">
+                        <img src={props.link} className="card-img-top imageSize" alt="thumbnail" />
+                        <p>{props.desc || "N/A"}</p>
+                        <p>By: {props.author}</p>
+                        {
+                            showAddBin &&
+                            <button onClick={addBinHandler}>
+                                Add To Bin
+                            </button>
+                        }
+                        {
+                            showRemoveBin &&
+                            <button onClick={removeBinHandler}>
+                                Remove From Bin
+                            </button>
+                        }
+                    </div>
                 </div>
-            </div>
-        </li>
-    );
+            </li >
+        );
+    } else {
+        return (
+            <li></li>
+        )
+    }
 }
 
 export default DisplayImage;

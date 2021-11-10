@@ -9,9 +9,6 @@ const client = redis.createClient();
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
-
-
-// const ACCESS_KEY = "GyfftFIc7omSItHNjomAZutW6oBtxuOHKbidHqSeJvo";
 const ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 const { ApolloServer, gql } = require('apollo-server');

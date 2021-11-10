@@ -13,6 +13,18 @@ const GET_IMAGES = gql`
     }
 `;
 
+const GET_BINNED_IMAGES = gql`
+    query GET_BINNED_IMAGES{
+        binnedImages{
+            id
+            url
+            posterName
+            description
+            binned
+        }
+    }
+`
+
 const EDIT_IMAGE = gql`
     mutation changeImage(
         $id: String!
@@ -42,7 +54,8 @@ const EDIT_IMAGE = gql`
 
 const exported = {
     GET_IMAGES,
-    EDIT_IMAGE
+    EDIT_IMAGE,
+    GET_BINNED_IMAGES
 };
 
 export default exported;
