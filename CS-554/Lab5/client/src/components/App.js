@@ -58,10 +58,6 @@ function App() {
               <NavLink className="navlink" to="/my-posts">
                 My Posts
               </NavLink>
-
-              <NavLink className="navlink" to="/new-post">
-                Create Post
-              </NavLink>
             </nav>
           </header>
 

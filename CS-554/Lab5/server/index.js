@@ -86,7 +86,7 @@ const resolvers = {
             postedImages = postedImages.map((imagePost) => {
                 return JSON.parse(imagePost);
             });
-            return binnedImages;
+            return postedImages;
         }
     },
 

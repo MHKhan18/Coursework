@@ -4,7 +4,6 @@ import './App.css';
 import queries from '../queries';
 import { useQuery, useMutation } from '@apollo/client';
 
-import { useState } from 'react';
 
 import DisplayImage from './DisplayImage';
 
@@ -13,7 +12,7 @@ function BinnedPost() {
 
     const [editImage, { editData, editLoading, editError }] = useMutation(queries.EDIT_IMAGE, {
         refetchQueries: [
-            'GET_BINNED_IMAGES'
+            queries.GET_BINNED_IMAGES, queries.GET_IMAGES, queries.GET_ADDED_IMAGES
         ]
     });
     const { loading, error, data } = useQuery(queries.GET_BINNED_IMAGES, { fetchPolicy: 'cache-and-network' });
@@ -67,6 +66,8 @@ function BinnedPost() {
                 addHandler={() => addBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
                 removeHandler={() => removeBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
                 binRoute={true}
+                canDel={false}
+                deleteHandler={() => null}
             />
         );
 

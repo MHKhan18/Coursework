@@ -14,7 +14,7 @@ function Home() {
     const [pageFetched, setPageFetched] = useState(2);
     const [editImage, { editData, editLoading, editError }] = useMutation(queries.EDIT_IMAGE, {
         refetchQueries: [
-            'GET_IMAGES'
+            'GET_BINNED_IMAGES', 'GET_IMAGES', 'GET_ADDED_IMAGES'
         ]
     });
 
@@ -85,6 +85,8 @@ function Home() {
                 addHandler={() => addBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
                 removeHandler={() => removeBinHandler(image.id, image.url, image.posterName, image.description, image.userPosted)}
                 binRoute={false}
+                canDel={false}
+                deleteHandler={() => null}
             />
         );
 

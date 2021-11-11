@@ -52,10 +52,64 @@ const EDIT_IMAGE = gql`
     }
 `;
 
+const ADD_IMAGE = gql`
+    mutation ADD_IMAGE(
+        $url: String!
+        $description: String
+        $posterName: String
+    ){
+        uploadImage(
+            url: $url
+            description: $description
+            posterName: $posterName
+        ){
+            id
+            url
+            posterName
+            description
+            userPosted
+            binned
+        }
+    }
+`;
+
+const GET_ADDED_IMAGES = gql`
+    query GET_ADDED_IMAGES{
+        userPostedImages{
+            id
+            url
+            posterName
+            description
+            userPosted
+            binned
+        }
+    }
+`;
+
+const DELETE_POST = gql`
+    mutation DELETE_POST(
+        $id: String!
+    ){
+        deleteImage(
+            id: $id
+        ){
+            id
+            url
+            posterName
+            description
+            userPosted
+            binned
+        }
+    }
+`;
+
 const exported = {
     GET_IMAGES,
     EDIT_IMAGE,
-    GET_BINNED_IMAGES
+    GET_BINNED_IMAGES,
+    ADD_IMAGE,
+    GET_ADDED_IMAGES,
+    DELETE_POST
 };
 
 export default exported;

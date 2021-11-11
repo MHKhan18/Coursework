@@ -126,3 +126,15 @@ select {
 span {
 	font-weight: bold;
 }
+
+#add-post{
+	margin-left: 30px;
+	margin-top: 30px;
+}
+
+.formLink{
+	margin-left: 40%;
+	margin-right: 40%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
