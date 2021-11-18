@@ -2,7 +2,7 @@ import React from 'react';
 import { seriesDetailsUrl } from '../utils/apiURL';
 import useAxios from '../utils/useAxios';
 
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 
 function getId(url) {
@@ -13,7 +13,7 @@ function getId(url) {
 const SeriesDetails = (props) => {
 
     let { data, loading } = useAxios(seriesDetailsUrl(props.match.params.id));
-    const history = useHistory();
+
 
 
     let characters = [];
@@ -22,7 +22,7 @@ const SeriesDetails = (props) => {
 
     if (!loading) {
         if (!data || data.data.results.length === 0) {
-            history.push('/not-found');
+            return (<Redirect to='/not-found' />);
         }
         comics = data.data.results[0].comics.items;
         characters = data.data.results[0].characters.items;

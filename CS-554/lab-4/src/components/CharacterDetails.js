@@ -3,12 +3,11 @@ import React from 'react';
 import { characterDetailsUrl } from '../utils/apiURL';
 import useAxios from '../utils/useAxios';
 
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 const CharacterDetails = (props) => {
 
     let { data, loading } = useAxios(characterDetailsUrl(props.match.params.id));
-    const history = useHistory();
 
 
     let series = [];
@@ -16,7 +15,7 @@ const CharacterDetails = (props) => {
     let urls = [];
     if (!loading) {
         if (!data || data.data.results.length === 0) {
-            history.push('/not-found');
+            return (<Redirect to='/not-found' />);
         }
         comics = data.data.results[0].comics.items;
         series = data.data.results[0].series.items;

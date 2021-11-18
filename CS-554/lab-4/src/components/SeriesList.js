@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { seriesUrl } from '../utils/apiURL';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import useAxios from '../utils/useAxios';
 
 const resultsPerPage = 20;
@@ -10,12 +10,11 @@ const SeriesList = (props) => {
 
     const pageOffset = props.match.params.page * resultsPerPage;
     let { data, loading } = useAxios(`${seriesUrl}&offset=${pageOffset}`);
-    const history = useHistory();
 
     let nextExist = true; // assume till fetch finishes
     if (!loading) {
         if (!data || data.data.results.length === 0) {
-            history.push('/not-found');
+            return (<Redirect to='/not-found' />);
         }
         let numPages = Math.ceil(data.data.total / resultsPerPage);
         console.log(numPages);
