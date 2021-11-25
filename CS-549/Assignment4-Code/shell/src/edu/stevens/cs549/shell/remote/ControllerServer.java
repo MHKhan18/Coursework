@@ -2,12 +2,14 @@ package edu.stevens.cs549.shell.remote;
 
 import java.io.IOException;
 
+import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
 
 import edu.stevens.cs549.shell.main.IShell;
 
@@ -15,6 +17,9 @@ import edu.stevens.cs549.shell.main.IShell;
  * TODO annotate this as a server endpoint, including callback operations and decoders.
  */
 
+@ServerEndpoint(value = "/control/{name}" , 
+				encoders = {CommandLineEncoder.class} , 
+				decoders = {CommandLineDecoder.class})
 public class ControllerServer {
 	
 	private static final String TAG = ControllerServer.class.getCanonicalName();
@@ -69,12 +74,13 @@ public class ControllerServer {
 			 * TODO Stop the current toplevel (local) shell.  It is sufficient to close the session,
 			 * which will trigger a callback on onClose() on both sides of the connection.
 			 */
-
+			
+			sessionManager.closeCurrentSession();
 		} else {
     		/*
     		 * TODO add the commandLine to the input of the current shell
     		 */
-
+			shellManager.getCurrentShell().addCommandLine(commandLine);
 		}
     }
     

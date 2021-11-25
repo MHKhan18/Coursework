@@ -55,7 +55,7 @@ public class ProxyContext extends ContextBase {
 		synchronized (commandLines) {
 			while (commandLines.isEmpty() && !stopped) {
 				try {
-					// Wait for a comand line to become available (via addCommandLine()).
+					// Wait for a command line to become available (via addCommandLine()).
 					commandLines.wait();
 				} catch (InterruptedException e) {
 				}
@@ -84,19 +84,22 @@ public class ProxyContext extends ContextBase {
 	@Override
 	public void msg(String m) throws IOException {
 		// TODO display the message on the remote client console
+		sender.sendText(m);
+		
 
 	}
 
 	@Override
 	public void msgln(String m) throws IOException {
 		// TODO display the message with EOL on the remote client console
+		sender.sendText(m + "\n");
 
 	}
 	
 	@Override
 	public void err(Throwable t) throws IOException {
 		// TODO print the stack trace on the remote client console
-
+		msgln(t.toString());
 	}
 
 	@Override

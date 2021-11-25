@@ -2,6 +2,7 @@ package edu.stevens.cs549.shell.remote;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +28,10 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 	private final ClientManager client = ClientManager.createClient();
 
 	// TODO configure the client to use proper encoder for messages sent to server
-	private final ClientEndpointConfig cec = null;
+	private final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create()
+																			.encoders(Arrays.asList(CommandLineEncoder.class))
+																			.decoders(Arrays.asList(CommandLineDecoder.class))
+																			.build();
 	
 	private final ShellManager shellManager = ShellManager.getShellManager();
 
@@ -55,6 +59,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 		try {
 			shell.msg("Requesting control of node at " + uri.toString() + "...");
 			// TODO make the connection request (use client)
+			client.connectToServer(this , cec, uri);
 
 			
 			while (true) {
@@ -67,6 +72,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 						 * TODO If we are connected, a new toplevel shell has been pushed
 						 * ("shell" variable updated in onMessage).  Execute its CLI.
 						 */
+						shell.cli();
 
 					}
 
@@ -75,6 +81,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 					
 				} catch (InterruptedException e) {
 					// Keep on waiting for the specified time interval
+					shell.err(e);
 				}
 			}
 		} catch (IOException e) {
@@ -90,7 +97,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
 		// TODO session created, add a message handler for receiving communication from server.
-
+		session.addMessageHandler(this);
 		
 		// We should also cache the session for use by some of the other operations.
 		this.session = session;
@@ -112,7 +119,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 					
 					// TODO create a proxy shell to control the remote node, and update "shell".
 
-					
+					shell = ProxyShell.createRemoteController(shell, session.getBasicRemote());
 					shellManager.addShell(shell);
 					endInitialization();
 				} else {
@@ -120,7 +127,7 @@ public class ControllerClient extends Endpoint implements MessageHandler.Whole<S
 				}
 			} else {
 				// TODO provide the message to the shell
-
+				shell.msgln(message);
 			}
 		} catch (IOException e) {
 			/*

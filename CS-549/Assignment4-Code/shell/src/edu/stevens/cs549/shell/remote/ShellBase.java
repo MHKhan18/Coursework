@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.websocket.DeploymentException;
+
 import edu.stevens.cs549.shell.main.IContext;
 import edu.stevens.cs549.shell.main.IShell;
 
@@ -114,10 +116,13 @@ public abstract class ShellBase implements IShell {
 				URI uri = ContextBase.getControlClientUri(inputs[1], inputs[2], name);
 				
 				// TODO Make a connection request to the remote node.
-
-				
+				ControllerClient client = new ControllerClient(this);
+				client.connect(uri);				
 			} catch (URISyntaxException e) {
 				msgln("Badly formatted URI.");
+			} catch (DeploymentException e) {
+				// Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

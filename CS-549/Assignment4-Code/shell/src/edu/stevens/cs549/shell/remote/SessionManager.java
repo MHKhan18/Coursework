@@ -81,15 +81,17 @@ public class SessionManager {
 				ShellManager shellManager = ShellManager.getShellManager();
 				LocalShell shell = shellManager.getCurrentShell().getLocal();
 				
-				ProxyContext proxyContext = null;
+				
 				// TODO create the proxy context (need other endpoint of the WS connection)
+				ProxyContext proxyContext = ProxyContext.createProxyContext(currentClient.getSession().getBasicRemote());
+				
 
 				
 				shellManager.addShell(LocalShell.createRemotelyControlled(shell, proxyContext));
 				currentClient.endInitialization();
 				
 				// TODO Send ACK back to the requester of the connection
-
+				currentClient.getSession().getBasicRemote().sendText(ACK);
 			}
 		} finally {
 			lock.unlock();
@@ -102,6 +104,14 @@ public class SessionManager {
 	 * 	The session for the connection request being rejected.
 	 */
 	public static void rejectSession(Session session) {
+		
+		// TODO 
+		try {
+			session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Rejecting request for remote control session."));
+		} catch (IOException e) {
+			//Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

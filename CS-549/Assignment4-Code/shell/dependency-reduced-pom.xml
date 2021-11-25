@@ -107,9 +107,9 @@
     <server.name>shell</server.name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <server.external-dns>localhost</server.external-dns>
-    <server.client.name>MyName</server.client.name>
+    <server.client.name>*anon*</server.client.name>
     <server.testdir>${server.home}/tmp/cs549/shell-test</server.testdir>
-    <server.home>${user.home}</server.home>
+    <server.home>C:/Users/Dipro/Desktop/CS-549</server.home>
     <server.port.ws>8181</server.port.ws>
     <server.dist>${server.testdir}</server.dist>
     <server.port.http>8080</server.port.http>
