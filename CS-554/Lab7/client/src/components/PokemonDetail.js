@@ -1,12 +1,20 @@
 import useAxios from '../utils/useAxios';
 import { Navigate, useParams } from 'react-router-dom';
 
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
+
 
 const PokemonDetail = () => {
 
     const { id } = useParams();
     const url = `http://localhost:4000/pokemon/${id}`;
+
     let { data, loading } = useAxios(url);
+    const fullState = useSelector((state) => state.trainers);
+    const dispatch = useDispatch();
+
+
 
     if (loading) {
         return (<div>Loading...</div>)
@@ -16,10 +24,35 @@ const PokemonDetail = () => {
         return (<Navigate to='/not-found' />);
     }
 
+    const catchPokemon = () => {
+        dispatch(actions.catchPokemon(parseInt(id), data.name));
+    }
+
+    const releasePokemon = () => {
+        dispatch(actions.releasePokemon(parseInt(id)));
+    }
+
+    let isFull = fullState.isPartyFull;
+    let catchedPokemons = fullState.catchedPokemons;
+    let filtered = catchedPokemons.filter(pokemon => parseInt(pokemon.id) === parseInt(id));
+    let notCatched = filtered.length === 0;
+
     return (
         <div>
 
             <h1>{data.name}</h1>
+            {isFull ? (<div>Party Full</div>) : ''}
+            {
+                (!notCatched) // catched
+                    ?
+                    (<button onClick={releasePokemon}>Release</button>)
+                    :
+                    (!isFull)
+                        ?
+                        (<button onClick={catchPokemon}>Catch</button>)
+                        :
+                        ''
+            }
 
             <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
                 className="imageSize" alt="thumbnail"

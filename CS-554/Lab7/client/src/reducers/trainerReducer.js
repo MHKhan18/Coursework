@@ -7,20 +7,11 @@ const initialState = {
             id: uuid(),
             name: 'Red',
             selected: true,
-            team: [
-                {
-                    id: '1',
-                    name: 'bulbasaur'
-                }
-            ]
+            team: []
         }
     ],
-    catchedPokemons: [
-        {
-            id: '1',
-            name: 'bulbasaur'
-        }
-    ]
+    catchedPokemons: []
+    
 };
 
 const trainerReducer = (state = initialState, action) => {

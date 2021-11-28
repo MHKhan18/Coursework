@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux';
 import actions from '../actions';
+import { Link } from 'react-router-dom';
 
 const Trainer = (props) => {
 
@@ -27,10 +28,10 @@ const Trainer = (props) => {
 
     const team = props.data.team.map((pokemon) => {
         return (
-            <div>
+            <div key={pokemon.name}>
                 <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
                     alt="thumbnail" />
-                <div>{pokemon.name}</div>
+                <p><Link to={`/pokemon/${pokemon.id}`}>{pokemon.name || "N/A"}</Link></p>
             </div>
         )
     })

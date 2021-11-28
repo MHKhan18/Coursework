@@ -27,6 +27,7 @@ const AddTrainer = () => {
                         id="name"
                         name="name"
                         placeholder="Trainer name..."
+                        required
                     />
                 </label>
             </div>

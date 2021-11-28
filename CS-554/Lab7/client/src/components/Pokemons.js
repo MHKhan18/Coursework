@@ -1,11 +1,12 @@
 
 import useAxios from '../utils/useAxios';
 import { Link, Navigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Pokemon from './Pokemon';
 
 
-const Pokemons = (props) => {
+const Pokemons = () => {
 
     const { page } = useParams();
     const pageNum = parseInt(page);
@@ -15,6 +16,9 @@ const Pokemons = (props) => {
     const url = `http://localhost:4000/pokemon/page/${pageNum}`;
 
     let { data, loading } = useAxios(url);
+    const fullState = useSelector((state) => state.trainers);
+    let isFull = fullState.isPartyFull;
+    let catchedPokemons = fullState.catchedPokemons;
 
 
     let pagination = (<div></div>);
@@ -36,11 +40,17 @@ const Pokemons = (props) => {
         )
 
         items = data.results.map((pokemon, index) => {
-            return <Pokemon
+            let parts = pokemon.url.split("/");
+            let id = parseInt(parts[parts.length - 2]);
+            let filtered = catchedPokemons.filter(pokemon => parseInt(pokemon.id) === parseInt(id));
+            let notCatched = filtered.length === 0;
+            return (<Pokemon
                 key={index}
                 name={pokemon.name}
-                id={pokemon.url}
-            />
+                id={id}
+                isFull={isFull}
+                notCatched={notCatched}
+            />)
         });
     }
 
