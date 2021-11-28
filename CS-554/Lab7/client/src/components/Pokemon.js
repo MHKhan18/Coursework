@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 
 const Pokemon = (props) => {
 
@@ -11,7 +12,7 @@ const Pokemon = (props) => {
                 <div className="card-body">
                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
                         className="card-img-top imageSize" alt="thumbnail" />
-                    <p>{props.name || "N/A"}</p>
+                    <p><Link to={`/pokemon/${id}`}>{props.name || "N/A"}</Link></p>
                 </div>
             </div>
         </li >
