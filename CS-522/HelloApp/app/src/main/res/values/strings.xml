@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Mohammad Khan\'s First App</string>
+    <string name="prompt_string">What is your name?</string>
+</resources>
