@@ -30,10 +30,7 @@ import edu.stevens.cs522.base.InetAddressUtils;
 import edu.stevens.cs522.chatclient.R;
 import edu.stevens.cs522.chatclient.location.CurrentLocation;
 
-/*
- * @author dduggan
- * 
- */
+
 public class ChatClientActivity extends Activity implements OnClickListener {
 
 	final static private String TAG = ChatClientActivity.class.getCanonicalName();
@@ -65,6 +62,8 @@ public class ChatClientActivity extends Activity implements OnClickListener {
 
 	private EditText messageText;
 
+	private Button sendButton;
+
 	/*
 	 * Called when the activity is first created.
 	 */
@@ -82,7 +81,12 @@ public class ChatClientActivity extends Activity implements OnClickListener {
 		StrictMode.setThreadPolicy(policy);
 
 		// TODO initialize the UI.
+		destinationHost = findViewById(R.id.destination_host);
+		chatName = findViewById(R.id.chat_name);
+		messageText = findViewById(R.id.message_text);
 
+		sendButton = findViewById(R.id.send_button);
+		sendButton.setOnClickListener(this);
 		
 		// End todo
 
@@ -112,22 +116,20 @@ public class ChatClientActivity extends Activity implements OnClickListener {
 			 */
 
 			String destAddrString = null;
-
-			int destPort = getResources().getInteger(R.integer.app_port);
-
 			String clientName = null;
-
-			String chatRoom = getString(R.string.default_chatroom);
-
 			String text = null;
 
+			int destPort = getResources().getInteger(R.integer.app_port);
+			String chatRoom = getString(R.string.default_chatroom);
 			Date timestamp = DateUtils.now();
-
 			CurrentLocation location = CurrentLocation.getLocation(this);
 
 			// TODO get data from UI (no-op if chat name is blank)
-
-
+			if (chatName.getText().toString().trim().length() > 0){
+				destAddrString = destinationHost.getText().toString();
+				clientName = chatName.getText().toString();
+				text = messageText.getText().toString();
+			}
 
 			// End todo
 

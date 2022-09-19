@@ -25,6 +25,10 @@ public class ViewPeerActivity extends Activity {
 
     public static final String PEER_KEY = "peer";
 
+    private TextView userName;
+    private TextView timestamp;
+    private TextView location;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,18 @@ public class ViewPeerActivity extends Activity {
         }
 
         // TODO Set the fields of the UI
+        userName = findViewById(R.id.view_user_name);
+        timestamp = findViewById(R.id.view_timestamp);
+        location = findViewById(R.id.view_location);
+
+        String nameField = getResources().getString(R.string.view_user_name);
+        String timeField = getResources().getString(R.string.view_timestamp);
+        String locationField = getResources().getString(R.string.view_location);
+
+        userName.setText(String.format(nameField, peer.name));
+        timestamp.setText(String.format(timeField, formatTimestamp((peer.timestamp))));
+        location.setText(String.format(locationField, peer.latitude, peer.longitude));
+
 
     }
 

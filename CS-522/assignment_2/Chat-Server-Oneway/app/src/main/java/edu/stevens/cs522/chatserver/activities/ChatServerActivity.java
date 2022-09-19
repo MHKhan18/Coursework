@@ -70,6 +70,10 @@ public class ChatServerActivity extends Activity implements OnClickListener {
     /*
      * TODO: Declare a listview for messages, and an adapter for displaying messages.
      */
+    private ListView list;
+    private ArrayAdapter<Message> messageArrayAdapter;
+    private Button nextButton;
+
 
     /*
      * End Todo
@@ -115,9 +119,14 @@ public class ChatServerActivity extends Activity implements OnClickListener {
 
         // TODO: Initialize the list view with the array adapter.
         // Use android.R.layout.simple_list_item_1 for list item layout
+        list = findViewById(R.id.message_list);
+        messageArrayAdapter = new ArrayAdapter<Message>(this, android.R.layout.simple_expandable_list_item_1, messages);
+        list.setAdapter(messageArrayAdapter);
 
 
         // TODO bind the button for "next" to this activity as listener
+        nextButton = findViewById(R.id.next);
+        nextButton.setOnClickListener(this);
 
 
     }
@@ -214,6 +223,8 @@ public class ChatServerActivity extends Activity implements OnClickListener {
             /*
              * TODO: Add message to the display.
              */
+            messages.add(message);
+            messageArrayAdapter.notifyDataSetChanged();
 
             /*
              * End Todo
@@ -267,6 +278,8 @@ public class ChatServerActivity extends Activity implements OnClickListener {
         super.onCreateOptionsMenu(menu);
 
         // TODO
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatserver_menu, menu);
 
         return true;
     }
@@ -278,9 +291,9 @@ public class ChatServerActivity extends Activity implements OnClickListener {
         if (itemId == R.id.peers) {
             // TODO PEERS provide the UI for viewing list of peers
             // The list of peers must be passed as an argument to the subactivity..
-
-
-
+            Intent intent = new Intent(this, ViewPeersActivity.class);
+            intent.putExtra(ViewPeersActivity.PEERS_KEY, peers);
+            startActivity(intent);
         }
         return false;
     }

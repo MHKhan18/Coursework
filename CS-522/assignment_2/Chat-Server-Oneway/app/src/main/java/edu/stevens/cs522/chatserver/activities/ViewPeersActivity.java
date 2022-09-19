@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.stevens.cs522.chatserver.R;
 import edu.stevens.cs522.chatserver.entities.Peer;
@@ -18,7 +19,10 @@ public class ViewPeersActivity extends Activity implements AdapterView.OnItemCli
 
     public static final String PEERS_KEY = "peers";
 
-    ArrayAdapter<Peer> peersAdapter;
+    private ArrayAdapter<Peer> peersAdapter;
+    private ListView peersList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,11 @@ public class ViewPeersActivity extends Activity implements AdapterView.OnItemCli
         }
 
         // TODO display the list of peers, set this activity as onClick listener
+        peersList = findViewById(R.id.peer_list);
+        peersAdapter = new ArrayAdapter<Peer>(this, android.R.layout.simple_expandable_list_item_1, peers);
+        peersList.setAdapter(peersAdapter);
 
+        peersList.setOnItemClickListener(this);
     }
 
     @Override
