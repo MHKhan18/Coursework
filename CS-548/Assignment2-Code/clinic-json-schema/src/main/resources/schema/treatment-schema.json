@@ -3,7 +3,11 @@
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"description": "JSON Schema for treatments",
 	"oneOf" : [
-		{ "$ref" : "#/$defs/drug-treatment" }
+		{ "$ref" : "#/$defs/drug-treatment" },
+		{ "$ref" : "#/$defs/surgery-treatment" },
+		{ "$ref" : "#/$defs/radiology-treatment" },
+		{ "$ref" : "#/$defs/physiotherapy-treatment" }
+
 	],
 	"$defs": {
 		"base": {
@@ -63,6 +67,82 @@
 				"start-date",
 				"end-date",
 				"frequency"
+			],
+			"unevaluatedProperties" : false
+		},
+		"surgery-treatment": {
+			"allOf": [ 
+				{ "$ref" : "#/$defs/base" }
+			],
+			"properties": {
+				"surgery-date": {
+					"type": "string",
+					"format": "date"
+				},
+				"discharge-instructions": {
+					"type": "string"
+				},
+				"followup-treatments": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{ "$ref":  "#/$defs/drug-treatment" },
+							{ "$ref" : "#/$defs/physiotherapy-treatment" }
+						]
+					}
+				}
+			},
+			"required": [
+				"surgery-date",
+				"discharge-instructions",
+				"followup-treatments"
+			],
+			"unevaluatedProperties" : false
+		},
+		"radiology-treatment": {
+			"allOf": [ 
+				{ "$ref" : "#/$defs/base" }
+			],
+			"properties": {
+				"treatment-dates": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "date"
+					}
+				},
+				"followup-treatments": {
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{ "$ref":  "#/$defs/drug-treatment" },
+							{ "$ref" : "#/$defs/physiotherapy-treatment" }
+						]
+					}
+				}
+
+			},
+			"required": [
+				"treatment-dates",
+				"followup-treatments"
+			],
+			"unevaluatedProperties" : false
+		},
+		"physiotherapy-treatment": {
+			"allOf": [ 
+				{ "$ref" : "#/$defs/base" }
+			],
+			"properties": {
+				"treatment-dates": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"format": "date"
+					}
+				}
+			},
+			"required": [
+				"treatment-dates"
 			],
 			"unevaluatedProperties" : false
 		}

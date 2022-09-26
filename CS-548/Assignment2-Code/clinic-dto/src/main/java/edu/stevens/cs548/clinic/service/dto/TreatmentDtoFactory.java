@@ -10,4 +10,16 @@ public class TreatmentDtoFactory {
 	 * TODO: Repeat for other treatments.
 	 */
 
+	 public SurgeryDto createSurgeryDto() {
+		return new SurgeryDto();
+	 }
+
+	 public RadiologyDto createRadiologyDto(){
+		return new RadiologyDto();
+	 }
+
+	 public PhysiotherapyDto createPhysiotherapyDto(){
+		return new PhysiotherapyDto();
+	 }
+
 }

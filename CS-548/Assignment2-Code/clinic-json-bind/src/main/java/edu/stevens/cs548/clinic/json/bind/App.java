@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -24,10 +25,14 @@ import com.google.gson.stream.JsonWriter;
 import edu.stevens.cs548.clinic.service.dto.DrugTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.PatientDto;
 import edu.stevens.cs548.clinic.service.dto.PatientDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.PhysiotherapyDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.RadiologyDto;
+import edu.stevens.cs548.clinic.service.dto.SurgeryDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.TreatmentDto.TreatmentType;
 
 public class App {
 
@@ -123,11 +128,11 @@ public class App {
 					else if ("save".equals(cmd))
 						save(inputs);
 					else if ("addpatient".equals(cmd))
-						addPatient(inputs);
+						addPatient();
 					else if ("addprovider".equals(cmd))
-						addProvider(inputs);
+						addProvider();
 					else if ("addtreatment".equals(cmd))
-						addTreatment(inputs);
+						addTreatment();
 					else if ("list".equals(cmd))
 						list(inputs);
 					else if ("help".equals(cmd))
@@ -181,8 +186,17 @@ public class App {
 		rd.endArray();
 
 		/*
-		 * TODO Load the treatment information
+		 * Parse the list of treatments.
 		 */
+		if (!TREATMENTS.equals(rd.nextName())) {
+			throw new ParseException("Expected field: " + TREATMENTS, 0);
+		}
+		rd.beginArray();
+		while (rd.hasNext()) {
+			TreatmentDto treatment =  TreatmentDeserializer.getTreatmentDeserializer(gson).deserialize(rd);
+			treatments.add(treatment);
+		}
+		rd.endArray();
 
 
 		rd.endObject();
@@ -211,16 +225,36 @@ public class App {
 			}
 			wr.endArray();
 
-			/*
-			 * TODO Save the treatment information.
-			 */
+			wr.name(TREATMENTS);
+			wr.beginArray();
+			for (TreatmentDto treatment: treatments){
+				TreatmentType type = treatment.getType();
+				switch(type){
+					case DRUGTREATMENT:
+						gson.toJson(treatment, DrugTreatmentDto.class, wr);
+						break;
+					case PHYSIOTHERAPY:
+						gson.toJson(treatment, PhysiotherapyDto.class, wr);
+						break;
+					case RADIOLOGY:
+						gson.toJson(treatment, RadiologyDto.class, wr);	
+						break;
+					case SURGERY:
+						gson.toJson(treatment, SurgeryDto.class, wr);
+						break;
+					default:
+						severe("Encountered unknown type treatment: " + type);
+						break;			
+				}
+			}
+			wr.endArray();
 
 
 			wr.endObject();
 		}
 	}
 
-	public void addPatient(String[] inputs) throws IOException {
+	public void addPatient() throws IOException {
 		PatientDto patient = patientFactory.createPatientDto();
 		patient.setId(UUID.randomUUID());
 		msg("Name: ");
@@ -229,7 +263,7 @@ public class App {
 		patients.add(patient);
 	}
 
-	public void addProvider(String[] inputs) throws IOException {
+	public void addProvider() throws IOException {
 		ProviderDto provider = providerFactory.createProviderDto();
 		provider.setId(UUID.randomUUID());
 		msg("NPI: ");
@@ -239,13 +273,22 @@ public class App {
 		providers.add(provider);
 	}
 
-	public void addTreatment(String[] inputs) throws IOException, ParseException {
-		msg("What form of treatment: [D]rug, [S]urgery, [R]adiology? ");
-		String line = in.readLine();
+	public void addTreatment() throws IOException, ParseException {
+		msg("What form of treatment: [D]rug, [S]urgery, [R]adiology, [P]hysiotherapy? ");
+		String line = in.readLine().strip();
 		if ("D".equals(line)) {
 			addDrugTreatment();
 		}
-		// TODO add other cases
+		if ("S".equals(line)){
+			addSurgeryTreatment();
+		}
+		if ("R".equals(line)){
+			addRadiologyTreatment();
+		}
+		if ("P".equals(line)){
+			addPhysiotherapyTreatment();
+		}
+
 	}
 
 	private void addDrugTreatment() throws IOException, ParseException {
@@ -253,26 +296,115 @@ public class App {
 
 		treatment.setId(UUID.randomUUID());
 		msg("Patient ID: ");
-		treatment.setPatientId(UUID.fromString(in.readLine()));
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
 		msg("Provider ID: ");
-		treatment.setProviderId(UUID.fromString(in.readLine()));
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
 		msg("Diagnosis: ");
 		treatment.setDiagnosis(in.readLine());
 		msg("Drug: ");
 		treatment.setDrug(in.readLine());
 		msg("Dosage: ");
-		treatment.setDosage(Float.parseFloat(in.readLine()));
+		treatment.setDosage(Float.parseFloat(in.readLine().strip()));
 		treatment.setStartDate(readDate("Start date"));
 		treatment.setEndDate(readDate("End date"));
 		msg("Frequency: ");
-		treatment.setFrequency(Integer.parseInt(in.readLine()));
+		treatment.setFrequency(Integer.parseInt(in.readLine().strip()));
+
+		treatments.add(treatment);
+	}
+
+	private void addSurgeryTreatment() throws IOException, ParseException {
+		SurgeryDto treatment = treatmentFactory.createSurgeryDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine());
+
+		treatment.setSurgeryDate(readDate("Surgery Date"));
+		msg("Discharge Instructions: ");
+		treatment.setDischargeinstructions(in.readLine().strip());
+		
+		msg("Followup Treatments (UUIDs separated by comma): ");
+		ArrayList<TreatmentDto> followupTreatments = new ArrayList<>();
+		List<String> treatmentIDs = Arrays.asList(in.readLine().strip().split(","));
+		for(String id: treatmentIDs){
+			UUID treatmentId = UUID.fromString(id.strip());
+			for (TreatmentDto curTreat : treatments ){
+				if (curTreat.getId().equals(treatmentId)){
+					followupTreatments.add(curTreat);
+				}
+			}
+		}
+		treatment.setFollowupTreatments(followupTreatments);
+
+		treatments.add(treatment);
+	}
+
+	private void addRadiologyTreatment() throws IOException, ParseException {
+		RadiologyDto treatment = treatmentFactory.createRadiologyDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine().strip());
+
+		ArrayList<LocalDate> treatmentDates = new ArrayList<>();
+		ArrayList<TreatmentDto> followupTreatments = new ArrayList<>();
+
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(LocalDate.parse(date.strip(), dateFormatter));
+		}
+		treatment.setTreatmentDates(treatmentDates);
+
+		msg("Followup Treatments (UUIDs separated by comma): ");
+		List<String> treatmentIDs = Arrays.asList(in.readLine().strip().split(","));
+		for(String id: treatmentIDs){
+			UUID treatmentId = UUID.fromString(id.strip());
+			for (TreatmentDto curTreat : treatments ){
+				if (curTreat.getId().equals(treatmentId)){
+					followupTreatments.add(curTreat);
+				}
+			}
+		}
+		treatment.setFollowupTreatments(followupTreatments);
+
+		treatments.add(treatment);
+	}
+
+	private void addPhysiotherapyTreatment() throws IOException, ParseException {
+		PhysiotherapyDto treatment = treatmentFactory.createPhysiotherapyDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine().strip());
+
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		ArrayList<LocalDate> treatmentDates = new ArrayList<>();
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(LocalDate.parse(date.strip(), dateFormatter));
+		}
+		treatment.setTreatmentDates(treatmentDates);
 
 		treatments.add(treatment);
 	}
 
 	private LocalDate readDate(String field) throws IOException {
 		msg(String.format("%s (MM/dd/yyyy): ", field));
-		return LocalDate.parse(in.readLine(), dateFormatter);
+		return LocalDate.parse(in.readLine().strip(), dateFormatter);
 	}
 
 	public void list(String[] inputs) {

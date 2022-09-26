@@ -2,5 +2,12 @@
 	"$id": "https://cs548.stevens.edu/clinic/patient",
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"description": "JSON Schema for patients",
-	"type" : "object"
+	"type" : "object",
+	"properties" : {
+		"id" : { "type" : "string", "format" : "uuid"},
+		"name": { "type" : "string"},
+		"dob": { "type" : "string", "format": "date"}
+	},
+	"required" : [ "id" , "name", "dob"],
+	"additionalProperties": false
 }
