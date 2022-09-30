@@ -6,10 +6,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
 
 import edu.stevens.cs522.chatserver.contracts.BaseContract;
 import edu.stevens.cs522.chatserver.contracts.MessageContract;
@@ -106,6 +108,11 @@ public class ChatProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
             // TODO initialize database tables
+            Log.w("db onCreate", "before peer table");
+            db.execSQL(CREATE_PEER_TABLE);
+            Log.w("db onCreate", "peer table created");
+            db.execSQL(CREATE_MESSAGE_TABLE);
+            Log.w("db onCreate", "message table created");
 
         }
 
@@ -177,9 +184,16 @@ public class ChatProvider extends ContentProvider {
                  * TODO: Implement this to handle requests to insert a new message.
                  * Make sure to notify any observers of this content!
                  */
-                throw new UnsupportedOperationException("Not yet implemented");
+                long messageId = db.insert(MESSAGES_TABLE, null, values);
+                if (messageId > 0){
+                    Uri messageURI = MessageContract.CONTENT_URI(messageId);
 
+                    ContentResolver cr = getContext().getContentResolver();
+                    cr.notifyChange(messageURI, null);
 
+                    return messageURI;
+                }
+                throw new SQLException("Message insertion failed.");
                 // End TODO
 
             case PEERS_ALL_ROWS:
@@ -205,10 +219,16 @@ public class ChatProvider extends ContentProvider {
                 } else {
                     peerId = db.insert(PEERS_TABLE, null, values);
                 }
-                /*
-                 * End by returning the URI for the row (new or not).
-                 */
-                return PeerContract.CONTENT_URI(peerId);
+
+                if (peerId > 0){
+                    Uri peerURI = PeerContract.CONTENT_URI(peerId);
+
+                    ContentResolver cr = getContext().getContentResolver();
+                    cr.notifyChange(peerURI, null);
+
+                    return peerURI;
+                }
+                throw new SQLException("Peer insertion failed.");
 
             default:
                 throw new IllegalStateException("insert: bad case");
@@ -219,6 +239,7 @@ public class ChatProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor;
         switch (uriMatcher.match(uri)) {
             case MESSAGES_ALL_ROWS:
                 /*
@@ -227,16 +248,18 @@ public class ChatProvider extends ContentProvider {
                  *
                  * The selection args may filter for messages for a particular peer.
                  */
-                throw new UnsupportedOperationException("Not yet implemented");
-
-
+                cursor = db.query(MESSAGES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return cursor;
                 // End TODO
 
             case PEERS_ALL_ROWS:
                 /*
                   * Query for all peers.
                  */
-                return db.query(PEERS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(PEERS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return cursor;
 
             default:
                 throw new IllegalStateException("query: bad case");        }
@@ -245,12 +268,12 @@ public class ChatProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        throw new UnsupportedOperationException("Update not implemented");
+        throw new UnsupportedOperationException("update not supported");
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("Delete not implemented");
+        throw new UnsupportedOperationException("delete not supported");
     }
 
 }

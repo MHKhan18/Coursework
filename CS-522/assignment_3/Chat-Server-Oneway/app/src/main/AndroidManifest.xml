@@ -23,9 +23,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ViewPeersActivity"/>
+            android:name=".activities.ViewPeersActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ChatServerActivity" />
+        </activity>
         <activity
-            android:name=".activities.ViewPeerActivity"/>
+            android:name=".activities.ViewPeerActivity"
+            android:exported="true" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ViewPeersActivity" />
+        </activity>
         <!-- TODO add a provider element (see BaseContract)  -->
         <provider
             android:authorities="edu.stevens.cs522.chatserver"

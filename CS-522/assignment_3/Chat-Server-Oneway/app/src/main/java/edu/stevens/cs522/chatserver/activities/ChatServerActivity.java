@@ -38,6 +38,7 @@ import java.net.InetAddress;
 import java.util.Date;
 
 import edu.stevens.cs522.base.DatagramSendReceive;
+import edu.stevens.cs522.base.DateUtils;
 import edu.stevens.cs522.chatserver.R;
 import edu.stevens.cs522.chatserver.contracts.MessageContract;
 import edu.stevens.cs522.chatserver.contracts.PeerContract;
@@ -87,6 +88,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
 
     static final private int LOADER_ID = 1;
 
+    private Button nextButton;
+
 
     /*
      * Called when the activity is first created.
@@ -120,10 +123,23 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
 
         // TODO use SimpleCursorAdapter (with flags=0 and null initial cursor) to display the messages received.
         // Use R.layout.message as layout for each row.
+        String[] to = new String[] { MessageContract.MESSAGE_TEXT, MessageContract.SENDER };
+        int[] from = new int[] { R.id.message, R.id.sender };
+        messagesAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.message,
+                null,
+                to,
+                from,
+                0
+        );
 
+        messageList = (ListView)findViewById(R.id.message_list);
+        messageList.setAdapter(messagesAdapter);
 
         // TODO bind the button for "next" to this activity as listener
-
+        nextButton = findViewById(R.id.next);
+        nextButton.setOnClickListener(this);
 
         // Use loader manager to initiate a query of the database
         LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
@@ -226,9 +242,14 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
              *
              * For this assignment, OK to do synchronous CP insertion on the main thread.
              */
+            ContentValues messageRow = new ContentValues();
 
+            message.writeToProvider(messageRow);
+            resolver.insert(MessageContract.CONTENT_URI, messageRow);
 
-
+            ContentValues peerRow = new ContentValues();
+            peer.writeToProvider(peerRow);
+            resolver.insert(PeerContract.CONTENT_URI, peerRow); // upsert handled in provider layer
             /*
              * End TODO
              */
@@ -248,7 +269,15 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         switch (id) {
             case LOADER_ID:
                 // TODO use a CursorLoader to initiate a query on the database for messages
-                return null;
+                String[] projection = new String[] { MessageContract.MESSAGE_TEXT, MessageContract.SENDER };
+                return new CursorLoader(
+                        this,
+                        MessageContract.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                    );
 
             default:
                 throw new IllegalStateException(("Unexpected loader id: " + id));
@@ -258,12 +287,14 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         // TODO populate the UI with the result of querying the provider
+        messagesAdapter.swapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         // TODO reset the UI when the cursor is empty
+        messagesAdapter.swapCursor(null);
 
     }
 
@@ -293,8 +324,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // TODO inflate a menu with PEERS option
-
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatserver_menu, menu);
         return true;
     }
 
@@ -305,9 +336,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         if (itemId == R.id.peers) {
             // TODO PEERS provide the UI for viewing list of peers
             // The subactivity will query the database for the list of peers.
-
-
-
+            Intent intent = new Intent(this, ViewPeersActivity.class);
+            startActivity(intent);
         }
         return false;
     }
