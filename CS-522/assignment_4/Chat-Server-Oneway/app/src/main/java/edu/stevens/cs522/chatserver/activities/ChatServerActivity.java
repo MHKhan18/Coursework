@@ -25,12 +25,15 @@ import android.widget.ListView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.room.Room;
 
 import java.io.StringReader;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
 import edu.stevens.cs522.base.DatagramSendReceive;
 import edu.stevens.cs522.chatserver.R;
@@ -121,16 +124,31 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         Log.d(TAG, "Opening the database....");
         // TODO open the database
         // Note use getApplicationContext, do not make DB depend on UI!
+        chatDatabase = ChatDatabase.getInstance(getApplicationContext());
+        messageDao = chatDatabase.messageDao();
+        peerDao = chatDatabase.peerDao();
 
 
         Log.d(TAG, "Querying the database asynchronously....");
         // TODO query the database asynchronously, registering an observer for the result.
         // Note: The adapter has a method for resetting the backing store.
+        messageDao.fetchAllMessages().observe(
+                this,
+                new Observer<List<Message>>() {
+                    @Override
+                    public void onChanged(List<Message> m) {
+                        Log.e("observer", "observer ran in chatserver activity");
+                        messagesAdapter.setElements(m);
+                        messageList.setAdapter(messagesAdapter);
+                    }
+                }
+        );
 
 
         Log.d(TAG, "Binding the callback for the NEXT button....");
         // TODO bind the button for "next" to this activity as listener
-
+        Button nextButton = findViewById(R.id.next);
+        nextButton.setOnClickListener(this);
 
 	}
 
@@ -224,9 +242,14 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
             message.latitude = latitude;
             message.longitude = longitude;
 
+            Log.e("network verification:", "received message" + text);
+
             /*
 			 * TODO upsert peer and insert message into the database
 			 */
+            peerDao.upsert(peer);
+            messageDao.persist(message);
+
 
             /*
              * End TODO
@@ -269,8 +292,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // TODO inflate a menu with PEERS option
-
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatserver_menu, menu);
         return true;
     }
 
@@ -281,9 +304,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         if (itemId == R.id.peers) {
             // TODO PEERS provide the UI for viewing list of peers
             // The subactivity will query the database for the list of peers.
-
-
-
+            Intent intent = new Intent(this, ViewPeersActivity.class);
+            startActivity(intent);
         }
         return false;
     }

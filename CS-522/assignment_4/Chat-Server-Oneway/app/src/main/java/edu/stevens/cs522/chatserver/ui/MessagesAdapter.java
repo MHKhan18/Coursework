@@ -8,7 +8,7 @@ import edu.stevens.cs522.chatserver.R;
 import edu.stevens.cs522.chatserver.entities.Message;
 
 /**
- *  This is for ChatServerActivity, since ArrayAdapter assumes a single TexxtView
+ *  This is for ChatServerActivity, since ArrayAdapter assumes a single TextView
  *  in the row layout and sets it by calling toString() on the corresponding element.
  */
 public class MessagesAdapter extends CustomArrayAdapter<Message> {

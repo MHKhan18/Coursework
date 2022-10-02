@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import edu.stevens.cs522.chatserver.entities.DateConverter;
@@ -18,7 +19,8 @@ import edu.stevens.cs522.chatserver.entities.Peer;
  */
 
 // TODO Add annotations (including @TypeConverters)
-@
+@Database(entities = {Peer.class, Message.class}, version = 1)
+@TypeConverters({DateConverter.class})
 public abstract class ChatDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "messages.db";

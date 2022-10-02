@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Used instead of ArrayAdapter in ViewPeersActivity and ViewPeeerActivity
+ * Used instead of ArrayAdapter in ViewPeersActivity and ViewPeerActivity
  * since ArrayAdapter does not provide an operation for replacing the elements.
  */
 public class SimpleArrayAdapter<T> extends CustomArrayAdapter<T> {

@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import java.util.List;
 
@@ -41,9 +42,20 @@ public class ViewPeersActivity extends FragmentActivity implements AdapterView.O
         /*
          * TODO query the database asynchronously, registering an observer for the result.
          */
+        chatDatabase.peerDao().fetchAllPeers().observe(
+                this,
+                new Observer<List<Peer>>() {
+                    @Override
+                    public void onChanged(List<Peer> peers) {
+                        peersAdapter.setElements(peers);
+                        peersList.setAdapter(peersAdapter);
+                    }
+                }
+        );
 
 
         // TODO set item click listener to this activity
+        peersList.setOnItemClickListener(this);
 
     }
 

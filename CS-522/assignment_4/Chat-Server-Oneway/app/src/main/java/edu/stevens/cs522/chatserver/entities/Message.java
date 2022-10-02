@@ -24,11 +24,17 @@ import edu.stevens.cs522.base.DateUtils;
  * You should also declare a (non-unique) index for this FK field, so
  * integrity checking does not involve a linear search of this table.
  */
-
+@Entity(
+        foreignKeys = @ForeignKey(
+            entity = Peer.class, onDelete = ForeignKey.CASCADE,
+            parentColumns = "name", childColumns = "sender"
+        ),
+        indices = @Index("sender")
+)
 public class Message implements Parcelable {
 
     // TODO primary key
-
+    @PrimaryKey(autoGenerate = true)
     public long id;
 
     public String chatroom;
@@ -36,7 +42,7 @@ public class Message implements Parcelable {
     public String messageText;
 
     // TODO Last time we heard from this peer.
-
+    @TypeConverters(DateConverter.class)
     public Date timestamp;
 
     public Double latitude;
