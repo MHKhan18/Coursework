@@ -1,14 +1,24 @@
 package edu.stevens.cs548.clinic.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
@@ -31,20 +41,32 @@ import org.eclipse.persistence.annotations.Converter;
 
 // TODO
 
+@Entity
+@Table(
+		name = "Patient",
+		indexes = @Index(columnList="patientId")
+	  )
+
 @Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class Patient implements Serializable {
 		
 	private static final long serialVersionUID = -4512912599605407549L;
 
 	// TODO PK
+	@Id
+	@Column(name = "id")
+	@GeneratedValue
 	private long id;
 	
+	
 	@Convert("uuidConverter")
+	@Column(nullable=false,unique=true)
 	private UUID patientId;
 			
 	private String name;
 
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date dob;
 	
 
@@ -82,6 +104,9 @@ public class Patient implements Serializable {
 
 
 	// TODO 
+	@OneToMany(cascade = CascadeType.ALL, 
+				mappedBy = "patient", 
+				fetch = FetchType.EAGER)
 	private Collection<Treatment> treatments;
 
 	public Collection<Treatment> getTreatments() {
@@ -105,6 +130,7 @@ public class Patient implements Serializable {
 		/*
 		 * TODO initialize lists
 		 */
+		this.treatments = new ArrayList<>();
 	}
    
 }

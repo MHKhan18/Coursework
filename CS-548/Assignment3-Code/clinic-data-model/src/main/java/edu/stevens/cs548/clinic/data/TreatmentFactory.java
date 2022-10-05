@@ -5,5 +5,17 @@ public class TreatmentFactory {
 	public DrugTreatment createDrugTreatment() {
 		return new DrugTreatment();
 	}
+	
+	public SurgeryTreatment createSurgeryTreatment() {
+		return new SurgeryTreatment();
+	}
+	
+	public RadiologyTreatment createRadiologyTreatment() {
+		return new RadiologyTreatment();
+	}
+	
+	public PhysiotherapyTreatment createPhysiotherapyTreatment() {
+		return new PhysiotherapyTreatment();
+	}
 
 }

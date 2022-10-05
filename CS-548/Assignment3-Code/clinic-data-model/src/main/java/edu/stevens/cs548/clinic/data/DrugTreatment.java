@@ -3,10 +3,19 @@ package edu.stevens.cs548.clinic.data;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * Entity implementation class for Entity: DrugTreatment
  */
 //TODO
+@Entity
+@Table(name = "DrugTreatment")
+@DiscriminatorValue("DRUGTREATMENT")
 public class DrugTreatment extends Treatment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -16,9 +25,11 @@ public class DrugTreatment extends Treatment implements Serializable {
 	private float dosage;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
 	private int frequency;
@@ -68,7 +79,7 @@ public class DrugTreatment extends Treatment implements Serializable {
 	}
 
 	public DrugTreatment() {
-		super();
+		super("DRUGTREATMENT");
 	}
 
 }

@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -28,8 +30,11 @@ import javax.persistence.TypedQuery;
 import edu.stevens.cs548.clinic.data.DrugTreatment;
 import edu.stevens.cs548.clinic.data.Patient;
 import edu.stevens.cs548.clinic.data.PatientFactory;
+import edu.stevens.cs548.clinic.data.PhysiotherapyTreatment;
 import edu.stevens.cs548.clinic.data.Provider;
 import edu.stevens.cs548.clinic.data.ProviderFactory;
+import edu.stevens.cs548.clinic.data.RadiologyTreatment;
+import edu.stevens.cs548.clinic.data.SurgeryTreatment;
 import edu.stevens.cs548.clinic.data.Treatment;
 import edu.stevens.cs548.clinic.data.TreatmentFactory;
 
@@ -248,7 +253,7 @@ public class App {
 		Patient patient = patientFactory.createPatient();
 		patient.setPatientId(UUID.randomUUID());
 		msg("Name: ");
-		patient.setName(in.readLine());
+		patient.setName(in.readLine().strip());
 		
 		LocalDate dob = readDate("Patient DOB");
 		patient.setDob(Date.valueOf(dob));
@@ -266,9 +271,9 @@ public class App {
 		Provider provider = providerFactory.createProvider();
 		provider.setProviderId(UUID.randomUUID());
 		msg("NPI: ");
-		provider.setNpi(in.readLine());
+		provider.setNpi(in.readLine().strip());
 		msg("Name: ");
-		provider.setName(in.readLine());
+		provider.setName(in.readLine().strip());
 
 		/*
 		 * Save the record in the database.
@@ -286,7 +291,16 @@ public class App {
 		Treatment treatment = addTreatment();
 		while (treatment != null) {
 			treatments.add(treatment);
-                        treatment = addTreatment();
+			
+			/*
+			 * Save the record in the database.
+			 */
+			entityManager.getTransaction().begin();
+			entityManager.persist(treatment);
+			entityManager.getTransaction().commit();
+			
+			
+            treatment = addTreatment();
 		}
 		return treatments;
 	}
@@ -301,44 +315,41 @@ public class App {
 			entityManager.persist(treatment);
 			entityManager.getTransaction().commit();
 		}
+		
 	}
 	
 	public Treatment addTreatment() throws IOException, ParseException {
 		msg("What form of treatment: [D]rug, [S]urgery, [R]adiology, [P]hysiotherapy? ");
-		String line = in.readLine();
+		String line = in.readLine().strip();
+		Treatment treatment = null;
 		if ("D".equals(line)) {
-			return addDrugTreatment();
+			treatment = addDrugTreatment();
 		}
 		// TODO add other cases
+		if ("S".equals(line)){
+			treatment = addSurgeryTreatment();
+		}
+		if ("R".equals(line)){
+			treatment = addRadiologyTreatment();
+		}
+		if ("P".equals(line)){
+			treatment = addPhysiotherapyTreatment();
+		}
 		
-		return null;
+		return treatment;
 	}
 
 	private DrugTreatment addDrugTreatment() throws IOException, ParseException {
+		
 		DrugTreatment treatment = treatmentFactory.createDrugTreatment();
 
-		treatment.setTreatmentId(UUID.randomUUID());
-
-		msg("Patient ID: ");
-		UUID patientId = UUID.fromString(in.readLine());
-		Patient patient = getPatient(patientId);
-		treatment.setPatient(patient);
-		patient.addTreatment(treatment);
-
-		msg("Provider ID: ");
-		UUID providerId = UUID.fromString(in.readLine());
-		Provider provider = getProvider(providerId);
-		treatment.setProvider(provider);
-		provider.addTreatment(treatment);
-
-		msg("Diagnosis: ");
-		treatment.setDiagnosis(in.readLine());
+		setTreatmentFields(treatment);
 		
 		msg("Drug: ");
-		treatment.setDrug(in.readLine());
+		treatment.setDrug(in.readLine().strip());
 		
 		msg("Dosage: ");
-		treatment.setDosage(Float.parseFloat(in.readLine()));
+		treatment.setDosage(Float.parseFloat(in.readLine().strip()));
 		
 		LocalDate startDate = readDate("Start date");
 		treatment.setStartDate(Date.valueOf(startDate));
@@ -347,11 +358,88 @@ public class App {
 		treatment.setEndDate(Date.valueOf(endDate));
 		
 		msg("Frequency: ");
-		treatment.setFrequency(Integer.parseInt(in.readLine()));
+		treatment.setFrequency(Integer.parseInt(in.readLine().strip()));
 
 		return treatment;
 	}
+	
+	private SurgeryTreatment addSurgeryTreatment() throws IOException, ParseException {
+		SurgeryTreatment treatment = treatmentFactory.createSurgeryTreatment();
+		
+		setTreatmentFields(treatment);
+		
+		LocalDate surgeryDate = readDate("Surgery Date: ");
+		treatment.setSurgeryDate(Date.valueOf(surgeryDate));
+		
+		msg("Discharge Instructions: ");
+		treatment.setDischargeInstructions(in.readLine().strip());
+		
+		msgln("Followup Treatments: ");
+		Collection<Treatment> followupTreatments = addTreatmentList();
+		treatment.setFollowupTreatments(followupTreatments);
+		
 
+		return treatment;
+	}
+	
+	private RadiologyTreatment addRadiologyTreatment() throws IOException, ParseException {
+		RadiologyTreatment treatment = treatmentFactory.createRadiologyTreatment();
+		
+		setTreatmentFields(treatment);
+		
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		Collection<java.util.Date> treatmentDates = new ArrayList<>();
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(Date.valueOf(LocalDate.parse(date.strip(), dateFormatter)));
+		}
+		treatment.setTreatmentDates(treatmentDates);
+		
+		msgln("Followup Treatments: ");
+		Collection<Treatment> followupTreatments = addTreatmentList();
+		treatment.setFollowupTreatments(followupTreatments);
+		
+		return treatment;
+	}
+	
+	private PhysiotherapyTreatment addPhysiotherapyTreatment() throws IOException, ParseException {
+		
+		PhysiotherapyTreatment treatment = treatmentFactory.createPhysiotherapyTreatment();
+		
+		setTreatmentFields(treatment);
+		
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		Collection<java.util.Date> treatmentDates = new ArrayList<>();
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(Date.valueOf(LocalDate.parse(date.strip(), dateFormatter)));
+		}
+		treatment.setTreatmentDates(treatmentDates);
+
+		return treatment;
+	}
+	
+	private void setTreatmentFields(Treatment treatment)throws IOException, ParseException {
+		
+		treatment.setTreatmentId(UUID.randomUUID());
+
+		msg("Patient ID: ");
+		UUID patientId = UUID.fromString(in.readLine().strip());
+		Patient patient = getPatient(patientId);
+		treatment.setPatient(patient);
+		patient.addTreatment(treatment);
+
+		msg("Provider ID: ");
+		UUID providerId = UUID.fromString(in.readLine().strip());
+		Provider provider = getProvider(providerId);
+		treatment.setProvider(provider);
+		provider.addTreatment(treatment);
+		
+
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine().strip());
+	}
+	
 	private Patient getPatient(UUID patientId) throws IOException {
 		TypedQuery<Patient> query = entityManager.createNamedQuery(SEARCH_PATIENT_QUERY, Patient.class);
 		query.setParameter("patientId", patientId);
@@ -374,7 +462,7 @@ public class App {
 
 	private LocalDate readDate(String field) throws IOException {
 		msg(String.format("%s (MM/dd/yyyy): ", field));
-		return LocalDate.parse(in.readLine(), dateFormatter);
+		return LocalDate.parse(in.readLine().strip(), dateFormatter);
 	}
 
 	public void help(String[] inputs) {

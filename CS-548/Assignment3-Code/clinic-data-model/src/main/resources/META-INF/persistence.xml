@@ -5,13 +5,21 @@
 	<persistence-unit name="clinic-domain" transaction-type="RESOURCE_LOCAL">
 		<description>Domain model for a clinical information system.</description>
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<!-- TODO list entity classes -->
+		
+					<!-- TODO list entity classes -->
   		<class>edu.stevens.cs548.clinic.data.Patient</class>
+  		<class>edu.stevens.cs548.clinic.data.Provider</class>
+  		<class>edu.stevens.cs548.clinic.data.Treatment</class>
+  		<class>edu.stevens.cs548.clinic.data.DrugTreatment</class>
+  		<class>edu.stevens.cs548.clinic.data.RadiologyTreatment</class>
+  		<class>edu.stevens.cs548.clinic.data.SurgeryTreatment</class>
+  		<class>edu.stevens.cs548.clinic.data.PhysiotherapyTreatment</class>
+  	
 		<properties>
 			<property name="eclipselink.logging.logger" value="JavaLogger"/>
 			
  			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-<!-- 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
+<!-- 		<property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
 			<property name="eclipselink.target-database" value="Postgresql" />
 			<!-- See more at: http://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm -->
 		</properties>
