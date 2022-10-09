@@ -1,6 +1,7 @@
 package edu.stevens.cs522.chatserver.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -13,6 +14,7 @@ import edu.stevens.cs522.chatserver.entities.Peer;
 
 public class PeerViewModel extends AndroidViewModel {
 
+    public static final String TAG = PeerViewModel.class.getCanonicalName();
     private ChatDatabase chatDatabase;
 
     private LiveData<List<Message>> messages;
@@ -22,14 +24,17 @@ public class PeerViewModel extends AndroidViewModel {
     public PeerViewModel(Application context) {
         super(context);
         chatDatabase = ChatDatabase.getInstance(context);
+        Log.i(TAG, "Creating peer view model....");
     }
 
     /*
      * TODO finish this
      */
     public LiveData<List<Message>> fetchMessagesFromPeer(Peer peer) {
-
-        return null;
+        if (messages == null){
+            messages = loadMessages(peer);
+        }
+        return messages;
     }
     // End TODO
 
@@ -42,5 +47,6 @@ public class PeerViewModel extends AndroidViewModel {
     public void onCleared() {
         super.onCleared();
         chatDatabase = null;
+        Log.i(TAG, "Clearing peer view model....");
     }
 }

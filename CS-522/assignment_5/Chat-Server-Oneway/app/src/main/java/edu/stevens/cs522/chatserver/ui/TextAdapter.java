@@ -72,6 +72,7 @@ public class TextAdapter<T> extends RecyclerView.Adapter<TextAdapter.ViewHolder>
         public void onClick(View v) {
             int position = this.getBindingAdapterPosition();
             // TODO invoke the listener
+            listener.onItemClick(recyclerView, v, position);
 
         }
     }

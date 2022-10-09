@@ -10,6 +10,7 @@
 **********************************************************************/
 package edu.stevens.cs522.chatserver.activities;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -24,6 +25,7 @@ import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -114,14 +116,27 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         messageList.setLayoutManager(new LinearLayoutManager(this));
 
         // TODO Initialize the recyclerview and adapter for messages
+        messagesAdapter = new MessagesAdapter();
+        messageList.setAdapter(messagesAdapter);
 
         // TODO create the view model
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
         // TODO query the database asynchronously, and use messagesAdapter to display the result
-
+        chatViewModel.fetchAllMessages().observe(
+                this,
+                new Observer<List<Message>>() {
+                    @Override
+                    public void onChanged(List<Message> messages) {
+                        messagesAdapter.setMessages(messages);
+                        messageList.setAdapter(messagesAdapter);
+                    }
+                }
+        );
 
         // TODO bind the button for "next" to this activity as listener
-
+        Button nextButton = findViewById(R.id.next);
+        nextButton.setOnClickListener(this);
 
 	}
 
@@ -217,7 +232,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
             /*
 			 * TODO upsert peer and insert message into the database
 			 */
-
+            chatViewModel.upsert(peer);
+            chatViewModel.persist(message);
             /*
              * End TODO
              *
@@ -259,8 +275,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // TODO inflate a menu with PEERS option
-
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatserver_menu, menu);
         return true;
     }
 
@@ -271,9 +287,8 @@ public class ChatServerActivity extends FragmentActivity implements OnClickListe
         if (itemId == R.id.peers) {
             // TODO PEERS provide the UI for viewing list of peers
             // The subactivity will query the database for the list of peers.
-
-
-
+            Intent intent = new Intent(this, ViewPeersActivity.class);
+            startActivity(intent);
         }
         return false;
     }

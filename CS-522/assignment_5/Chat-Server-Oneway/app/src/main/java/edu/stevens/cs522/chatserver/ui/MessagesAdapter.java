@@ -68,6 +68,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         // TODO set the fields of the view for the message
+        Message m = messages.get(position);
+        viewHolder.setMessage(m.toString());
 
     }
 
