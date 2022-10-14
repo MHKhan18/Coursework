@@ -1,6 +1,7 @@
 package edu.stevens.cs548.clinic.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,6 @@ public class PhysiotherapyTreatment extends Treatment {
 		treatmentDates.add(DateUtils.toDatabaseDate(date));
 	}
 
-
 	@Override
 	public <T> T export(ITreatmentExporter<T> visitor) {
 		return visitor.exportRadiology(treatmentId, 
@@ -27,6 +27,11 @@ public class PhysiotherapyTreatment extends Treatment {
 				   provider.getProviderId(), 
 				   diagnosis, 
 				   DateUtils.fromDatabaseDates(treatmentDates),
-				   exportFollowupTreatments(visitor));	}
+				   exportFollowupTreatments(visitor));	
+	}
+	
+	public PhysiotherapyTreatment() {
+		treatmentDates = new ArrayList<>();
+	}
 
 }

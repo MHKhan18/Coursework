@@ -28,6 +28,9 @@ import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 		name="CountProviderByProviderId",
 		query="select count(p) from Provider p where p.providerId = :providerId"),
 	@NamedQuery(
+			name = "SearchAllProviders", 
+			query = "select p from Provider p"),
+	@NamedQuery(
 		name = "RemoveAllProviders", 
 		query = "delete from Provider p")
 })
@@ -42,6 +45,7 @@ public class Provider implements Serializable {
 	private long id;
 	
 	// TODO
+
 	@Convert("uuidConverter")
 	private UUID providerId;
 	
@@ -85,10 +89,10 @@ public class Provider implements Serializable {
 	private Collection<Treatment> treatments;
 
 	@Transient
-	private ITreatmentDao treatmentDAO;
+	private ITreatmentDao treatmentDao;
 	
-	public void setTreatmentDAO (ITreatmentDao tdao) {
-		this.treatmentDAO = tdao;
+	public void setTreatmentDao (ITreatmentDao tdao) {
+		this.treatmentDao = tdao;
 	}
 	
 	public Provider() {
@@ -105,7 +109,7 @@ public class Provider implements Serializable {
 	}
 	
 	public void addTreatment (Patient p, Treatment t) {
-		treatmentDAO.addTreatment(t);
+		treatmentDao.addTreatment(t);
 		/*
 		 * TODO complete this operation (see patient entity)
 		 */
@@ -120,13 +124,9 @@ public class Provider implements Serializable {
 	 * 
 	 */
 	public <T> T exportTreatment(UUID tid, ITreatmentExporter<T> visitor) throws TreatmentExn {
-		Treatment t = treatmentDAO.getTreatment(tid);
-		
-		if (t.getProvider() != this) {
-			throw new TreatmentExn("Inappropriate treatment access: provider = " + id + ", treatment = " + tid);
-		}
 
-		return t.export(visitor);
+
+		return null;
 	}
 	
 	/**

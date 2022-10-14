@@ -21,7 +21,7 @@ import org.eclipse.persistence.annotations.Convert;
 @NamedQueries({
 	@NamedQuery(
 		name="SearchTreatmentByTreatmentId",
-		query="select t from Treatment t where t.treatmentId = :treatmentId"),
+		query="select t from Treatment t join fetch t.followupTreatments where t.treatmentId = :treatmentId"),
 	@NamedQuery(
 			name="CountTreatmentByTreatmentId",
 			query="select count(t) from Treatment t where t.treatmentId = :treatmentId"),
@@ -41,6 +41,7 @@ public abstract class Treatment implements Serializable {
 	protected long id;
 	
 	// TODO
+
 	@Convert("uuidConverter")
 	protected UUID treatmentId;
 	
@@ -133,5 +134,6 @@ public abstract class Treatment implements Serializable {
 		/*
 		 * TODO initialize lists
 		 */
+
 	}   
 }

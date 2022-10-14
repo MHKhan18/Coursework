@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 // TODO
 public class PatientDao implements IPatientDao {
 
-	// TODO Use CDI producer
+	// TODO
 	private EntityManager em;
 	
 	// TODO
@@ -24,14 +24,13 @@ public class PatientDao implements IPatientDao {
 	@Override
 	public void addPatient(Patient patient) throws PatientExn {
 		UUID pid = patient.getPatientId();
-		Query query = em.createNamedQuery("CountPatientByPatientID").setParameter("pid", pid);
+		Query query = em.createNamedQuery("CountPatientByPatientId").setParameter("patientId", pid);
 		Long numExisting = (Long) query.getSingleResult();
 		
 		if (numExisting < 1) {
 			
 			// TODO add to database, and initialize the patient aggregate with a treatment DAO.
 
-			
 			
 		} else {
 			
@@ -44,7 +43,7 @@ public class PatientDao implements IPatientDao {
 		/*
 		 * Retrieve patient using external key
 		 */
-		TypedQuery<Patient> query = em.createNamedQuery("SearchPatientByPatientID", Patient.class).setParameter("patientId",id);
+		TypedQuery<Patient> query = em.createNamedQuery("SearchPatientByPatientId", Patient.class).setParameter("patientId",id);
 		List<Patient> patients = query.getResultList();
 		
 		if (patients.size() > 1) {
@@ -53,7 +52,7 @@ public class PatientDao implements IPatientDao {
 			throw new PatientExn("Patient not found: patient id = " + id);
 		} else {
 			Patient p = patients.get(0);
-			p.setTreatmentDAO(this.treatmentDao);
+			p.setTreatmentDao(this.treatmentDao);
 			return p;
 		}
 	}
@@ -67,7 +66,7 @@ public class PatientDao implements IPatientDao {
 		List<Patient> patients = query.getResultList();
 		
 		for (Patient p : patients) {
-			p.setTreatmentDAO(treatmentDao);
+			p.setTreatmentDao(treatmentDao);
 		}
 
 		return patients;

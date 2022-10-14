@@ -11,9 +11,8 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
+import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import edu.stevens.cs548.clinic.domain.DrugTreatment;
 import edu.stevens.cs548.clinic.domain.IPatientDao;
@@ -25,9 +24,11 @@ import edu.stevens.cs548.clinic.domain.Provider;
 import edu.stevens.cs548.clinic.domain.ProviderFactory;
 import edu.stevens.cs548.clinic.domain.TreatmentFactory;
 
-@Singleton
-@LocalBean
-@Startup
+ @Singleton
+ @LocalBean
+ @Startup
+// @ApplicationScoped
+// @Transactional
 public class InitBean implements ITreatmentExporter<Void>{
 
 	private static final Logger logger = Logger.getLogger(InitBean.class.getCanonicalName());
@@ -46,12 +47,20 @@ public class InitBean implements ITreatmentExporter<Void>{
 	// TODO
 	private IProviderDao providerDao;
 	
-        // TODO
-	private void init() {
+	/*
+	 * Initialize using EJB logic
+	 */
+	@PostConstruct
+	/*
+	 * This should work to initialize with CDI bean, but there is a bug in Payara.....
+	 */
+	// public void init(@Observes @Initialized(ApplicationScoped.class) ServletContext init) {
+	public void init() {
 		/*
 		 * Put your testing logic here. Use the logger to display testing output in the server logs.
 		 */
 		logger.info("Your name here: ");
+		System.err.println("Your name here!");
 
 		try {
 			
@@ -78,6 +87,7 @@ public class InitBean implements ITreatmentExporter<Void>{
 			providerDao.addProvider(jane);
 			
 			DrugTreatment drug01 = treatmentFactory.createDrugTreatment();
+			drug01.setTreatmentId(UUID.randomUUID());
 			drug01.setDiagnosis("Headache");
 			drug01.setDrug("Aspirin");
 			drug01.setStartDate(LocalDate.ofInstant(Instant.now(), ZONE_ID));
@@ -111,6 +121,10 @@ public class InitBean implements ITreatmentExporter<Void>{
 		} 
 			
 	}
+	
+//	public void shutdown(@Observes @Destroyed(ApplicationScoped.class) ServletContext init) {
+//		logger.info("App shutting down....");
+//	}
 	
 	@Override
 	public Void exportDrugTreatment(UUID tid, UUID patientId, UUID providerId, String diagnosis, String drug,

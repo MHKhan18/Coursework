@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 
 public class TreatmentDao implements ITreatmentDao {
 
-	// TODO Use CDI producer
+	// TODO
 	private EntityManager em;
 
 	@Override
@@ -16,7 +16,7 @@ public class TreatmentDao implements ITreatmentDao {
 		/*
 		 * Retrieve treatment using external key
 		 */
-		TypedQuery<Treatment> query = em.createNamedQuery("SearchTreatmentByTreatmentID", Treatment.class).setParameter("treatmentId",id);
+		TypedQuery<Treatment> query = em.createNamedQuery("SearchTreatmentByTreatmentId", Treatment.class).setParameter("treatmentId",id);
 		List<Treatment> treatments = query.getResultList();
 		
 		if (treatments.size() > 1) {

@@ -24,14 +24,10 @@ import edu.stevens.cs548.clinic.util.DateUtils;
  * Entity implementation class for Entity: Patient
  *
  */
-/**
- * Entity implementation class for Entity: Patient
- *
- */
 @NamedQueries({
 	@NamedQuery(
 		name="SearchPatientByPatientId",
-		query="select p from Patient p where p.patientId = :patientId"),
+		query="select p from Patient p join fetch p.treatments where p.patientId = :patientId"),
 	@NamedQuery(
 		name="CountPatientByPatientId",
 		query="select count(p) from Patient p where p.patientId = :patientId"),
@@ -55,6 +51,7 @@ public class Patient implements Serializable {
 	private long id;
 	
 	// TODO
+
 	@Convert("uuidConverter")
 	private UUID patientId;
 			
@@ -101,10 +98,10 @@ public class Patient implements Serializable {
 	
 
 	@Transient
-	private ITreatmentDao treatmentDAO;
+	private ITreatmentDao treatmentDao;
 	
-	public void setTreatmentDAO (ITreatmentDao tdao) {
-		this.treatmentDAO = tdao;
+	public void setTreatmentDao (ITreatmentDao tdao) {
+		this.treatmentDao = tdao;
 	}
 	
 	/**
@@ -113,15 +110,13 @@ public class Patient implements Serializable {
 	void addTreatment (Treatment t) {
 		// Persist treatment and set forward and backward links
 		treatments.add(t);
-		if (t.getPatient() != this) {
-			t.setPatient(this);
-		}
+		t.setPatient(this);
 	}
 	
 	public <T> T exportTreatment(UUID tid, ITreatmentExporter<T> visitor) throws TreatmentExn {
 		// Export a treatment without violating Aggregate pattern
 		// Check that the exported treatment is a treatment for this patient.
-		Treatment t = treatmentDAO.getTreatment(tid);
+		Treatment t = treatmentDao.getTreatment(tid);
 		if (t.getPatient() != this) {
 			throw new TreatmentExn("Inappropriate treatment access: patient = " + id + ", treatment = " + tid);
 		}

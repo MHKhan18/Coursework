@@ -1,13 +1,16 @@
 package edu.stevens.cs548.clinic.billing;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Convert;
@@ -34,10 +37,11 @@ public class BillingRecord implements Serializable {
 		super();
 	}
 	
-	// TODO
+	@Id @GeneratedValue(strategy = IDENTITY)
 	private long id;
 	
 	// TODO
+
 	@Convert("uuidConverter")
 	private UUID treatmentId;
 	
@@ -48,7 +52,7 @@ public class BillingRecord implements Serializable {
 	
 	private float amount;
 	
-	@PrimaryKeyJoinColumn
+	// @PrimaryKeyJoinColumn
 	// TODO
 	private Treatment treatment;
 

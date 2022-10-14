@@ -1,12 +1,12 @@
 package edu.stevens.cs548.clinic.domain;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Date;
 
 import edu.stevens.cs548.clinic.util.DateUtils;
 
 //TODO JPA annotations
-
 public class SurgeryTreatment extends Treatment {
 
 	/**
@@ -18,7 +18,9 @@ public class SurgeryTreatment extends Treatment {
 	private Date surgeryDate;
 	
 	private String dischargeInstructions;
-
+	
+	// TODO
+	private Collection<Treatment> followupTreatments;
 
 	public LocalDate getSurgeryDate() {
 		return DateUtils.fromDatabaseDate(surgeryDate);

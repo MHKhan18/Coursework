@@ -10,7 +10,7 @@ import javax.persistence.Query;
 // TODO
 public class ProviderDao implements IProviderDao {
 
-	// TODO Use CDI producer
+	// TODO
 	private EntityManager em;
 	
 	// TODO
@@ -22,7 +22,7 @@ public class ProviderDao implements IProviderDao {
 	@Override
 	public void addProvider(Provider provider) throws ProviderExn {
 		/*
-		 * TODO add to database.
+		 * TODO add to database (and sync with database to generate primary key).
 		 * Don't forget to initialize the Provider aggregate with a treatment DAO.
 		 */
 

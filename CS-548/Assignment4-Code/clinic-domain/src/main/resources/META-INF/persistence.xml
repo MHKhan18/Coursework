@@ -7,11 +7,13 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/cs548</jta-data-source>
 		<!-- TODO List domain classes -->
+
 		<properties>
-			<property name="eclipselink.logging.logger" value="JavaLogger"/>
+			<!-- This property only necessary when running in standalone app -->
+			<!--   <property name="eclipselink.logging.logger" value="JavaLogger"/> -->
 			<property name="eclipselink.logging.level" value="FINE"/>
  			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-			<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />  -->
+<!-- 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />  -->
 			<property name="eclipselink.target-database" value="Postgresql" />
 			<!-- See more at: http://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm -->
 		</properties>

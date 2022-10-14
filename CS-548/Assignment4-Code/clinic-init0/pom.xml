@@ -33,6 +33,7 @@
 			<groupId>edu.stevens.cs548</groupId>
 			<artifactId>clinic-domain</artifactId>
 		</dependency>
+		
 	</dependencies>
 
 </project>

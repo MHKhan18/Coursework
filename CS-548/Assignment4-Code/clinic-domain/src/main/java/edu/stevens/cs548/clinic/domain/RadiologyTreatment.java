@@ -16,7 +16,6 @@ public class RadiologyTreatment extends Treatment {
 	private static final long serialVersionUID = -3656673416179492428L;
 
 	// TODO  including order by date
-
 	protected List<Date> treatmentDates;
 
 	public void addTreatmentDate(LocalDate date) {

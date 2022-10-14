@@ -56,7 +56,7 @@ public class DrugTreatment extends Treatment implements Serializable {
 	}
 
 	public void setEndDate(LocalDate endDate) {
-		this.startDate = DateUtils.toDatabaseDate(endDate);
+		this.endDate = DateUtils.toDatabaseDate(endDate);
 	}
 
 	public int getFrequency() {
@@ -69,17 +69,16 @@ public class DrugTreatment extends Treatment implements Serializable {
 	
 
 	public <T> T export(ITreatmentExporter<T> visitor) {
-		// TODO
-		return visitor.exportDrugTreatment(treatmentId, 
-				patient.getPatientId(), 
-				provider.getProviderId(), 
-				diagnosis, 
-				drug, 
-				dosage, 
-				DateUtils.fromDatabaseDate(startDate), 
-				DateUtils.fromDatabaseDate(endDate), 
-				frequency, 
-				exportFollowupTreatments(visitor));
+		return visitor.exportDrugTreatment(treatmentId,
+										   patient.getPatientId(),
+										   provider.getProviderId(),
+								   		   diagnosis,
+								   		   drug, 
+								   		   dosage,
+								   		   DateUtils.fromDatabaseDate(startDate),
+								   		   DateUtils.fromDatabaseDate(endDate),
+								   		   frequency,
+								   		   exportFollowupTreatments(visitor));
 	}
 
 	public DrugTreatment() {
