@@ -14,4 +14,19 @@ public class TreatmentFactory implements ITreatmentFactory {
 	
 	// TODO define other factory methods
 
+	@Override
+	public RadiologyTreatment createRadiologyTreatment(){
+		return new RadiologyTreatment();
+	}
+
+	@Override
+	public SurgeryTreatment createSurgeryTreatment(){
+		return new SurgeryTreatment();
+	}
+
+	@Override
+	public PhysiotherapyTreatment createPhysiotherapyTreatment(){
+		return new PhysiotherapyTreatment();
+	}
+
 }

@@ -7,15 +7,21 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 
 import edu.stevens.cs548.clinic.domain.Treatment;
+import edu.stevens.cs548.clinic.domain.UUIDConverter;
 import edu.stevens.cs548.clinic.util.DateUtils;
 
 /**
@@ -27,8 +33,9 @@ import edu.stevens.cs548.clinic.util.DateUtils;
 		query="select b from BillingRecord b")
 
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="treatmentId"))
+@Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class BillingRecord implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -41,13 +48,14 @@ public class BillingRecord implements Serializable {
 	private long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID treatmentId;
 	
 	private String description;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date date;
 	
 	private float amount;

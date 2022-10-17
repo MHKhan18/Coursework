@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import edu.stevens.cs548.clinic.util.DateUtils;
 
 /**
@@ -11,6 +15,7 @@ import edu.stevens.cs548.clinic.util.DateUtils;
  * 
  */
 // TODO JPA annotations
+@Entity
 public class DrugTreatment extends Treatment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -20,9 +25,11 @@ public class DrugTreatment extends Treatment implements Serializable {
 	private float dosage;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
 	private int frequency;

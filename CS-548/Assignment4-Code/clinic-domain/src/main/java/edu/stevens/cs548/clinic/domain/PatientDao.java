@@ -4,17 +4,24 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import edu.stevens.cs548.clinic.domain.ClinicDomainProducer.ClinicDomain;
+
 // TODO
+@RequestScoped
 public class PatientDao implements IPatientDao {
 
 	// TODO
+	@Inject @ClinicDomain
 	private EntityManager em;
 	
 	// TODO
+	@Inject
 	private ITreatmentDao treatmentDao;
 
 
@@ -30,7 +37,8 @@ public class PatientDao implements IPatientDao {
 		if (numExisting < 1) {
 			
 			// TODO add to database, and initialize the patient aggregate with a treatment DAO.
-
+			em.persist(patient);
+			patient.setTreatmentDao(treatmentDao);
 			
 		} else {
 			

@@ -5,12 +5,23 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 
+import edu.stevens.cs548.clinic.domain.UUIDConverter;
 import edu.stevens.cs548.clinic.util.DateUtils;
 
 /**
@@ -22,8 +33,9 @@ import edu.stevens.cs548.clinic.util.DateUtils;
 		query="select t from DrugTreatmentRecord t")
 
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="treatmentId"))
+@Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class DrugTreatmentRecord implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -33,16 +45,21 @@ public class DrugTreatmentRecord implements Serializable {
 	}
 	
 	// TODO
+	@Id
+	@GeneratedValue
 	private long id;
 	
 	// TODO
 	@Convert("uuidConverter")
+	@Column(nullable=false,unique=true)
 	private UUID treatmentId;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
 	private String drugName;
@@ -50,6 +67,8 @@ public class DrugTreatmentRecord implements Serializable {
 	private float dosage;
 	
 	// TODO
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SUBJECT_FK", nullable = false)
 	private Subject subject;
 
 	public long getId() {
