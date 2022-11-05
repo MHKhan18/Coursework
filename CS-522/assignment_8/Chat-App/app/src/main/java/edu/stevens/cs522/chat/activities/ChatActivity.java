@@ -11,6 +11,7 @@
 package edu.stevens.cs522.chat.activities;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -112,10 +113,13 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
         }
 
         // TODO get shared view model for current chatroom
-
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         // TODO initialize sendResultReceiver (for receiving notification of message sent)
-
+        sendResultReceiver = new ResultReceiverWrapper(new Handler(Looper.myLooper()));
         // TODO initiate binding to the service
+        Intent bindIntent = new Intent(this, ChatService.class);
+        bindService(bindIntent, this , Context.BIND_AUTO_CREATE);
+
 
 
         // Only used to insert a chatroom
@@ -131,12 +135,14 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
 	public void onResume() {
         super.onResume();
         // TODO register result receiver
+        sendResultReceiver.setReceiver(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         // TODO unregister result receiver
+        sendResultReceiver.setReceiver(null);
     }
 
     @Override
@@ -174,7 +180,8 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // TODO inflate a menu with PEERS options
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
 
         return true;
     }
@@ -191,7 +198,8 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
 
         } else if (itemId == R.id.peers) {
             // TODO PEERS: provide the UI for viewing list of peers
-
+            Intent intent = new Intent(this, ViewPeersActivity.class);
+            startActivity(intent);
             return true;
 
         }
@@ -234,6 +242,7 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
             CurrentLocation location = CurrentLocation.getLocation(this);
 
             // TODO use chatService to send the message
+            chatService.send(destinationAddr, chatroomName, text, timestamp, location.getLatitude(), location.getLongitude(), sendResultReceiver);
 
 
             Log.i(TAG, "Sent message: " + text);
@@ -249,9 +258,11 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
         switch (resultCode) {
             case RESULT_OK:
                 // TODO show a success toast message
+                Toast.makeText(getApplicationContext(),"Message successfully sent!", Toast.LENGTH_LONG).show();
                 break;
             default:
                 // TODO show a failure toast message
+                Toast.makeText(getApplicationContext(),"Message couldn't be sent", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -279,7 +290,11 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
         if (!isTwoPane) {
             // TODO For single pane, replace chatrooms fragment with messages fragment.
             // Add chatrooms fragment to backstack, so pressing BACK key will return to index.
-
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new MessagesFragment(), SHOWING_MESSAGES_TAG)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -287,6 +302,7 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.d(TAG, "Connected to the chat service.");
         // TODO initialize chatService
+        chatService = ((ChatService.ChatBinder)service).getService();
     }
 
     @Override

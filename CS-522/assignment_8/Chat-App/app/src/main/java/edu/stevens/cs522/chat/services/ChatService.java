@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Process;
 import android.os.ResultReceiver;
 import android.util.JsonReader;
 import android.util.JsonWriter;
@@ -73,7 +72,7 @@ public class ChatService extends Service implements IChatService {
 
     @Override
     public void onCreate() {
-
+        super.onCreate();
         chatPort = this.getResources().getInteger(R.integer.app_port);
 
         Log.d(TAG, "Getting database instance in ChatService....");
@@ -81,13 +80,16 @@ public class ChatService extends Service implements IChatService {
 
         try {
             DatagramConnectionFactory factory = new DatagramConnectionFactory();
-            chatConnection = factory.getUdpConnection(chatPort);
+            chatConnection = factory.getTcpConnection(chatPort);
         } catch (Exception e) {
             throw new IllegalStateException("Unable to init client socket.", e);
         }
 
         // TODO initialize the thread that sends messages
-
+        HandlerThread sendHandlerThread = new HandlerThread(SEND_TAG);
+        sendHandlerThread.start();
+        Looper sendLooper = sendHandlerThread.getLooper();
+        sendHandler = new SendHandler(sendLooper);
         // end TODO
 
         receiveThread = new Thread(new ReceiverThread());
@@ -123,7 +125,21 @@ public class ChatService extends Service implements IChatService {
                      Date timestamp, double latitude, double longitude, ResultReceiver receiver) {
         android.os.Message message = sendHandler.obtainMessage();
         // TODO send the message to the sending thread (add a bundle with params)
+        Bundle args = new Bundle();
+        args.putString(SendHandler.HDLR_DEST_ADDRESS, destAddress);
+        args.putString(SendHandler.HDLR_CHATROOM, chatRoom);
+        args.putString(SendHandler.HDLR_MESSAGE_TEXT, messageText);
+        args.putSerializable(SendHandler.HDLR_TIMESTAMP, timestamp);
+        args.putDouble(SendHandler.HDLR_LATITUDE, latitude);
+        args.putDouble(SendHandler.HDLR_LONGITUDE, longitude);
+        args.putParcelable(SendHandler.HDLR_RECEIVER, receiver);
+        message.setData(args);
 
+        try{
+            sendHandler.sendMessage(message);
+        }catch (Exception  e){
+            throw new Error("failed to send message");
+        }
     }
 
 
@@ -166,9 +182,13 @@ public class ChatService extends Service implements IChatService {
                 Bundle data = message.getData();
 
                 // TODO get data from message (including result receiver)
-
-
-
+                destinationAddr = data.getString(HDLR_DEST_ADDRESS);
+                chatRoom = data.getString(HDLR_CHATROOM);
+                messageText = data.getString(HDLR_MESSAGE_TEXT);
+                timestamp = (Date) data.getSerializable(HDLR_TIMESTAMP);
+                latitude = data.getDouble(HDLR_LATITUDE);
+                longitude = data.getDouble(HDLR_LONGITUDE);
+                receiver = data.getParcelable(HDLR_RECEIVER);
                 // End todo
 
                 /*
@@ -309,6 +329,9 @@ public class ChatService extends Service implements IChatService {
                     /*
                      * TODO upsert chatroom and peer, and insert message into the database
                      */
+                    chatDatabase.chatroomDao().upsert(chatroom);
+                    chatDatabase.peerDao().upsert(peer);
+                    chatDatabase.messageDao().persist(message);
 
 
 

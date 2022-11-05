@@ -30,7 +30,10 @@ public class PeerViewModel extends AndroidViewModel {
 
     // TODO finish this
     public LiveData<List<Message>> fetchMessagesFromPeer(Peer peer) {
-        return null;
+        if (messages == null){
+            messages = loadMessages(peer);
+        }
+        return messages;
     }
 
     private LiveData<List<Message>> loadMessages(Peer peer) {

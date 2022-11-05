@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Dominic\'s Chat App</string>
+    <string name="app_name">Mohammad\'s Chat App</string>
 
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_register">Register</string>
