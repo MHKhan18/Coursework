@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import edu.stevens.cs548.clinic.service.IProviderService;
@@ -18,6 +19,7 @@ public class ProvidersBacking extends BaseBacking {
 	private static final long serialVersionUID = -733113325524128462L;
 	
 	// TODO
+	@Inject
 	IProviderService providerService;
 
 	/*

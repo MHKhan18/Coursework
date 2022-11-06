@@ -9,5 +9,7 @@ public interface ITreatmentFactory {
 	 * TODO add methods for Radiology, Surgery, Physiotherapy
 	 */
 
-	
+	public RadiologyTreatment createRadiologyTreatment();
+	public SurgeryTreatment createSurgeryTreatment();
+	public PhysiotherapyTreatment createPhysiotherapyTreatment();
 }

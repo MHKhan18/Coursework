@@ -3,13 +3,19 @@ package edu.stevens.cs548.clinic.domain;
 import java.util.List;
 import java.util.UUID;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import edu.stevens.cs548.clinic.domain.ClinicDomainProducer.ClinicDomain;
+
 // TODO
+@RequestScoped
 public class TreatmentDao implements ITreatmentDao {
 
 	// TODO
+	@Inject @ClinicDomain
 	private EntityManager em;
 
 	@Override

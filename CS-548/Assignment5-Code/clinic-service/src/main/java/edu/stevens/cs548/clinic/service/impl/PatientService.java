@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+
 import edu.stevens.cs548.clinic.domain.IPatientDao;
 import edu.stevens.cs548.clinic.domain.IPatientDao.PatientExn;
 import edu.stevens.cs548.clinic.domain.IPatientFactory;
@@ -23,6 +26,7 @@ import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 /**
  * CDI Bean implementation class PatientService
  */
+@RequestScoped
 public class PatientService implements IPatientService {
 	
 	@SuppressWarnings("unused")
@@ -39,6 +43,7 @@ public class PatientService implements IPatientService {
 	}
 	
 	// TODO
+	@Inject
 	private IPatientDao patientDao;
 
 
@@ -80,7 +85,20 @@ public class PatientService implements IPatientService {
 	@Override
 	public PatientDto getPatient(UUID id) throws PatientServiceExn {
 		// TODO use DAO to get patient by external key, create DTO that includes treatments
-		return null;
+		Patient patient;
+		try{
+			patient = patientDao.getPatient(id);
+		} catch(PatientExn e){
+			throw new PatientServiceExn("Failed to retireve patient with uuid: " + id, e);
+		}
+		PatientDto dto;
+		try{
+			dto = patientToDto(patient, true);
+		}catch (TreatmentExn e) {
+			throw new PatientServiceExn("Failed to export treatment", e);
+		}
+
+		return dto;
 	}
 
 

@@ -6,13 +6,21 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 
 import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 
@@ -35,17 +43,20 @@ import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 		query = "delete from Provider p")
 })
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="providerId"))
+@Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class Provider implements Serializable {
 		
 	private static final long serialVersionUID = -876909316791083094L;
 
 	// TODO JPA annotations
+	@Id
+	@GeneratedValue
 	private long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID providerId;
 	
@@ -86,6 +97,7 @@ public class Provider implements Serializable {
 	}
 
 	// TODO JPA annotations (propagate deletion of provider to treatments)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "provider", fetch = FetchType.EAGER)
 	private Collection<Treatment> treatments;
 
 	@Transient
@@ -113,7 +125,7 @@ public class Provider implements Serializable {
 		/*
 		 * TODO complete this operation (see patient entity)
 		 */
-
+		p.addTreatment(t);
 	}
 	
 	/**
