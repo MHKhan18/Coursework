@@ -22,6 +22,8 @@ import javax.persistence.Transient;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
 
+import java.util.logging.Logger;
+
 import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 
 /**
@@ -49,6 +51,7 @@ import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 public class Provider implements Serializable {
 		
 	private static final long serialVersionUID = -876909316791083094L;
+	private static final Logger logger = Logger.getLogger(Provider.class.getCanonicalName());
 
 	// TODO JPA annotations
 	@Id
@@ -126,6 +129,7 @@ public class Provider implements Serializable {
 		 * TODO complete this operation (see patient entity)
 		 */
 		p.addTreatment(t);
+		treatments.add(t);
 	}
 	
 	/**
@@ -151,6 +155,7 @@ public class Provider implements Serializable {
 	public <T> List<T> exportTreatments(ITreatmentExporter<T> visitor) throws TreatmentExn {
 		List<T> exports = new ArrayList<T>();
 		
+		logger.info("From Provider.exportTreatments --" + "Length of treatments array: " + treatments.size() );
 		for (Treatment t : treatments) {
 			exports.add(t.export(visitor));
 		}

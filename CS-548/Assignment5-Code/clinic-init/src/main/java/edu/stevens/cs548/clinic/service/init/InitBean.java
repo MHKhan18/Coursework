@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -186,7 +185,7 @@ public class InitBean {
 			Collection<TreatmentDto> followupTreatments2 = new ArrayList<>();
 			followupTreatments2.add(therapy01);
 			followupTreatments2.add(sur01);
-			rad01.setFollowupTreatments(followupTreatments2);
+			sur02.setFollowupTreatments(followupTreatments2);
 			sur02.setId(providerService.addTreatment(sur02));
 
 			SurgeryTreatmentDto sur03 = treatmentFactory.createSurgeryTreatmentDto();
@@ -200,25 +199,50 @@ public class InitBean {
 			Collection<TreatmentDto> followupTreatments3 = new ArrayList<>();
 			followupTreatments3.add(drug01);
 			followupTreatments3.add(sur01);
-			rad01.setFollowupTreatments(followupTreatments3);
+			sur03.setFollowupTreatments(followupTreatments3);
 			sur03.setId(providerService.addTreatment(sur03));
 
 			
 
 			// Now show in the logs what has been added
-
+			logger.info("#################################Listing Patients######################################");
 			Collection<PatientDto> patients = patientService.getPatients();
 			for (PatientDto p : patients) {
 				logger.info(String.format("Patient %s, ID %s, DOB %s", p.getName(), p.getId().toString(),
 						p.getDob().toString()));
-				logTreatments(p.getTreatments());
 			}
 
+			logger.info("######################################Lisitng Providers#################################");
 			Collection<ProviderDto> providers = providerService.getProviders();
 			for (ProviderDto p : providers) {
 				logger.info(String.format("Provider %s, ID %s, NPI %s", p.getName(), p.getId().toString(), p.getNpi()));
-				logTreatments(p.getTreatments());
 			}
+
+			logger.info("########################################Details for each patient#########################");
+			for (PatientDto p : patients) {
+				PatientDto patientWithTreatments =  patientService.getPatient(p.getId());
+				logger.info(String.format("^^^^^^^Details for patient with id: %s, name: %s^^^^^^^^^^^^^^^^^", p.getId().toString(), p.getName().toString()));
+				logTreatments(patientWithTreatments.getTreatments());
+			}
+
+			logger.info("#######################################Details for each provider##############################");
+			for (ProviderDto p : providers) {
+				logger.info(String.format("^^^^^^^^^^^^Details for provider with id: %s, name: %s^^^^^^^^^^^^^^", p.getId().toString(), p.getName().toString()));
+				ProviderDto providerWithTreatment = providerService.getProvider(p.getId());
+				logTreatments(providerWithTreatment.getTreatments());
+			}
+
+			logger.info("#######################Details for each type of treatment#######################################");
+			for (PatientDto p : patients) {
+				PatientDto patientWithTreatments =  patientService.getPatient(p.getId());
+				ArrayList<TreatmentDto> treatmentsWithFollowups = new ArrayList<>();
+				for (TreatmentDto treatment : patientWithTreatments.getTreatments()){
+					treatmentsWithFollowups.add(patientService.getTreatment(p.getId(), treatment.getId()));
+				}
+				logTreatments(treatmentsWithFollowups);
+			}
+
+
 
 		} catch (Exception e) {
 			;
