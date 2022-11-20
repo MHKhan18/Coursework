@@ -6,12 +6,24 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 
 
 /**
@@ -34,17 +46,22 @@ import org.eclipse.persistence.annotations.Convert;
 })
 
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="treatmentId"))
+@Converter(name="uuidConverter", converterClass=UUIDConverter.class)
+@Inheritance(strategy = InheritanceType.JOINED)
+
 public abstract class Treatment implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	// TODO PK
+	@Id
+	@GeneratedValue
 	protected long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	protected UUID treatmentId;
 	
@@ -78,7 +95,8 @@ public abstract class Treatment implements Serializable {
 	/*
 	 * TODO
 	 */
-
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "PATIENT_FK", nullable = false)
 	protected Patient patient;
 
 	public Patient getPatient() {
@@ -93,7 +111,8 @@ public abstract class Treatment implements Serializable {
 	/*
 	 * TODO
 	 */
-
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "PROVIDER_FK", nullable = false)
 	protected Provider provider;
 
 	public Provider getProvider() {
@@ -107,6 +126,7 @@ public abstract class Treatment implements Serializable {
 	/*
 	 * TODO
 	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	protected Collection<Treatment> followupTreatments;
 	
 	public void addFollowupTreatment(Treatment t) {
@@ -133,5 +153,6 @@ public abstract class Treatment implements Serializable {
 		/*
 		 * TODO initialize lists
 		 */
+		followupTreatments = new ArrayList<>();
 	}   
 }

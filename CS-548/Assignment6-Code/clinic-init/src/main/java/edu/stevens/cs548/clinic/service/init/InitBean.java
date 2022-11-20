@@ -4,7 +4,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,7 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Destroyed;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import edu.stevens.cs548.clinic.service.IPatientService;
@@ -47,9 +50,11 @@ public class InitBean {
 	private TreatmentDtoFactory treatmentFactory = new TreatmentDtoFactory();
 
 	// TODO
+	@Inject
 	private IPatientService patientService;
 
 	// TODO
+	@Inject
 	private IProviderService providerService;
 
 	/*
@@ -109,19 +114,135 @@ public class InitBean {
 
 			// TODO add more testing, including treatments and providers
 			
-			// Now show in the logs what has been added
+			//================patients ====================
+			PatientDto russel = patientFactory.createPatientDto();
+			russel.setName("Andrew Russel");
+			russel.setDob(LocalDate.parse("1997-05-15"));
+			russel.setId(patientService.addPatient(russel));
 
+			PatientDto stokes = patientFactory.createPatientDto();
+			stokes.setName("Ben Stokes");
+			stokes.setDob(LocalDate.parse("2003-04-23"));
+			stokes.setId(patientService.addPatient(stokes));
+
+			// ================== providers =================
+			ProviderDto provider2 = providerFactory.createProviderDto();
+			provider2.setName("Provider2 LLC");
+			provider2.setNpi("7789");
+			provider2.setId(providerService.addProvider(provider2));
+
+			ProviderDto provider3 = providerFactory.createProviderDto();
+			provider3.setName("Provider3 Company");
+			provider3.setNpi("5634");
+			provider3.setId(providerService.addProvider(provider3));
+
+			// ============= treatments ==================
+			PhysiotherapyTreatmentDto therapy01 = treatmentFactory.createPhysiotherapyTreatmentDto();
+			therapy01.setPatientId(john.getId());
+			therapy01.setPatientName(john.getName());
+			therapy01.setProviderId(jane.getId());
+			therapy01.setProviderName(jane.getName());
+			therapy01.setDiagnosis("Neck Pain");
+			List<LocalDate> treatmentDates = new ArrayList<>();
+			treatmentDates.add(LocalDate.parse("2022-11-07"));
+			treatmentDates.add(LocalDate.parse("2022-11-17"));
+			treatmentDates.add(LocalDate.parse("2022-11-27"));
+			therapy01.setTreatmentDates(treatmentDates);
+			providerService.addTreatment(therapy01);
+
+			RadiologyTreatmentDto rad01 = treatmentFactory.createRadiologyTreatmentDto();
+			rad01.setPatientId(russel.getId());
+			rad01.setPatientName(russel.getName());
+			rad01.setProviderId(provider2.getId());
+			rad01.setProviderName(provider2.getName());
+			rad01.setDiagnosis("Skin Cancer");
+			List<LocalDate> treatmentDates2 = new ArrayList<>();
+			treatmentDates.add(LocalDate.parse("2022-12-07"));
+			treatmentDates.add(LocalDate.parse("2022-12-17"));
+			treatmentDates.add(LocalDate.parse("2022-12-27"));
+			rad01.setTreatmentDates(treatmentDates2);
+			Collection<TreatmentDto> followupTreatments = new ArrayList<>();
+			followupTreatments.add(drug01);
+			followupTreatments.add(therapy01);
+			rad01.setFollowupTreatments(followupTreatments);
+			providerService.addTreatment(rad01);
+
+			SurgeryTreatmentDto sur01 = treatmentFactory.createSurgeryTreatmentDto();
+			sur01.setPatientId(russel.getId());
+			sur01.setPatientName(russel.getName());
+			sur01.setProviderId(provider2.getId());
+			sur01.setProviderName(provider2.getName());
+			sur01.setDiagnosis("Broken Feet");
+			sur01.setSurgeryDate(LocalDate.parse("2022-12-19"));
+			sur01.setDischargeInstructions("Take 2 weeks rest");
+			providerService.addTreatment(sur01);
+
+			SurgeryTreatmentDto sur02 = treatmentFactory.createSurgeryTreatmentDto();
+			sur02.setPatientId(stokes.getId());
+			sur02.setPatientName(stokes.getName());
+			sur02.setProviderId(provider3.getId());
+			sur02.setProviderName(provider3.getName());
+			sur02.setDiagnosis("Knee Fracture");
+			sur02.setSurgeryDate(LocalDate.parse("2022-11-20"));
+			sur02.setDischargeInstructions("Take 4 weeks rest");
+			Collection<TreatmentDto> followupTreatments2 = new ArrayList<>();
+			followupTreatments2.add(therapy01);
+			followupTreatments2.add(sur01);
+			sur02.setFollowupTreatments(followupTreatments2);
+			providerService.addTreatment(sur02);
+
+			SurgeryTreatmentDto sur03 = treatmentFactory.createSurgeryTreatmentDto();
+			sur03.setPatientId(stokes.getId());
+			sur03.setPatientName(stokes.getName());
+			sur03.setProviderId(provider3.getId());
+			sur03.setProviderName(provider3.getName());
+			sur03.setDiagnosis("Dislocated joint");
+			sur03.setSurgeryDate(LocalDate.parse("2022-12-05"));
+			sur03.setDischargeInstructions("Take 5 weeks rest");
+			Collection<TreatmentDto> followupTreatments3 = new ArrayList<>();
+			followupTreatments3.add(drug01);
+			followupTreatments3.add(sur01);
+			sur03.setFollowupTreatments(followupTreatments3);
+			providerService.addTreatment(sur03);
+
+
+			
+			// Now show in the logs what has been added
+			logger.info("#################################Listing Patients######################################");
 			Collection<PatientDto> patients = patientService.getPatients();
 			for (PatientDto p : patients) {
 				logger.info(String.format("Patient %s, ID %s, DOB %s", p.getName(), p.getId().toString(),
 						p.getDob().toString()));
-				logTreatments(p.getTreatments());
 			}
 
+			logger.info("######################################Lisitng Providers#################################");
 			Collection<ProviderDto> providers = providerService.getProviders();
 			for (ProviderDto p : providers) {
 				logger.info(String.format("Provider %s, ID %s, NPI %s", p.getName(), p.getId().toString(), p.getNpi()));
-				logTreatments(p.getTreatments());
+			}
+
+			logger.info("########################################Details for each patient#########################");
+			for (PatientDto p : patients) {
+				PatientDto patientWithTreatments =  patientService.getPatient(p.getId());
+				logger.info(String.format("^^^^^^^Details for patient with id: %s, name: %s^^^^^^^^^^^^^^^^^", p.getId().toString(), p.getName().toString()));
+				logTreatments(patientWithTreatments.getTreatments());
+			}
+
+			logger.info("#######################################Details for each provider##############################");
+			for (ProviderDto p : providers) {
+				logger.info(String.format("^^^^^^^^^^^^Details for provider with id: %s, name: %s^^^^^^^^^^^^^^", p.getId().toString(), p.getName().toString()));
+				ProviderDto providerWithTreatment = providerService.getProvider(p.getId());
+				logTreatments(providerWithTreatment.getTreatments());
+			}
+
+			logger.info("#######################Details for each type of treatment#######################################");
+			for (PatientDto p : patients) {
+				PatientDto patientWithTreatments =  patientService.getPatient(p.getId());
+				ArrayList<TreatmentDto> treatmentsWithFollowups = new ArrayList<>();
+				for (TreatmentDto treatment : patientWithTreatments.getTreatments()){
+					treatmentsWithFollowups.add(patientService.getTreatment(p.getId(), treatment.getId()));
+				}
+				logTreatments(treatmentsWithFollowups);
 			}
 
 		} catch (Exception e) {

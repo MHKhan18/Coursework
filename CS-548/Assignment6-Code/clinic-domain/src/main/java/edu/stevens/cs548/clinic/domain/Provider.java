@@ -8,13 +8,21 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 
 import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 
@@ -40,17 +48,20 @@ import edu.stevens.cs548.clinic.domain.ITreatmentDao.TreatmentExn;
 		query = "delete from Provider p")
 })
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="providerId"))
+@Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class Provider implements Serializable, ITreatmentImporter {
 		
 	private static final long serialVersionUID = -876909316791083094L;
 
 	// TODO JPA annotations
+	@Id
+	@GeneratedValue
 	private long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID providerId;
 	
@@ -91,7 +102,9 @@ public class Provider implements Serializable, ITreatmentImporter {
 	}
 
 	// TODO JPA annotations (propagate deletion of provider to treatments)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "provider", fetch = FetchType.EAGER)
 	private Collection<Treatment> treatments;
+	
 
 	@Transient
 	private TreatmentFactory treatmentFactory;
@@ -151,8 +164,10 @@ public class Provider implements Serializable, ITreatmentImporter {
 		/*
 		 * TODO complete this operation (see patient entity)
 		 */
+		
 		treatments.add(t);
 		t.setProvider(this);
+		treatmentDao.addTreatment(t);
 	}
 	
 	@Override
@@ -196,21 +211,62 @@ public class Provider implements Serializable, ITreatmentImporter {
 	@Override
 	public Consumer<Treatment>  importRadiology(UUID tid, Patient patient, Provider provider, String diagnosis, List<LocalDate> dates, Consumer<Treatment> consumer) {
 		// TODO finish this
-		return null;
+		RadiologyTreatment treatment = treatmentFactory.createRadiologyTreatment();
+		treatment.setTreatmentId(tid);
+		treatment.setPatient(patient);
+		treatment.setProvider(provider);
+		treatment.setDiagnosis(diagnosis);
+		
+		for (LocalDate date : dates){
+			treatment.addTreatmentDate(date);
+		}
+
+		if (consumer != null) {
+			consumer.accept(treatment);
+		}
+
+		return (followUp) -> { treatment.addFollowupTreatment(followUp); };
 	}
 
 	@Override
 	public Consumer<Treatment> importSurgery(UUID tid, Patient patient, Provider provider, String diagnosis, LocalDate date,
 			String dischargeInstructions, Consumer<Treatment> consumer) {
 		// TODO finish this
-		return null;
+		SurgeryTreatment treatment = treatmentFactory.createSurgeryTreatment();
+		treatment.setTreatmentId(tid);
+		treatment.setPatient(patient);
+		treatment.setProvider(provider);
+		treatment.setDiagnosis(diagnosis);
+		treatment.setSurgeryDate(date);
+		treatment.setDischargeInstructions(dischargeInstructions);
+
+		if (consumer != null) {
+			consumer.accept(treatment);
+		}
+
+		return (followUp) -> { treatment.addFollowupTreatment(followUp); };
+
 	}
 
 	@Override
 	public Consumer<Treatment> importPhysiotherapy(UUID tid, Patient patient, Provider provider, String diagnosis,
 			List<LocalDate> dates, Consumer<Treatment> consumer) {
 		// TODO finish this
-		return null;
+		PhysiotherapyTreatment treatment = treatmentFactory.createPhysiotherapyTreatment();
+		treatment.setTreatmentId(tid);
+		treatment.setPatient(patient);
+		treatment.setProvider(provider);
+		treatment.setDiagnosis(diagnosis);
+		for (LocalDate date : dates){
+			treatment.addTreatmentDate(date);
+		}
+
+		if (consumer != null) {
+			consumer.accept(treatment);
+		}
+
+		return (followUp) -> { treatment.addFollowupTreatment(followUp); };
+
 	}
 		
 }

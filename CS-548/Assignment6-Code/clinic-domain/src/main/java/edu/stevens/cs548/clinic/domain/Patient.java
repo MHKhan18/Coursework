@@ -8,10 +8,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.Convert;
@@ -43,7 +52,7 @@ import edu.stevens.cs548.clinic.util.DateUtils;
 })
 
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="patientId"))
 @Converter(name="uuidConverter", converterClass=UUIDConverter.class)
 public class Patient implements Serializable {
@@ -51,16 +60,20 @@ public class Patient implements Serializable {
 	private static final long serialVersionUID = -4512912599605407549L;
 
 	// TODO PK
+	@Id
+	@Column(name = "id")
+	@GeneratedValue
 	private long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID patientId;
 				
 	private String name;
 
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date dob;
 	
 	public long getId() {
@@ -97,6 +110,7 @@ public class Patient implements Serializable {
 
 
 	// TODO JPA annotations (propagate deletion of patient to treatments)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch = FetchType.EAGER)
 	private Collection<Treatment> treatments;
 	
 

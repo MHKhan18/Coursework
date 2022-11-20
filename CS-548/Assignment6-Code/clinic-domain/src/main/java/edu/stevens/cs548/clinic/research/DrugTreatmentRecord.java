@@ -7,9 +7,11 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -29,6 +31,7 @@ import edu.stevens.cs548.clinic.util.DateUtils;
 		query="select t from DrugTreatmentRecord t")
 
 // TODO
+@Entity
 @Table(indexes = @Index(columnList="treatmentId"))
 public class DrugTreatmentRecord implements Serializable {
 	
@@ -39,17 +42,21 @@ public class DrugTreatmentRecord implements Serializable {
 	}
 	
 	// TODO
+	@Id
+	@GeneratedValue
 	private long id;
 	
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID treatmentId;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	
 	// TODO
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
 	private String drugName;
@@ -57,6 +64,8 @@ public class DrugTreatmentRecord implements Serializable {
 	private float dosage;
 	
 	// TODO
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SUBJECT_FK", nullable = false)
 	private Subject subject;
 
 	public long getId() {

@@ -181,7 +181,19 @@ public class ProviderResource extends ResourceBase {
 			/*
 			 * TODO read stream of treatments and add to database
 			 */
-
+			logger.info("...reading treatment data...");
+			label = rd.nextName();
+			if (!TREATMENTS.equals(label)){
+				logger.log(Level.SEVERE, String.format("Unexpected label, expected %s, found %s",  TREATMENTS, label));
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+			rd.beginArray();
+			while (rd.hasNext()){
+				TreatmentDto treatment = gson.fromJson(rd, TreatmentDto.class);
+				logger.info("......uploading treatment"+ treatment.getId());
+				providerService.addTreatment(treatment);
+			}
+			rd.endArray();
 			
 			rd.endObject();
 			

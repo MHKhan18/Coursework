@@ -3,9 +3,14 @@ package edu.stevens.cs548.clinic.domain;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import edu.stevens.cs548.clinic.util.DateUtils;
 
 //TODO JPA annotations
+@Entity
 public class SurgeryTreatment extends Treatment {
 
 	/**
@@ -14,6 +19,7 @@ public class SurgeryTreatment extends Treatment {
 	private static final long serialVersionUID = 4173146640306267418L;
 	
 	//TODO annotations
+	@Temporal(TemporalType.DATE)
 	private Date surgeryDate;
 	
 	private String dischargeInstructions;
@@ -37,7 +43,16 @@ public class SurgeryTreatment extends Treatment {
 	@Override
 	public <T> T export(ITreatmentExporter<T> visitor) {
 		// TODO
-		return null;
+		return visitor.exportSurgery( treatmentId, 
+									patient.getPatientId(), 
+									patient.getName(),
+									provider.getProviderId(), 
+									provider.getName(),
+									diagnosis, 
+									getSurgeryDate(), 
+									getDischargeInstructions(),
+									() -> exportFollowupTreatments(visitor)
+					);
 	}
 	
 	public SurgeryTreatment() {

@@ -7,6 +7,10 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
 import edu.stevens.cs548.clinic.domain.IPatientDao;
 import edu.stevens.cs548.clinic.domain.IPatientDao.PatientExn;
 import edu.stevens.cs548.clinic.domain.IProviderDao;
@@ -21,14 +25,19 @@ import edu.stevens.cs548.clinic.service.IPatientService.PatientNotFoundExn;
 import edu.stevens.cs548.clinic.service.IPatientService.PatientServiceExn;
 import edu.stevens.cs548.clinic.service.IProviderService;
 import edu.stevens.cs548.clinic.service.dto.DrugTreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.PhysiotherapyTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.RadiologyTreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.SurgeryTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 
 /**
  * CDI Bean implementation class ProviderService
  */
 // TODO
+@RequestScoped
+@Transactional
 public class ProviderService implements IProviderService {
 
 	@SuppressWarnings("unused")
@@ -46,9 +55,11 @@ public class ProviderService implements IProviderService {
 	}
 	
 	// TODO
+	@Inject
 	private IProviderDao providerDao;
 
 	// TODO
+	@Inject
 	private IPatientDao patientDao;
 
 
@@ -96,7 +107,20 @@ public class ProviderService implements IProviderService {
 	 */
 	public ProviderDto getProvider(UUID id, boolean includeTreatments) throws ProviderServiceExn {
 		// TODO use DAO to get Provider by external key
-		return null;
+		Provider provider;
+		try{
+			provider = providerDao.getProvider(id);
+		}catch(ProviderExn e){
+			throw new ProviderServiceExn("Failed to retrieve provider with id: " + id, e);
+		}
+		ProviderDto dto;
+		try{
+			dto = providerToDto(provider, includeTreatments);
+		}catch (TreatmentExn e) {
+			throw new ProviderServiceExn("Failed to export treatment", e);
+		}
+
+		return dto;
 	}
 	
 	@Override
@@ -144,9 +168,27 @@ public class ProviderService implements IProviderService {
 				/*
 				 * TODO Handle the other cases
 				 */
+				if (dto instanceof RadiologyTreatmentDto){
+					RadiologyTreatmentDto radiologyTreatmentDto = (RadiologyTreatmentDto) dto;
+					followUpsConsumer = provider.importRadiology(radiologyTreatmentDto.getId(), patient, provider, 
+										radiologyTreatmentDto.getDiagnosis(), radiologyTreatmentDto.getTreatmentDates(), parentFollowUps);
+				}
+
+				if (dto instanceof SurgeryTreatmentDto){
+					SurgeryTreatmentDto surgeryTreatmentDto = (SurgeryTreatmentDto)dto; 
+					followUpsConsumer = provider.importSurgery(surgeryTreatmentDto.getId(), patient, provider, 
+											surgeryTreatmentDto.getDiagnosis(), surgeryTreatmentDto.getSurgeryDate(), surgeryTreatmentDto.getDischargeInstructions(), parentFollowUps);
+
+				}
+
+				if (dto instanceof PhysiotherapyTreatmentDto){
+					PhysiotherapyTreatmentDto physiotherapyTreatmentDto = (PhysiotherapyTreatmentDto)dto; 
+					followUpsConsumer = provider.importPhysiotherapy(physiotherapyTreatmentDto.getId(), patient, provider, 
+						physiotherapyTreatmentDto.getDiagnosis(), physiotherapyTreatmentDto.getTreatmentDates(), parentFollowUps);
+				}
 
 
-					throw new IllegalArgumentException("No treatment-specific info provided.");
+				throw new IllegalArgumentException("No treatment-specific info provided.");
 				
 			}
 

@@ -5,7 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Convert;
@@ -14,7 +21,7 @@ import org.eclipse.persistence.annotations.Convert;
  * Entity implementation class for Entity: Subject
  */
 // TODO
-
+@Entity
 @Table(indexes = @Index(columnList="patientId"))
 public class Subject implements Serializable {
 
@@ -22,13 +29,15 @@ public class Subject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// TODO
+	@Id
+	@GeneratedValue
 	private long id;
 	
 	/*
 	 * This will be same as patient id in Clinic database
 	 */
 	// TODO
-
+	@Column(nullable=false,unique=true)
 	@Convert("uuidConverter")
 	private UUID patientId;
 		
@@ -38,6 +47,7 @@ public class Subject implements Serializable {
 	private long subjectId;
 	
 	// TODO
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "subject", fetch = FetchType.EAGER)
 	private Collection<DrugTreatmentRecord> treatments;
 
 	public long getId() {

@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -32,8 +33,11 @@ import edu.stevens.cs548.clinic.rest.client.stub.WebClient;
 import edu.stevens.cs548.clinic.service.dto.DrugTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.PatientDto;
 import edu.stevens.cs548.clinic.service.dto.PatientDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.PhysiotherapyTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDto;
 import edu.stevens.cs548.clinic.service.dto.ProviderDtoFactory;
+import edu.stevens.cs548.clinic.service.dto.RadiologyTreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.SurgeryTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDtoFactory;
 import edu.stevens.cs548.clinic.service.dto.util.GsonFactory;
@@ -264,7 +268,15 @@ public class App {
 		/*
 		 * TODO Load the treatment information
 		 */
-
+		if (!TREATMENTS.equals(rd.nextName())){
+			throw new ParseException("Expected field: " + TREATMENTS, 0);
+		}
+		rd.beginArray();
+		while (rd.hasNext()) {
+			TreatmentDto treatment = gson.fromJson(rd, TreatmentDto.class);
+			treatments.add(treatment);
+		}
+		rd.endArray();
 
 		rd.endObject();
 	}
@@ -358,6 +370,15 @@ public class App {
 			treatment = addDrugTreatment();
 		}
 		// TODO add other cases
+		else if ("S".equals(line)){
+			addSurgeryTreatment();
+		}
+		else if ("R".equals(line)){
+			addRadiologyTreatment();
+		}
+		else if ("P".equals(line)){
+			addPhysiotherapyTreatment();
+		}
 		
 		if (treatment != null) {
 			msgln("Adding follow-up treatments...");
@@ -385,6 +406,69 @@ public class App {
 		treatment.setEndDate(readDate("End date"));
 		msg("Frequency: ");
 		treatment.setFrequency(Integer.parseInt(in.readLine()));
+
+		return treatment;
+	}
+
+	private SurgeryTreatmentDto addSurgeryTreatment() throws IOException, ParseException {
+		
+		SurgeryTreatmentDto treatment = treatmentFactory.createSurgeryTreatmentDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine());
+		treatment.setSurgeryDate(readDate("Surgery Date"));
+		msg("Discharge Instructions: ");
+		treatment.setDischargeInstructions(in.readLine().strip());
+
+		return treatment;
+	}
+
+	private RadiologyTreatmentDto addRadiologyTreatment() throws IOException, ParseException {
+		
+		RadiologyTreatmentDto treatment = treatmentFactory.createRadiologyTreatmentDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine().strip());
+
+		ArrayList<LocalDate> treatmentDates = new ArrayList<>();
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(LocalDate.parse(date.strip(), dateFormatter));
+		}
+		treatment.setTreatmentDates(treatmentDates);
+
+		return treatment;
+	}
+
+	private PhysiotherapyTreatmentDto addPhysiotherapyTreatment() throws IOException, ParseException {
+		PhysiotherapyTreatmentDto treatment = treatmentFactory.createPhysiotherapyTreatmentDto();
+
+		treatment.setId(UUID.randomUUID());
+		msg("Patient ID: ");
+		treatment.setPatientId(UUID.fromString(in.readLine().strip()));
+		msg("Provider ID: ");
+		treatment.setProviderId(UUID.fromString(in.readLine().strip()));
+		msg("Diagnosis: ");
+		treatment.setDiagnosis(in.readLine().strip());
+
+		msg("Treatment Dates: (comma separated in the format (MM/dd/yyyy): ");
+		ArrayList<LocalDate> treatmentDates = new ArrayList<>();
+		List<String> dates = Arrays.asList(in.readLine().strip().split(","));
+		for (String date: dates){
+			treatmentDates.add(LocalDate.parse(date.strip(), dateFormatter));
+		}
+		treatment.setTreatmentDates(treatmentDates);
 
 		return treatment;
 	}
@@ -452,6 +536,14 @@ public class App {
 					/*
 					 * TODO Upload the treatment information.
 					 */
+					logger.info("...uploading treatment records...");
+					wr.name(TREATMENTS);
+					wr.beginArray();
+					for (TreatmentDto treatment : treatments) {
+						logger.info("......uploading patient " + treatment.getId());
+						gson.toJson(treatment, treatment.getClass(), wr);
+					}
+					wr.endArray();
 
 
 					wr.endObject();

@@ -7,6 +7,9 @@ import com.google.gson.GsonBuilder;
 
 import edu.stevens.cs548.clinic.service.dto.DrugTreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.PhysiotherapyTreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.RadiologyTreatmentDto;
+import edu.stevens.cs548.clinic.service.dto.SurgeryTreatmentDto;
 
 public class GsonFactory {
 	
@@ -27,6 +30,9 @@ public class GsonFactory {
 			RuntimeTypeAdapterFactory.of(TreatmentDto.class, TYPE_TAG)
 				.registerSubtype(DrugTreatmentDto.class, DRUGTREATMENT_TAG)
 				// TODO Register other DTO classes with adapter factory.
+				.registerSubtype(RadiologyTreatmentDto.class, RADIOLOGY_TAG)
+				.registerSubtype(SurgeryTreatmentDto.class, SURGERY_TAG)
+				.registerSubtype(PhysiotherapyTreatmentDto.class, PHYSIOTHERAPY_TAG)
 				;
 		
 		GsonBuilder gsonBuilder = new GsonBuilder();
