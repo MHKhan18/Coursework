@@ -83,7 +83,7 @@ public class RegisterService extends Service {
 
         Intent notificationIntent = new Intent(this, RegisterActivity.class);
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         /*
          * If you are feeling ambitious, try adding a CANCEL action to the notification.....
@@ -163,10 +163,10 @@ public class RegisterService extends Service {
                         // Use receiver to call back to activity
                         if (registerResponse != null && !(registerResponse instanceof ErrorResponse)) {
                             // TODO let activity know request succeeded
-
+                            receiver.send(Activity.RESULT_OK, null);
                         } else {
                             // TODO let activity know request failed
-
+                            receiver.send(Activity.RESULT_CANCELED, null);
                         }
                     } else {
                         Log.d(TAG, "Missing receiver for registration.");

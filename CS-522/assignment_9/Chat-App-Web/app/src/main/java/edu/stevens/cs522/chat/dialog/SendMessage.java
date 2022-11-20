@@ -115,6 +115,7 @@ public class SendMessage extends DialogFragment {
             Log.d(TAG, String.format("...sending \"%s\" to %s....", message, currentChatroom.name));
 
             // TODO get the activity to send the message
+            listener.send(currentChatroom.name, message);
 
             Log.d(TAG, "...dismissing dialog.");
             SendMessage.this.dismiss();

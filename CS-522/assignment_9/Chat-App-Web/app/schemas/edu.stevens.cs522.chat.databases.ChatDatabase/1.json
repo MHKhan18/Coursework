@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4c66a4f7a1e5a7b2114d22ffdc181643",
+    "identityHash": "a29340056988389e03e5d713ebc0ee99",
     "entities": [
       {
         "tableName": "Peer",
@@ -60,7 +60,7 @@
       },
       {
         "tableName": "Message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `chatroom` TEXT, `messageText` TEXT, `seqNum` INTEGER NOT NULL, `appID` TEXT, `timestamp` INTEGER, `latitude` REAL, `longitude` REAL, `sender` TEXT, FOREIGN KEY(`sender`) REFERENCES `Peer`(`name`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`chatroom`) REFERENCES `Chatroom`(`name`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `chatroom` TEXT, `messageText` TEXT, `seqNum` INTEGER NOT NULL, `appID` TEXT, `timestamp` INTEGER, `latitude` REAL, `longitude` REAL, `sender` TEXT, FOREIGN KEY(`sender`) REFERENCES `Peer`(`name`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -132,35 +132,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_Message_sender` ON `${TABLE_NAME}` (`sender`)"
-          },
-          {
-            "name": "index_Message_chatroom",
-            "unique": false,
-            "columnNames": [
-              "chatroom"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Message_chatroom` ON `${TABLE_NAME}` (`chatroom`)"
           }
         ],
         "foreignKeys": [
           {
             "table": "Peer",
-            "onDelete": "NO ACTION",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "sender"
-            ],
-            "referencedColumns": [
-              "name"
-            ]
-          },
-          {
-            "table": "Chatroom",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "chatroom"
             ],
             "referencedColumns": [
               "name"
@@ -208,7 +188,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c66a4f7a1e5a7b2114d22ffdc181643')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a29340056988389e03e5d713ebc0ee99')"
     ]
   }
 }

@@ -51,6 +51,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -150,7 +151,14 @@ public class RestMethod {
          * TODO Wrap the okhttp client with a retrofit stub factory.
          */
 
-        return null;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverUri.toString())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+
+        ServerApi api = retrofit.create(ServerApi.class);
+        return  api;
     }
 
 
@@ -160,8 +168,8 @@ public class RestMethod {
             ServerApi server = createClient(request.chatServer, request);
             Response<Void> response = null;
             // TODO execute the Web service call
-
-
+            Call<Void> call =  server.register(request.chatname);
+            response = call.execute();
             return request.getResponse(response);
         } catch (SocketTimeoutException e) {
             Log.e(TAG, "Socket timeout.", e);
@@ -179,8 +187,8 @@ public class RestMethod {
 
             Response<Void> response = null;
             // TODO execute the Web service call
-
-
+            Call<Void> call = server.postMessage(request.message.sender, request.message);
+            response = call.execute();
             return request.getResponse(response);
         } catch (SocketTimeoutException e) {
             return isUnavailable(request);
@@ -221,8 +229,9 @@ public class RestMethod {
         ChatServiceResponse response = null;
 
         // TODO execute the Web service call
-
-
+        Call<ResponseBody> call = server.syncMessages(chatName,request.lastSequenceNumber,requestBody);
+        callResponse = call.execute();
+        response = request.getResponse(callResponse);
         // end TODO
 
         /*

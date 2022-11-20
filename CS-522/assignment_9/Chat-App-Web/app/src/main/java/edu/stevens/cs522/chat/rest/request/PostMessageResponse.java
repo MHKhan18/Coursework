@@ -23,6 +23,7 @@ public class PostMessageResponse extends ChatServiceResponse {
         super(response);
 
         // TODO set messageId from HTTP response header
+        messageId = Long.valueOf(response.headers().get("id"));
 
     }
 

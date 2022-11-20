@@ -18,6 +18,9 @@ import edu.stevens.cs522.chat.entities.Chatroom;
  */
 public abstract class ChatroomDao {
 
+    @Query("SELECT id FROM Chatroom WHERE name = :name LIMIT 1")
+    protected abstract long getChatRoomId(String name);
+
     /*
      * List of chatrooms for the UI (asynchronous)
      */
@@ -35,5 +38,14 @@ public abstract class ChatroomDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract void insert(Chatroom chatroom);
+
+
+    @Transaction
+    public void upsert(Chatroom chatroom){
+        long id = getChatRoomId(chatroom.name);
+        if (id == 0){
+            insert(chatroom);
+        }
+    }
 
 }

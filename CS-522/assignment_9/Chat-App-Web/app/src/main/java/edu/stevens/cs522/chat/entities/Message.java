@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 import java.util.UUID;
 
+import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import edu.stevens.cs522.base.DateUtils;
 
@@ -21,11 +22,17 @@ import edu.stevens.cs522.base.DateUtils;
 // TODO annotate (including FK constraints)
 // You must also declare indices on the FK columns, otherwise integrity checking
 // may trigger a linear search of this table.
-
+@Entity(
+        foreignKeys = @ForeignKey(
+                entity = Peer.class, onDelete = ForeignKey.CASCADE,
+                parentColumns = "name", childColumns = "sender"
+        ),
+        indices = @Index("sender")
+)
 public class Message implements Parcelable {
 
     // TODO annotate
-
+    @PrimaryKey(autoGenerate = true)
     public long id;
 
     public String chatroom;
@@ -37,11 +44,11 @@ public class Message implements Parcelable {
 
     // The id of the app that created this message
     // TODO annotate
-
+    @TypeConverters(UUIDConverter.class)
     public UUID appID;
 
     // TODO annotate
-
+    @TypeConverters(DateConverter.class)
     public Date timestamp;
 
     public Double latitude;

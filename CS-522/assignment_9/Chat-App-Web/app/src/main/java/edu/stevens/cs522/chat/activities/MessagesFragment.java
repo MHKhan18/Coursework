@@ -24,6 +24,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -106,6 +107,8 @@ public class MessagesFragment extends Fragment implements OnClickListener {
         messageList.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // TODO Initialize the recyclerview and adapter for messages
+        messagesAdapter = new MessageSenderAdapter();
+        messageList.setAdapter(messagesAdapter);
 
 
          return rootView;
@@ -115,6 +118,8 @@ public class MessagesFragment extends Fragment implements OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         // TODO get the view models
+        chatViewModel = new ViewModelProvider(this.requireActivity()).get(ChatViewModel.class);
+        sharedViewModel = new ViewModelProvider(this.requireActivity()).get(SharedViewModel.class);
 
 
         // Rely on live data to requery the messages if the chatroom selection changes
@@ -137,6 +142,16 @@ public class MessagesFragment extends Fragment implements OnClickListener {
         }
 
         // TODO query the database asynchronously, and use messagesAdapter to display the result
+        chatViewModel.fetchAllMessages(chatroom).observe(
+                getViewLifecycleOwner(),
+                new Observer<List<Message>>() {
+                    @Override
+                    public void onChanged(List<Message> messages) {
+                        messagesAdapter.setMessages(messages);
+                        messagesAdapter.notifyItemRangeChanged(0, messages.size());
+                    }
+                }
+        );
 
     }
 

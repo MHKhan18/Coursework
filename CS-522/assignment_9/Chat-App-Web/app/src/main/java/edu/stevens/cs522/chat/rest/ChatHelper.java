@@ -43,7 +43,7 @@ public class ChatHelper {
     public void register (Uri chatServer, String chatName, ResultReceiverWrapper resultReceiver) {
         if (chatName != null && !chatName.isEmpty()) {
             // TODO register with the cloud chat service
-
+            RegisterService.register(context,chatServer,chatName,resultReceiver);
         }
     }
 
@@ -72,7 +72,8 @@ public class ChatHelper {
              * and eventually synchronized with server database.  The request processor
              * is where either of these will be done.
             */
-
+            OneTimeWorkRequest request = new OneTimeWorkRequest(PostMessageWorker.class, data);
+            workManager.enqueueUniqueWork(request);
         }
     }
 
@@ -87,7 +88,8 @@ public class ChatHelper {
             }
 
             // TODO schedule periodic synchronization with message database
-
+            syncRequest= new PeriodicWorkRequest(SynchronizeWorker.class,null,SYNC_INTERVAL);
+            workManager.enqueuePeriodicUniqueWork(syncRequest);
         }
     }
 
@@ -100,7 +102,7 @@ public class ChatHelper {
             }
 
             // TODO cancel periodic synchronization with message database
-
+            workManager.cancelPeriodicUniqueWork(syncRequest);
         }
     }
 

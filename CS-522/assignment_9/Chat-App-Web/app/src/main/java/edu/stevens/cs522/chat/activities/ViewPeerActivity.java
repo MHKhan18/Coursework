@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.Observer;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -45,8 +46,17 @@ public class ViewPeerActivity extends FragmentActivity {
         }
 
         // TODO Set the fields of the UI
+        TextView name = findViewById(R.id.view_user_name);
+        TextView lastSeen = findViewById(R.id.view_timestamp);
+        TextView location = findViewById(R.id.view_location);
 
+        String namePrompt = getResources().getString(R.string.view_user_name);
+        String timePrompt = getResources().getString(R.string.view_timestamp);
+        String locationPrompt = getResources().getString(R.string.view_location);
 
+        name.setText(String.format(namePrompt, peer.name));
+        lastSeen.setText(String.format(timePrompt, formatTimestamp(peer.timestamp)));
+        location.setText(String.format(locationPrompt, peer.latitude, peer.longitude));
         // End TODO
 
         // Initialize the recyclerview and adapter for messages
@@ -56,10 +66,21 @@ public class ViewPeerActivity extends FragmentActivity {
         messageAdapter = new MessageChatroomAdapter();
         messageList.setAdapter(messageAdapter);
 
+
         // TODO open the view model
+        PeerViewModel peerViewModel =  new ViewModelProvider(this).get(PeerViewModel.class);
 
         // TODO query the database asynchronously, and use messagesAdapter to display the result
-
+        peerViewModel.fetchMessagesFromPeer(peer).observe(
+                this,
+                new Observer<List<Message>>() {
+                    @Override
+                    public void onChanged(List<Message> messages) {
+                        messageAdapter.setMessages(messages);
+                        messageList.setAdapter(messageAdapter);
+                    }
+                }
+        );
     }
 
     private static String formatTimestamp(Date timestamp) {

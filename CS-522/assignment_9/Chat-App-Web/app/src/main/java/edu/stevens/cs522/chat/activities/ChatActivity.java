@@ -91,10 +91,11 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
         }
 
         // TODO get shared view model for current chatroom
-
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         // TODO instantiate helper for service
-
+        chatHelper = new ChatHelper(ChatActivity.this);
         // TODO start synchronizing with cloud chat servce (may be no-op, if Settings.SYNC == false).
+        chatHelper.startMessageSync();
 
         // Only used to insert a chatroom
         chatroomDao = ChatDatabase.getInstance(getApplicationContext()).chatroomDao();
@@ -120,6 +121,7 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
     public void onDestroy() {
         super.onDestroy();
         // TODO stop synchronization of messages with chat server
+        chatHelper.stopMessageSync();
     }
 
     @Override
@@ -145,8 +147,8 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // TODO inflate a menu with REGISTER and PEERS options
-
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatserver_menu, menu);
         return true;
     }
 
@@ -162,7 +164,8 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
 
         } else if (itemId == R.id.peers) {
             // TODO PEERS: provide the UI for viewing list of peers
-
+            Intent peerIntent = new Intent(this, ViewPeersActivity.class);
+            startActivity(peerIntent);
             return true;
 
         }
@@ -193,7 +196,7 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
      */
     public void send(String chatroom, String message) {
         // TODO send the message
-
+        chatHelper.postMessage(chatroom,message,null);
         Log.i(TAG, "Sent message: " + message);
     }
 
@@ -220,7 +223,11 @@ public class ChatActivity extends AppCompatActivity implements ChatroomsFragment
         if (!isTwoPane) {
             // TODO For single pane, replace chatrooms fragment with messages fragment.
             // Add chatrooms fragment to backstack, so pressing BACK key will return to index.
-
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container,new MessagesFragment())
+                    .addToBackStack(SHOWING_CHATROOMS_TAG)
+                    .commit();
         }
     }
 }
