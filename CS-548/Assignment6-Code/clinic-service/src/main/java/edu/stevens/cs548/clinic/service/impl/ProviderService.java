@@ -174,22 +174,22 @@ public class ProviderService implements IProviderService {
 										radiologyTreatmentDto.getDiagnosis(), radiologyTreatmentDto.getTreatmentDates(), parentFollowUps);
 				}
 
-				if (dto instanceof SurgeryTreatmentDto){
+				else if (dto instanceof SurgeryTreatmentDto){
 					SurgeryTreatmentDto surgeryTreatmentDto = (SurgeryTreatmentDto)dto; 
 					followUpsConsumer = provider.importSurgery(surgeryTreatmentDto.getId(), patient, provider, 
 											surgeryTreatmentDto.getDiagnosis(), surgeryTreatmentDto.getSurgeryDate(), surgeryTreatmentDto.getDischargeInstructions(), parentFollowUps);
 
 				}
 
-				if (dto instanceof PhysiotherapyTreatmentDto){
+				else if (dto instanceof PhysiotherapyTreatmentDto){
 					PhysiotherapyTreatmentDto physiotherapyTreatmentDto = (PhysiotherapyTreatmentDto)dto; 
 					followUpsConsumer = provider.importPhysiotherapy(physiotherapyTreatmentDto.getId(), patient, provider, 
 						physiotherapyTreatmentDto.getDiagnosis(), physiotherapyTreatmentDto.getTreatmentDates(), parentFollowUps);
 				}
 
-
-				throw new IllegalArgumentException("No treatment-specific info provided.");
-				
+				else{
+					throw new IllegalArgumentException("No treatment-specific info provided.");
+				}
 			}
 
 			for (TreatmentDto followUp : dto.getFollowupTreatments()) {

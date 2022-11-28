@@ -35,7 +35,7 @@ import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 import edu.stevens.cs548.clinic.service.dto.util.GsonFactory;
 
 // TODO
-@Path("provider")
+@Path("/provider")
 @RequestScoped
 public class ProviderResource extends ResourceBase {
 	

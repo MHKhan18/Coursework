@@ -221,6 +221,10 @@ public class Provider implements Serializable, ITreatmentImporter {
 			treatment.addTreatmentDate(date);
 		}
 
+		provider.addTreatment(treatment);
+		patient.addTreatment(treatment);
+		treatmentDao.addTreatment(treatment);
+
 		if (consumer != null) {
 			consumer.accept(treatment);
 		}
@@ -239,6 +243,10 @@ public class Provider implements Serializable, ITreatmentImporter {
 		treatment.setDiagnosis(diagnosis);
 		treatment.setSurgeryDate(date);
 		treatment.setDischargeInstructions(dischargeInstructions);
+
+		provider.addTreatment(treatment);
+		patient.addTreatment(treatment);
+		treatmentDao.addTreatment(treatment);
 
 		if (consumer != null) {
 			consumer.accept(treatment);
@@ -260,6 +268,10 @@ public class Provider implements Serializable, ITreatmentImporter {
 		for (LocalDate date : dates){
 			treatment.addTreatmentDate(date);
 		}
+
+		provider.addTreatment(treatment);
+		patient.addTreatment(treatment);
+		treatmentDao.addTreatment(treatment);
 
 		if (consumer != null) {
 			consumer.accept(treatment);

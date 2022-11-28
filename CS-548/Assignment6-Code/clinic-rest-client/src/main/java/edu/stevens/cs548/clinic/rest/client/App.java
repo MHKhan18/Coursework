@@ -371,13 +371,13 @@ public class App {
 		}
 		// TODO add other cases
 		else if ("S".equals(line)){
-			addSurgeryTreatment();
+			treatment = addSurgeryTreatment();
 		}
 		else if ("R".equals(line)){
-			addRadiologyTreatment();
+			treatment = addRadiologyTreatment();
 		}
 		else if ("P".equals(line)){
-			addPhysiotherapyTreatment();
+			treatment = addPhysiotherapyTreatment();
 		}
 		
 		if (treatment != null) {

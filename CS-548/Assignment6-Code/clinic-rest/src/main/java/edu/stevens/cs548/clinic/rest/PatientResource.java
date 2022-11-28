@@ -21,7 +21,7 @@ import edu.stevens.cs548.clinic.service.dto.PatientDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 
 // TODO
-@Path("patient")
+@Path("/patient")
 @RequestScoped
 public class PatientResource extends ResourceBase {
 	
