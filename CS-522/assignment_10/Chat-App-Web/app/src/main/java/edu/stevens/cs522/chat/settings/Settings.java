@@ -24,7 +24,7 @@ public class Settings {
      * by an alarm-driven process.  In this latter scenario, messages are downloaded from the
      * server to this device as part of the synchronization.
      */
-    public static final boolean SYNC = false;
+    public static final boolean SYNC = true;
 
     /*
      * Key for storing UUID identifying this installation in preferences.
