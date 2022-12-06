@@ -16,6 +16,15 @@ import edu.stevens.cs548.clinic.gson.GsonProvider;
 
 
 // TODO
+@DataSourceDefinition(
+    name="java:global/jdbc/cs548",
+    className="org.postgresql.ds.PGSimpleDataSource",
+    user="${db.username}",
+    password="${ENV=DATABASE_PASSWORD}",
+    databaseName="${db.database}",
+    serverName="${db.host}",
+    portNumber=5432
+)
 
 @ApplicationPath("/")
 @ApplicationScoped

@@ -19,6 +19,7 @@ import edu.stevens.cs548.clinic.service.dto.PatientDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 
 // TODO
+@RequestScoped
 public class PatientService implements IPatientService {
 	
 	private Logger logger = Logger.getLogger(PatientService.class.getCanonicalName());
@@ -26,6 +27,7 @@ public class PatientService implements IPatientService {
 	private static final String LOCATION = "Location";
 	
 	// TODO
+	@Inject @RestClient
 	IPatientMicroService patientMicroService;
 
 	@Override

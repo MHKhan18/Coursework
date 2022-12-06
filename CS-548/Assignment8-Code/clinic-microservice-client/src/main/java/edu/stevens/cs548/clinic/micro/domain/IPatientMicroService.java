@@ -17,16 +17,30 @@ import edu.stevens.cs548.clinic.gson.GsonProvider;
 import edu.stevens.cs548.clinic.service.dto.PatientDto;
 
 // TODO annotate
+@RegisterRestClient(configKey = "clinic-domain.api")
+@RegisterProvider(GsonProvider.class)
+@Path("patient")
 public interface IPatientMicroService {
 	
+	@POST
+	@Consumes("application/json")
 	public Response addPatient(PatientDto dto);
 
+	@GET
+	@Produces("application/json")
 	public Response getPatients();
 	
+	@GET
+	@Path("{id}")
+	@Produces("application/json")
 	public Response getPatient(@PathParam("id") String id, @QueryParam("treatments") String includeTreatments);
 	
+	@GET
+	@Path("{id}/treatment/{tid}")
+	@Produces("application/json")
 	public Response getTreatment(@PathParam("id") String patientId, @PathParam("tid") String treatmentId);
 
+	@DELETE
 	public Response removeAll();
 	
 }

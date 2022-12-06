@@ -41,14 +41,19 @@ import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
  * REST version of Patient Service
  */
 // TODO
+@Path("/patient")
+@RequestScoped
+@Transactional
 public class PatientMicroService {
 	
 	private Logger logger = Logger.getLogger(PatientMicroService.class.getCanonicalName());	
 
 	// TODO
+	@Context
 	private UriInfo uriInfo;
 	
 	// TODO
+	@Inject
 	private IPatientDao patientDao;
 	
 	private IPatientFactory patientFactory;
@@ -62,6 +67,8 @@ public class PatientMicroService {
 	}
 	
 	// TODO
+	@POST
+	@Consumes("application/json")
 	public Response addPatient(PatientDto dto) {
 		try {
 			logger.info(String.format("addPatient: Adding patient %s in microservice!", dto.getName()));
@@ -84,6 +91,8 @@ public class PatientMicroService {
 	}
 
 	// TODO
+	@GET
+	@Produces("application/json")
 	public Response getPatients() {
 		logger.info(String.format("getPatients: Getting all patients in microservice!"));
 		Collection<Patient> patients = patientDao.getPatients();
@@ -112,6 +121,9 @@ public class PatientMicroService {
 	}
 	
 	// TODO
+	@GET
+	@Path("{id}")
+	@Produces("application/json")
 	public Response getPatient(@PathParam("id") String id, @QueryParam("treatments") @DefaultValue("true") String treatments) {
 		try {
 			logger.info(String.format("getPatient: Getting patient %s in microservice!", id));
@@ -119,6 +131,8 @@ public class PatientMicroService {
 			boolean includeTreatments = Boolean.parseBoolean(treatments);
 			
 			// TODO use DAO to get patient by external key, create DTO that includes treatments
+			Patient patient = patientDao.getPatient(patientId, includeTreatments);
+			PatientDto patientDto = patientToDto(patient, true);
 			
 			return Response.ok(patientDto, MediaType.APPLICATION_JSON).build();
 		} catch (PatientExn e) {
@@ -132,6 +146,9 @@ public class PatientMicroService {
 	}
 
 	// TODO
+	@GET
+	@Path("{id}/treatment/{tid}")
+	@Produces("application/json")
 	public Response getTreatment(@PathParam("id") String id, @PathParam("tid") String tid) {
 		// Export treatment DTO from patient aggregate
 		try {
@@ -154,6 +171,7 @@ public class PatientMicroService {
 	}
 	
 	// TODO
+	@DELETE
 	public void removeAll() {
 		logger.info(String.format("deletePatients: Deleting all patients in microservice!"));
 		patientDao.deletePatients();

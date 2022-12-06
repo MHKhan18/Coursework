@@ -14,10 +14,10 @@
 		<module>../clinic-dto</module>
 		<module>../clinic-domain</module>
 		<module>../clinic-service-client</module>
-		<module>../clinic-service</module>
+		<!-- <module>../clinic-service</module> -->
 
-		<module>../clinic-init0</module>
-		<module>../clinic-webapp0</module>
+		<!-- <module>../clinic-init0</module>
+		<module>../clinic-webapp0</module> -->
 
 		<module>../clinic-init</module>
 		<module>../clinic-webapp</module>
@@ -179,11 +179,11 @@
 			</dependency>
 
 			<!-- Intra-app dependencies. -->
-			<dependency>
+			<!-- <dependency>
 				<groupId>edu.stevens.cs548</groupId>
 				<artifactId>clinic-json-schema</artifactId>
 				<version>1.0.0</version>
-			</dependency>
+			</dependency> -->
 
 
 			<!-- Internal dependencies -->
@@ -206,11 +206,11 @@
 				<version>1.0.0</version>
 			</dependency>
 
-			<dependency>
+			<!-- <dependency>
 				<groupId>edu.stevens.cs548</groupId>
 				<artifactId>clinic-init0</artifactId>
 				<version>1.0.0</version>
-			</dependency>
+			</dependency> -->
 
 			<dependency>
 				<groupId>edu.stevens.cs548</groupId>
@@ -224,11 +224,11 @@
 				<version>1.0.0</version>
 			</dependency>
 
-			<dependency>
+			<!-- <dependency>
 				<groupId>edu.stevens.cs548</groupId>
 				<artifactId>clinic-service</artifactId>
 				<version>1.0.0</version>
-			</dependency>
+			</dependency> -->
 
 			<dependency>
 				<groupId>edu.stevens.cs548</groupId>

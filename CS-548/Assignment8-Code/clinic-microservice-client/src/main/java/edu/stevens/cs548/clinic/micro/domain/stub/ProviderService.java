@@ -20,6 +20,7 @@ import edu.stevens.cs548.clinic.service.dto.ProviderDto;
 import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
 
 // TODO
+@RequestScoped
 public class ProviderService implements IProviderService {
 	
 	private Logger logger = Logger.getLogger(ProviderService.class.getCanonicalName());
@@ -27,6 +28,7 @@ public class ProviderService implements IProviderService {
 	private static final String LOCATION = "location";
 	
 	// TODO
+	@Inject @RestClient
 	IProviderMicroService providerMicroService;
 	
 	@Override
@@ -74,7 +76,7 @@ public class ProviderService implements IProviderService {
 
 	@Override
 	public void addTreatment(TreatmentDto dto) throws PatientServiceExn, ProviderServiceExn {
-		logger.info(String.format("addTreatment: Adding treatment for %s in microservice client!", dto.getPatientName()));
+		logger.info(String.format("addTreatment: Adding treatment for %s in microservice client!", dto.getPatientId()));
 		Response response = providerMicroService.addTreatment(dto.getProviderId().toString(), dto);
 		if (response.getStatus() >= 300) {
 			Exception e = new WebApplicationException(response);

@@ -50,6 +50,9 @@ import edu.stevens.cs548.clinic.service.dto.TreatmentDto;
  * Microservice for provider aggregate
  */
 // TODO
+@Path("/provider")
+@RequestScoped
+@Transactional
 public class ProviderMicroService {
 
 	private Logger logger = Logger.getLogger(ProviderMicroService.class.getCanonicalName());
@@ -66,15 +69,20 @@ public class ProviderMicroService {
 	
 
 	// TODO
+	@Context
 	UriInfo uriInfo;
 	
 	// TODO
+	@Inject
 	private IProviderDao providerDao;
 
 	// TODO
+	@Inject
 	private IPatientDao patientDao;
 
 	// TODO
+	@POST
+	@Consumes("application/json")
 	public Response addProvider(ProviderDto dto) {
 		// Use factory to create Provider entity, and persist with DAO
 		try {
@@ -97,6 +105,8 @@ public class ProviderMicroService {
 	}
 	
 	// TODO
+	@GET
+	@Produces("application/json")
 	public Response getProviders() {
 		try {
 			logger.info(String.format("getProviders: Getting all providers in microservice!"));
@@ -125,6 +135,9 @@ public class ProviderMicroService {
 	}
 	
 	// TODO
+	@GET
+	@Path("{id}")
+	@Produces("application/json")
 	public Response getProvider(@PathParam("id") String id, @QueryParam("treatments") @DefaultValue("true")String treatments) {
 		try {
 			logger.info(String.format("getProvider: Getting provider %s in microservice!", id));
@@ -132,6 +145,8 @@ public class ProviderMicroService {
 			boolean includeTreatments = Boolean.parseBoolean(treatments);
 			
 			// TODO use DAO to get Provider by external key
+			Provider provider = providerDao.getProvider(providerId, includeTreatments);
+			ProviderDto providerDto = providerToDto(provider, includeTreatments);
 			
 			return Response.ok(providerDto, MediaType.APPLICATION_JSON).build();
 		} catch (ProviderExn e) {
@@ -144,6 +159,9 @@ public class ProviderMicroService {
 	}
 	
 	// TODO
+	@POST
+	@Path("{id}")
+	@Consumes("application/json")
 	public Response addTreatment(@PathParam("id") String id, TreatmentDto dto) {
 		try {
 			logger.info(String.format("addTreatment: Adding treatment for %s in microservice!", dto.getPatientName()));
@@ -187,6 +205,28 @@ public class ProviderMicroService {
 			/*
 			 * TODO Handle the other cases
 			 */
+			if (dto instanceof RadiologyTreatmentDto){
+				RadiologyTreatmentDto radiologyTreatmentDto = (RadiologyTreatmentDto) dto;
+				followUpsConsumer = provider.importRadiology(radiologyTreatmentDto.getId(), patient, provider, 
+									radiologyTreatmentDto.getDiagnosis(), radiologyTreatmentDto.getTreatmentDates(), parentFollowUps);
+			}
+
+			else if (dto instanceof SurgeryTreatmentDto){
+				SurgeryTreatmentDto surgeryTreatmentDto = (SurgeryTreatmentDto)dto; 
+				followUpsConsumer = provider.importSurgery(surgeryTreatmentDto.getId(), patient, provider, 
+										surgeryTreatmentDto.getDiagnosis(), surgeryTreatmentDto.getSurgeryDate(), surgeryTreatmentDto.getDischargeInstructions(), parentFollowUps);
+
+			}
+
+			else if (dto instanceof PhysiotherapyTreatmentDto){
+				PhysiotherapyTreatmentDto physiotherapyTreatmentDto = (PhysiotherapyTreatmentDto)dto; 
+				followUpsConsumer = provider.importPhysiotherapy(physiotherapyTreatmentDto.getId(), patient, provider, 
+					physiotherapyTreatmentDto.getDiagnosis(), physiotherapyTreatmentDto.getTreatmentDates(), parentFollowUps);
+			}
+
+			else{
+				throw new IllegalArgumentException("No treatment-specific info provided.");
+			}
 		}
 
 		for (TreatmentDto followUp : dto.getFollowupTreatments()) {
@@ -196,6 +236,9 @@ public class ProviderMicroService {
 	}
 	
 	// TODO
+	@GET
+	@Path("{id}/treatment/{tid}")
+	@Produces("application/json")
 	public Response getTreatment(@PathParam("id") String id, @PathParam("tid") String tid) {
 		try {
 			logger.info(String.format("getTreatment: Getting treatment %s in microservice!", tid));
@@ -219,6 +262,7 @@ public class ProviderMicroService {
 	
 
 	// TODO
+	@DELETE
 	public void removeAll() {
 		logger.info(String.format("deleteProviders: Deleting all providers in microservice!"));
 		providerDao.deleteProviders();

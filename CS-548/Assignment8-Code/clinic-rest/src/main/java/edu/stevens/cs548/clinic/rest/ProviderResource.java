@@ -125,6 +125,7 @@ public class ProviderResource extends ResourceBase {
 	// TODO
 	@POST
 	@Consumes("application/json")
+	@Produces("application/json")
 	/*
 	 * This operation is intended to upload lists of providers, patients and treatments
 	 * from the client.  Imagine the client is a mobile app on which data is entered and later

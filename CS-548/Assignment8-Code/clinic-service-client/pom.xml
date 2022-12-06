@@ -24,10 +24,6 @@
 		</dependency>
 		<dependency>
 			<groupId>edu.stevens.cs548</groupId>
-			<artifactId>clinic-domain</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>edu.stevens.cs548</groupId>
 			<artifactId>clinic-dto</artifactId>
 		</dependency>
 	</dependencies>

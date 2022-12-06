@@ -43,12 +43,20 @@ public class TreatmentExporter implements ITreatmentExporter<TreatmentDto> {
 		DrugTreatmentDto dto = factory.createDrugTreatmentDto();
 
 		// TODO set properties of dto
-
-		
+		dto.setId(tid);
+		dto.setPatientId(patientId);
+		dto.setPatientName(patientName);
+		dto.setProviderId(providerId);
+		dto.setProviderName(providerName);
+		dto.setDiagnosis(diagnosis);
+		dto.setDrug(drug);
+		dto.setDosage(dosage);
+		dto.setStartDate(start);
+		dto.setEndDate(end);
+		dto.setFrequency(frequency);
 		if (includeFollowups) {
 			dto.setFollowupTreatments(followups.get());
 		}
-
 		return dto;
 	}
 
@@ -56,9 +64,17 @@ public class TreatmentExporter implements ITreatmentExporter<TreatmentDto> {
 	public TreatmentDto exportRadiology(UUID tid, UUID patientId, String patientName, UUID providerId,
 			String providerName, String diagnosis, List<LocalDate> dates, Supplier<Collection<TreatmentDto>> followups) {
 		// TODO
-		
-
-		
+		RadiologyTreatmentDto dto = factory.createRadiologyTreatmentDto();
+		dto.setId(tid);
+		dto.setPatientId(patientId);
+		dto.setPatientName(patientName);
+		dto.setProviderId(providerId);
+		dto.setProviderName(providerName);
+		dto.setDiagnosis(diagnosis);
+		dto.setTreatmentDates(dates);
+		if (includeFollowups) {
+			dto.setFollowupTreatments(followups.get());
+		}
 		return dto;
 	}
 
@@ -67,9 +83,18 @@ public class TreatmentExporter implements ITreatmentExporter<TreatmentDto> {
 			String providerName, String diagnosis, LocalDate date, String dischargeInstructions, 
 			Supplier<Collection<TreatmentDto>> followups) {
 		// TODO
-		
-
-		
+		SurgeryTreatmentDto dto = factory.createSurgeryTreatmentDto();
+		dto.setId(tid);
+		dto.setPatientId(patientId);
+		dto.setPatientName(patientName);
+		dto.setProviderId(providerId);
+		dto.setProviderName(providerName);
+		dto.setDiagnosis(diagnosis);
+		dto.setSurgeryDate(date);
+		dto.setDischargeInstructions(dischargeInstructions);
+		if (includeFollowups) {
+			dto.setFollowupTreatments(followups.get());
+		}
 		return dto;
 	}
 
@@ -77,8 +102,18 @@ public class TreatmentExporter implements ITreatmentExporter<TreatmentDto> {
 	public TreatmentDto exportPhysiotherapy(UUID tid, UUID patientId, String patientName, UUID providerId,
 			String providerName, String diagnosis, List<LocalDate> dates, Supplier<Collection<TreatmentDto>> followups) {
 		// TODO
-
-		
-		return dto;	}
+		PhysiotherapyTreatmentDto dto = factory.createPhysiotherapyTreatmentDto();
+		dto.setId(tid);
+		dto.setPatientId(patientId);
+		dto.setPatientName(patientName);
+		dto.setProviderId(providerId);
+		dto.setProviderName(providerName);
+		dto.setDiagnosis(diagnosis);
+		dto.setTreatmentDates(dates);
+		if (includeFollowups) {
+			dto.setFollowupTreatments(followups.get());
+		}
+		return dto;
+	}
 
 }

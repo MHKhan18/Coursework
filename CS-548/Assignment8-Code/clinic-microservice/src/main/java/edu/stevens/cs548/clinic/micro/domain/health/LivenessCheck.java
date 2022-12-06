@@ -2,11 +2,18 @@ package edu.stevens.cs548.clinic.micro.domain.health;
 
 import java.util.logging.Logger;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
+import org.eclipse.microprofile.health.Liveness;
 
 // TODO
+@Liveness
+@ApplicationScoped
 public class LivenessCheck implements HealthCheck {
 
 	private static final Logger logger = Logger.getLogger(ReadinessCheck.class.getCanonicalName());
@@ -18,6 +25,8 @@ public class LivenessCheck implements HealthCheck {
 	private static final String ERROR_KEY = "error";
 
 	// TODO
+    @Inject
+   @ConfigProperty(name = MEMORY_THRESHOLD_PROPERTY)
     private long threshold;
 	
     @Override

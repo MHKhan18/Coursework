@@ -540,7 +540,7 @@ public class App {
 					wr.name(TREATMENTS);
 					wr.beginArray();
 					for (TreatmentDto treatment : treatments) {
-						logger.info("......uploading patient " + treatment.getId());
+						logger.info("......uploading treatment " + treatment.getId());
 						gson.toJson(treatment, treatment.getClass(), wr);
 					}
 					wr.endArray();
