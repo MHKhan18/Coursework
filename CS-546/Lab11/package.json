@@ -10,6 +10,6 @@
   "author": "Mohammad Khan 10438167",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.18.2"
   }
 }
