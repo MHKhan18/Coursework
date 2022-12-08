@@ -1,0 +1,9 @@
+# List all emulatores:
+./adb devices -l
+
+# get name of emulator devices
+./adb -s <emulator_name> emu avd name
+
+
+# port forward to connect
+./adb -t <transport_id_of_receving_device> forward tcp:6666 tcp:6666
