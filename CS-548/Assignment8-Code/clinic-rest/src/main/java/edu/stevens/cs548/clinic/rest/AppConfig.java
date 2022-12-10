@@ -8,7 +8,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import edu.stevens.cs548.clinic.gson.GsonProvider;
+import edu.stevens.cs548.clinic.rest.GsonProvider;
 
 @ApplicationPath("/")
 public class AppConfig extends Application {
@@ -32,6 +32,7 @@ public class AppConfig extends Application {
     public Map<String, Object> getProperties() {
         Map<String, Object> props = new HashMap<>();
         props.put("jersey.config.server.disableMoxyJson", true);
+		props.put("jersey.config.disableJsonProcessing", true);
         return props;
     }
 

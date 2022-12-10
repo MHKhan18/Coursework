@@ -161,10 +161,6 @@ public class InitBean {
 			// treatmentDates.add(LocalDate.parse("2022-12-17"));
 			// treatmentDates.add(LocalDate.parse("2022-12-27"));
 			// rad01.setTreatmentDates(treatmentDates2);
-			// // Collection<TreatmentDto> followupTreatments = new ArrayList<>();
-			// // followupTreatments.add(drug01);
-			// // followupTreatments.add(therapy01);
-			// // rad01.setFollowupTreatments(followupTreatments);
 			// providerService.addTreatment(rad01);
 
 			// SurgeryTreatmentDto sur01 = treatmentFactory.createSurgeryTreatmentDto();
@@ -185,10 +181,6 @@ public class InitBean {
 			// sur02.setDiagnosis("Knee Fracture");
 			// sur02.setSurgeryDate(LocalDate.parse("2022-11-20"));
 			// sur02.setDischargeInstructions("Take 4 weeks rest");
-			// // Collection<TreatmentDto> followupTreatments2 = new ArrayList<>();
-			// // followupTreatments2.add(therapy01);
-			// // followupTreatments2.add(sur01);
-			// // sur02.setFollowupTreatments(followupTreatments2);
 			// providerService.addTreatment(sur02);
 
 			// SurgeryTreatmentDto sur03 = treatmentFactory.createSurgeryTreatmentDto();
@@ -199,10 +191,6 @@ public class InitBean {
 			// sur03.setDiagnosis("Dislocated joint");
 			// sur03.setSurgeryDate(LocalDate.parse("2022-12-05"));
 			// sur03.setDischargeInstructions("Take 5 weeks rest");
-			// // Collection<TreatmentDto> followupTreatments3 = new ArrayList<>();
-			// // followupTreatments3.add(drug01);
-			// // followupTreatments3.add(sur01);
-			// // sur03.setFollowupTreatments(followupTreatments3);
 			// providerService.addTreatment(sur03);
 
 

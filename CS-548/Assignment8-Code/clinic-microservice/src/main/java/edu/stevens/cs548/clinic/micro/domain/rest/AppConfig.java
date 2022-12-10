@@ -35,7 +35,7 @@ public class AppConfig extends Application {
 	 * Register provider and resources classes IN THAT ORDER with JAX-RS implementation.
 	 */
 	public Set<Class<?>> getClasses() {
-		Set<Class<?>> classes = new HashSet<>();;;
+		Set<Class<?>> classes = new HashSet<>();
 		classes.add(GsonProvider.class);
 		classes.add(PatientMicroService.class);
 		classes.add(ProviderMicroService.class);
@@ -49,7 +49,7 @@ public class AppConfig extends Application {
     public Map<String, Object> getProperties() {
         Map<String, Object> props = new HashMap<>();
         props.put(CommonProperties.MOXY_JSON_FEATURE_DISABLE, true);
-        props.put(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, true);
+        // props.put(CommonProperties.JSON_PROCESSING_FEATURE_DISABLE, true);
         return props;
     }
 

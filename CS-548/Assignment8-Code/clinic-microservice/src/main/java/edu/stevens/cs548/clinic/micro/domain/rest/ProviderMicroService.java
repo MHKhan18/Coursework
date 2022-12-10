@@ -162,6 +162,7 @@ public class ProviderMicroService {
 	@POST
 	@Path("{id}")
 	@Consumes("application/json")
+	@Produces("application/json")
 	public Response addTreatment(@PathParam("id") String id, TreatmentDto dto) {
 		try {
 			logger.info(String.format("addTreatment: Adding treatment for %s in microservice!", dto.getPatientName()));
