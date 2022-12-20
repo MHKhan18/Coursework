@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>edu.stevens.cs548</groupId>
+  <artifactId>ClinicOwl</artifactId>
+  <name>ClinicOwl</name>
+  <version>1.0.0</version>
+  <description>Project for testing OWL solutions with Jena</description>
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers />
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <transformers>
+            <transformer>
+              <manifestEntries>
+                <Main-Class>edu.stevens.cs548.owl.App</Main-Class>
+                <Build-Number>1</Build-Number>
+              </manifestEntries>
+            </transformer>
+            <transformer />
+          </transformers>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete />
+                <copy />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>apache-jena-libs</artifactId>
+      <version>3.15.0</version>
+      <type>pom</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <server.testdir>${server.home}/tmp/cs548/owl-test</server.testdir>
+    <server.name>owl</server.name>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <server.dist>${server.testdir}</server.dist>
+    <server.home>${user.home}</server.home>
+  </properties>
+</project>
+
