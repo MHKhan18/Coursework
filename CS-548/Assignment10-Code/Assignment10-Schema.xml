@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ns0="https://www.w3.org/2002/07/">
+
+  <rdf:Description rdf:about="http://www.cs.stevens.edu/cs548#Provider">
+    <ns0:owltype rdf:resource="https://www.w3.org/2002/07/owlClass"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.cs.stevens.edu/cs548#Treatment">
+    <ns0:owltype rdf:resource="https://www.w3.org/2002/07/owlClass"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.cs.stevens.edu/cs548#Patient">
+    <ns0:owltype rdf:resource="https://www.w3.org/2002/07/owlClass"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.cs.stevens.edu/cs548#Joe">
+    <ns0:owltype rdf:resource="http://www.cs.stevens.edu/cs548#Provider"/>
+  </rdf:Description>
+
+</rdf:RDF>

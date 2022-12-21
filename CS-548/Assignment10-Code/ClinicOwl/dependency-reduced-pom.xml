@@ -72,11 +72,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <server.testdir>${server.home}/tmp/cs548/owl-test</server.testdir>
     <server.name>owl</server.name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <server.dist>${server.testdir}</server.dist>
+    <server.testdir>${server.home}/tmp/cs548/owl-test</server.testdir>
     <server.home>${user.home}</server.home>
+    <server.dist>${server.testdir}</server.dist>
   </properties>
 </project>
 

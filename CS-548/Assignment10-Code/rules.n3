@@ -1,0 +1,21 @@
+@prefix clinic: <http://www.cs.stevens.edu/cs548#>.
+@prefix rdf: <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
+@prefix rdfs: <https://www.w3.org/2000/01/rdf-schema>.
+@prefix owl: <https://www.w3.org/2002/07/owl>.
+
+clinic:Provider owl:type owl:Class.
+clinic:Treatment owl:type owl:Class.
+clinic:Patient owl:type owl:Class.
+
+clinic:Joe owl:type clinic:Provider.
+
+clinic:Surgeons owl:subClassOf clinic:Proivder.
+clinic:Radiologists owl:subClassOf clinic:Provider.
+clinic:Internists owl:subClassOf clinic:Provider.
+
+clinic:Surgery owl:subClassOf clinic:Treatment.
+clinic:Radiology owl:subClassOf clinic:Treatment.
+clinic:DrugTreatment owl:subClassOf clinic:Treatment.
+
+clinic:Jane owl:type clinic:Surgeons.
+clinic:Doe owl:type clinic:Internists.

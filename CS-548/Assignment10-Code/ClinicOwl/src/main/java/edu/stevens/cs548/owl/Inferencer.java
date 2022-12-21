@@ -158,7 +158,7 @@ public class Inferencer {
 	public boolean isa(String resName, String className) {
 		String resource = resourceName(resName);
 		String clazz = resourceName(className);
-		String queryString = String.format(" ASK { %s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> %s } ", resource, clazz);
+		String queryString = String.format(" ASK { %s <https://www.w3.org/2002/07/owltype> %s } ", resource, clazz);
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase);
 		if (debug) {
@@ -171,7 +171,7 @@ public class Inferencer {
 
 	public void elems(Console console, String className) {
 		String clazz = resourceName(className);
-		String queryString = String.format(" SELECT ?subject WHERE { ?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> %s } ", clazz);
+		String queryString = String.format(" SELECT ?subject WHERE { ?subject <https://www.w3.org/2002/07/owltype> %s } ", clazz);
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.create(query, knowledgeBase);
 		if (debug) {
