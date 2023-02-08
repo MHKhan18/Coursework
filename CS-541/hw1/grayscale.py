@@ -1,5 +1,7 @@
 #matrix manipulation - convert color image to grayscale
 #do not make changes in the function names
+#do not use any inbuilt libraries and/or packages to convert image to grayscale, implement the code yourself
+
 
 from PIL import Image
 
