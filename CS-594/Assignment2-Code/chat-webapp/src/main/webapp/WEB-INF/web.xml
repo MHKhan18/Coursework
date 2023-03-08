@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+		 version="6.0">
+
+	<!-- https://jakarta.ee/specifications/servlet/6.0/jakarta-servlet-spec-6.0.html -->
+
+	<!-- https://eclipse-ee4j.github.io/jakartaee-tutorial/#configuring-jakarta-faces-applications -->
+
+	<!-- https://stackoverflow.com/q/3112946 -->
+
+	<welcome-file-list>
+		<welcome-file>index.xhtml</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>FacesServlet</servlet-name>
+		<servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>jakarta.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	<context-param>
+		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
+		<param-name>jakarta.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<param-name>jakarta.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>jakarta.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>resources.application</param-value>
+	</context-param>
+	<context-param>
+		<description>Required for FlowScoped</description>
+		<param-name>jakarta.faces.CLIENT_WINDOW_MODE</param-name>
+		<param-value>url</param-value>
+	</context-param>
+	<context-param>
+		<description>Obsolete for JSF 2.3</description>
+		<param-name>jakarta.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- Security constraints enforcing access control to Web app paths -->
+
+	<!-- Security constraint requiring TLS: Payara Micro Community only supports HTTP -->
+	<!-- 	<security-constraint> -->
+	<!-- 		<display-name>RootConstraint</display-name> -->
+	<!-- 		<web-resource-collection> -->
+	<!-- 			<web-resource-name>Root</web-resource-name> -->
+	<!-- 			<description></description> -->
+	<!-- 			<url-pattern>/*</url-pattern> -->
+	<!-- 		</web-resource-collection> -->
+	<!-- 		<user-data-constraint> -->
+	<!-- 			<transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
+	<!-- 		</user-data-constraint> -->
+	<!-- 	</security-constraint> -->
+
+	<!-- Define security roles for the app -->
+	<security-role>
+		<description></description>
+		<role-name>admin</role-name>
+	</security-role>
+	<security-role>
+		<description></description>
+		<role-name>moderator</role-name>
+	</security-role>
+	<security-role>
+		<description></description>
+		<role-name>poster</role-name>
+	</security-role>
+</web-app>

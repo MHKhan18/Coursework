@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f3bf358f-3c04-4654-9739-fdd91562e730" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.bpmn2.modeler.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/build/classes/edu/stevens/cs548/clinic/service/dto/patient/jaxb.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/build/classes/edu/stevens/cs548/clinic/service/dto/treatment/jaxb.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/MessageDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/MessageDtoFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/ObjectFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/RoleDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/RoleDtoFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/UserDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDTOs/src/main/java/edu/stevens/cs594/chat/service/dto/UserDtoFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.jpt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.ltk.core.refactoring.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.wst.common.project.facet.core.prefs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/RemoteSystemsTempFiles/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/build/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/build/classes/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/createDDL.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/dropDDL.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/resources/createDDL.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/resources/dropDDL.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IMessageDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IMessageFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IRoleDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IRoleFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IUserDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/IUserFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/MessageDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/MessageFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/Message_.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/RoleDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/RoleFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/Role_.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/UserDAO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/UserFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatDomain/src/edu/stevens/cs594/chat/domain/User_.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/ejbModule/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/ejbModule/META-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/ejbModule/META-INF/ejb-jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/ejbModule/edu/stevens/cs594/chat/test/InitBean.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatInit/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/pom-backup.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/src/main/java/edu/stevens/cs548/ClinicRoot/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/src/main/resources/passwords.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatRoot/target/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/src/main/java/edu/stevens/cs548/ClinicRoot/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ChatRoot/src/test/java/edu/stevens/cs548/ClinicRoot/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/build/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/build/classes/META-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/build/classes/META-INF/ejb-jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/build/classes/META-INF/sun-ejb-jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/META-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/META-INF/ejb-jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/edu/stevens/cs594/chat/service/ejb/ChatDomainProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/edu/stevens/cs594/chat/service/ejb/MessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/ejbModule/edu/stevens/cs594/chat/service/ejb/OneTimePassword.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatService/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.bpmn2.modeler.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.jst.j2ee.ejb.annotations.xdoclet.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/build/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/ejbModule/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/ejbModule/edu/stevens/cs594/chat/service/ejb/IMessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/ejbModule/edu/stevens/cs594/chat/service/ejb/IMessageServiceLocal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/ejbModule/edu/stevens/cs594/chat/service/ejb/IMessageServiceRemote.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/ejbModule/edu/stevens/cs594/chat/service/messages/Messages.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatServiceClient/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/driver/Driver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/util/DateUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/util/ExceptionWrapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/util/FileUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/util/Reporter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/java/edu/stevens/cs594/util/StringUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/main/resources/driver.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatUtil/src/test/java/edu/stevens/cs594/ChatUtil/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.metadata/src/main/webapp/WEB-INF/faces-config.pageflow" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.metadata/src/main/webapp/addUser/addUser-flow.pageflow" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/.jsdtscope" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.common.project.facet.core.prefs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.jsdt.ui.superType.container" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.jsdt.ui.superType.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/.settings/org.eclipse.wst.validation.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/AppConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/BaseBacking.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/LoginBacking.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/Messages.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/Navigation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/admin/AddUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/admin/EditUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/admin/ViewUsers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/java/edu/stevens/cs594/chat/webapp/messages/ViewMessages.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/resources/edu/stevens/cs594/chat/webapp/Messages.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/WEB-INF/beans.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/WEB-INF/faces-config.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/WEB-INF/payara-web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/WEB-INF/templates/template.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/WEB-INF/web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/addUser/addUser-flow.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/addUser/addUser.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/addUser/qrcode.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/admin/editUser.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/admin/viewUsers.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/index.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/login.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/loginError.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/moderator/viewMessages.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/poster/viewMessages.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/resources/default/css/Site.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/resources/default/css/Site_ADA.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/resources/default/images/jive-talkin-choirboy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatWebApp/src/main/webapp/resources/default/images/meddc-banner.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../chat/chat-webapp/src/main/webapp/WEB-INF/faces-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../chat/chat-webapp/src/main/webapp/WEB-INF/faces-config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../chat/chat-webapp/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../chat/chat-webapp/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing-rubric.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing-rubric.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing-rubric.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing-rubric.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Classes/2023-Spring/Assignments/Assignment1 VPC/Assignment-Cloud-Computing.pdf" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2LZcWY0EWkaM5Xydi6Vc3w0kjOl" />
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/dduggan/Documents/Teach/CS594/Classes/2023-Spring/Assignments/Assignment2 Web App/Assignment2-Code/chat-root/pom.xml",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../chat-domain/src/main/resources/META-INF" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../chat-webapp/src/main/resources" />
+      <recent name="$PROJECT_DIR$/../chat-webapp/src/main/resources/edu/stevens/cs594/chat/webapp" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="edu.stevens.cs594.chat.service" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="edu.stevens.cs594.chat.domain" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f3bf358f-3c04-4654-9739-fdd91562e730" name="Changes" comment="" />
+      <created>1676082078218</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1676082078218</updated>
+      <workItem from="1676082079774" duration="320000" />
+      <workItem from="1676082411041" duration="35000" />
+      <workItem from="1676082456885" duration="20000" />
+      <workItem from="1676082581944" duration="33215000" />
+      <workItem from="1676154334531" duration="484000" />
+      <workItem from="1676215554292" duration="29000" />
+      <workItem from="1676215640147" duration="996000" />
+      <workItem from="1676234147163" duration="136000" />
+      <workItem from="1676291648765" duration="1899000" />
+      <workItem from="1676456388906" duration="807000" />
+      <workItem from="1676467001717" duration="3795000" />
+      <workItem from="1676480179027" duration="240000" />
+      <workItem from="1676480448259" duration="2818000" />
+      <workItem from="1677842114792" duration="497000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

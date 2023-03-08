@@ -1,0 +1,180 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.stevens.cs594</groupId>
+	<artifactId>chat-root</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<name>chat-root</name>
+	<url>http://maven.apache.org</url>
+
+	<modules>
+		<module>../chat-init</module>
+		<module>../chat-domain</module>
+		<module>../chat-dto</module>
+		<module>../chat-service-client</module>
+		<module>../chat-service</module>
+		<module>../chat-webapp</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
+		<!-- Where to distribute jar files (using mvn install). -->
+		<app.dist>${user.home}/tmp/cs594</app.dist>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.9.0</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.3.2</version>
+					<configuration>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+						<!-- <packagingIncludes>META-INF/**,**/Chat*.jar,**/Chat*.war,</packagingIncludes> -->
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<filters>
+									<filter>
+										<!-- http://stackoverflow.com/a/6743609 -->
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>META-INF/*.SF</exclude>
+											<exclude>META-INF/*.DSA</exclude>
+											<exclude>META-INF/*.RSA</exclude>
+										</excludes>
+									</filter>
+								</filters>
+								<minimizeJar>true</minimizeJar>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-api</artifactId>
+				<version>10.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>42.5.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.10</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>3.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>javase</artifactId>
+				<version>3.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>1.51</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk15on</artifactId>
+				<version>1.51</version>
+			</dependency>
+
+
+			<!-- Intra-app dependencies. -->
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-dto</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-init</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-service</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-service-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.stevens.cs594</groupId>
+				<artifactId>chat-webapp</artifactId>
+				<version>1.0.0</version>
+				<type>war</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>
