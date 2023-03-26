@@ -105,6 +105,14 @@ public class InitBean {
 			messageService.addTestUser(john);
 			
 			// TODO add more testing
+
+			UserDto kallis = userDtoFactory.createUserDto();
+			kallis.setUsername("kallis");
+			kallis.setPassword("XXXXX");
+			kallis.setName("Jack Kallis");
+			kallis.getRoles().add(POSTER);
+			logger.info("Adding user kallis");
+			messageService.addTestUser(kallis);
 			
 		} catch (MessageServiceExn e) {
 			throw new IllegalStateException("Failed to add user record.", e);

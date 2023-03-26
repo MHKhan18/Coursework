@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.time.Instant;
 
 import edu.stevens.cs594.chat.domain.IMessageDao;
 import edu.stevens.cs594.chat.domain.IMessageFactory;
@@ -136,6 +137,7 @@ public class MessageService implements IMessageService {
 			/*
 			 * TODO set the encoded password hash to be set in the database (use passwordHash).
 			 */
+			hashedPassword = passwordHash.generate(password.toCharArray());
 
 			String secret = null;
 			// if not a test user, set secret from otpAuth
@@ -151,7 +153,7 @@ public class MessageService implements IMessageService {
 			userDao.addUser(user);
 			
 			// TODO add the roles specified in the DTO to the user object (use editUser)
-
+			editUser(dto);
 			
 			userDao.sync();
 	        
@@ -169,7 +171,10 @@ public class MessageService implements IMessageService {
 		/*
 		 * TODO Generate OTP authorization (see OneTimePassword)
 		 */
-
+		if (dto == null || dto.getUsername() == null || dto.getUsername().isEmpty()){
+			throw new MessageServiceExn(Messages.admin_user_none);
+		}
+		otpAuth = OneTimePassword.generateOtpAuth(dto.getUsername(), ISSUER);
         return addUser(dto, otpAuth);
 	}
 	
@@ -194,7 +199,7 @@ public class MessageService implements IMessageService {
 					/*
 					 * TODO set the encoded password hash to be set in the database (use passwordHash).
 					 */
-
+					hashedPassword = passwordHash.generate(dto.getPassword().toCharArray());
 					user.setPassword(hashedPassword);
 				}
 				
@@ -271,6 +276,7 @@ public class MessageService implements IMessageService {
 		/*
 		 * TODO get the username of the logged-in user (use the security context)
 		 */
+		loggedInUser = securityContext.getCallerPrincipal().getName();
 
 		if (!loggedInUser.equals(dto.getSender())) {
 			throw new IllegalStateException("Poster of message is inconsistent with message metadata.");
@@ -298,7 +304,7 @@ public class MessageService implements IMessageService {
 			 * TODO check that the provided OTP code matches what is in the user record, using current time.
 			 * See OneTimePassword.
 			 */
-
+			validOtp = OneTimePassword.checkCode(user.getOtpSecret(), otpCode, Instant.now().toEpochMilli());
 			if (!validOtp) {
 				throw new MessageServiceExn(Messages.login_invalid_code);
 			}

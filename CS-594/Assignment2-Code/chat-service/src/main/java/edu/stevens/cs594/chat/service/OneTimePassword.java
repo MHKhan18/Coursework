@@ -8,6 +8,9 @@ import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.logging.Logger;
 
 import javax.crypto.Mac;
@@ -60,6 +63,17 @@ public class OneTimePassword {
 		return generateOtpAuth(subject, issuer, secret);
 	}
 
+	private static String encodeValue(String value){
+		String encodedString = "";
+		try {
+			encodedString =  URLEncoder.encode(value, MessageService.CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			logger.warning("Failed to encode string: " + value);
+			throw new IllegalArgumentException("Failed to encode string: " + value);
+		}
+		return encodedString;
+	}
+
 	private static OtpAuth generateOtpAuth(String subject, String issuer, byte[] secret) {
 
 		try {
@@ -73,7 +87,13 @@ public class OneTimePassword {
 			/*
 			 *  TODO set the key URI.  Use URLEncoder to encode the issuer and subject, using UTF-8 charset.
 			 */
+			String issuerEncoded = encodeValue(issuer);
+			String subjectEncoded = encodeValue(subject);
+			String baseURL = GOOGLE_URL + issuerEncoded + ":" + subjectEncoded + "?";
+			String fullURL  = baseURL + "secret=" + secretBase32 + "&issuer=" + issuerEncoded;
 
+			logger.info("QR Code URL: " + fullURL);
+			result.setKeyUri(fullURL);
 
 			return result;
 

@@ -20,6 +20,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.stevens.cs594.chat.domain.Message;
 import edu.stevens.cs594.chat.domain.Role;
 import edu.stevens.cs594.chat.service.dto.RoleDto;
 import edu.stevens.cs594.chat.service.IMessageService.MessageServiceExn;
@@ -113,9 +114,8 @@ public class Login extends BaseBacking {
 		
 		// TODO Authenticate using the security context.
 		// Use AuthenticationParameters.withParams() to pass credential.
-		
-
-		
+		Credential credential = new UsernamePasswordCredential(username, new Password(password));
+		status = securityContext.authenticate(request, response, AuthenticationParameters.withParams().credential(credential));
 		// End TODO
 		
 		logger.info("Result of authentication: " + status);
@@ -140,9 +140,15 @@ public class Login extends BaseBacking {
 			/*
 			 * TODO check the input otp with what is in the user record (see loginService)
 			 */
+			loginService.checkOtp(username, code);
 
 		} catch (NumberFormatException e) {
 			addMessage(Messages.login_malformed_code);
+			logout();
+			return null;
+		} catch (MessageServiceExn me){
+			logger.info("Failed 2FA attempt: username" + username + " code: " + otpCode);
+			addMessage(Messages.login_invalid_code);
 			logout();
 			return null;
 		}
@@ -154,6 +160,10 @@ public class Login extends BaseBacking {
 		 * TODO Use the security context to check that the selected role is valid for this user.
 		 * this.selectedRole is the role name for the role selected in the form.
 		 */
+		if (selectedRole != null){
+			validRole = securityContext.isCallerInRole(this.selectedRole);
+		}
+		
 
 		if (!validRole) {
 			addMessage(Messages.login_invalid_role);
@@ -183,7 +193,7 @@ public class Login extends BaseBacking {
 
 	public boolean isLoggedIn() {
 		// TODO use security context to check if a user is logged in
-		return false;
+		return securityContext.getCallerPrincipal() != null;
 	}
 
 }

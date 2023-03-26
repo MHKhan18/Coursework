@@ -8,7 +8,7 @@
 	<persistence-unit name="chat-domain">
 		<description>Domain model for a secure-ish chat system</description>
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<jta-data-source>java:global/jdbc/cs594</jta-data-source>
+		<jta-data-source>java:global/jdbc/cs594db</jta-data-source>
 		<class>edu.stevens.cs594.chat.domain.User</class>
 		<class>edu.stevens.cs594.chat.domain.Role</class>
 		<class>edu.stevens.cs594.chat.domain.Message</class>
