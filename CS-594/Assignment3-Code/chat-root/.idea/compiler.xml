@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="chat-domain" />
+        <module name="chat-dto" />
+        <module name="chat-webapp" />
+        <module name="chat-messages" />
+        <module name="chat-util" />
+        <module name="chat-service-client" />
+        <module name="chat-messages-client" />
+        <module name="chat-service" />
+        <module name="chat-init" />
+        <module name="chat-messages-domain" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
