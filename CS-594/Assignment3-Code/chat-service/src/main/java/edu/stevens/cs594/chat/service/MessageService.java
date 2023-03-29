@@ -218,7 +218,7 @@ public class MessageService implements IMessageService {
     }
     
     private String getKeyEncryptionAlg(EncryptedPrivateKeyInfo ePKInfo) {
-    	String algName = ePKInfo.
+    	String algName = ePKInfo.getAlgName();
     	logger.info("Key encryption algorithm: "+algName);
     	return algName;
     }
@@ -249,7 +249,7 @@ public class MessageService implements IMessageService {
 		token = Jwts.builder()	
 				.setHeaderParam("typ", "JWT")
 				.setHeaderParam("alg", "RS256")
-				// .setHeaderParam("kid", "abc-1234567890")
+				.setHeaderParam("kid", "abc-1234567890")
 				.setIssuer(JWT_ISSUER)
 				.setSubject(username)
 				.setAudience("chat-webapp")
@@ -257,7 +257,7 @@ public class MessageService implements IMessageService {
 				.setIssuedAt(new Date(now))
 				.setId(UUID.randomUUID().toString())
 				.claim("groups", groups)
-				// .claim("upn", username)
+				.claim("upn", username)
 				.signWith(signingKey)
 				.compact();
 
