@@ -249,7 +249,7 @@ public class MessageService implements IMessageService {
 		token = Jwts.builder()	
 				.setHeaderParam("typ", "JWT")
 				.setHeaderParam("alg", "RS256")
-				.setHeaderParam("kid", "abc-1234567890")
+				// .setHeaderParam("kid", "abc-1234567890")
 				.setIssuer(JWT_ISSUER)
 				.setSubject(username)
 				.setAudience("chat-webapp")
