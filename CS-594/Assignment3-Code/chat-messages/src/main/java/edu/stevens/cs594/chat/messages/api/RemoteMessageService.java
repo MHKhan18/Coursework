@@ -5,6 +5,8 @@ import edu.stevens.cs594.chat.messages.domain.MessageFactory;
 import edu.stevens.cs594.chat.messages.domain.dao.IMessageDao;
 import edu.stevens.cs594.chat.service.dto.MessageDto;
 import edu.stevens.cs594.chat.service.dto.MessageDtoFactory;
+import edu.stevens.cs594.chat.service.dto.RoleDto;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -29,7 +31,7 @@ import java.util.logging.Logger;
 
 @RequestScoped
 @Transactional
-@Path("messages")
+@Path("/messages")
 public class RemoteMessageService {
 	
 	private static final Logger logger = Logger.getLogger(RemoteMessageService.class.getCanonicalName());
@@ -43,7 +45,7 @@ public class RemoteMessageService {
 	@GET
 	@Produces("application/json")
 	// TODO restrict access to RoleDto.ROLE_POSTER or ROLE_MODERATOR
-
+	@RolesAllowed({RoleDto.ROLE_MODERATOR, RoleDto.ROLE_POSTER})
 	public Response getMessages() {
 		logger.info("Getting a list of all messages.");
 		List<Message> messages = messageDao.getMessages();
@@ -64,7 +66,7 @@ public class RemoteMessageService {
 	@POST
 	@Consumes("application/json")
 	// TODO restrict access to RoleDto.ROLE_POSTER
-
+	@RolesAllowed({RoleDto.ROLE_POSTER})
 	public Response addMessage(MessageDto dto) {
 		logger.info("Adding message: " + dto.getText());
 		Message message = new MessageFactory().createMessage();
@@ -81,7 +83,7 @@ public class RemoteMessageService {
 	@DELETE
 	@Path("{id}")
 	// TODO restrict access to RoleDto.ROLE_MODERATOR
-
+	@RolesAllowed({RoleDto.ROLE_MODERATOR})
 	public Response deleteMessage(@PathParam("id") UUID id) {
 		logger.info("Deleting message, id="+id);
 		if (id == null) {
@@ -94,7 +96,7 @@ public class RemoteMessageService {
 
 	@DELETE
 	// TODO restrict access to RoleDto.ROLE_ADMIN
-
+	@RolesAllowed({RoleDto.ROLE_ADMIN})
 	public Response deleteMessages() {
 		logger.info("Deleting messages as part of initialization");
 		messageDao.deleteMessages();

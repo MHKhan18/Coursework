@@ -32,6 +32,7 @@ import jakarta.transaction.Transactional;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
@@ -50,7 +51,7 @@ import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import org.eclipse.microprofile.jwt.Claims;
+
 
 /**
  * Session Bean implementation class UserService
@@ -64,7 +65,8 @@ public class MessageService implements IMessageService {
 	 */
 	
 	public static final String JWT_ISSUER = "edu.stevens.cs594";
-	
+	public static final String AUTHORIZATION_HEADER_PREFIX = "Authorization: BEARER";
+
 	public static final String REQUEST_SIGNING_KEY_FILENAME = "META-INF/privateKey.pem";
 	
 	// Passed as an environment variable
@@ -216,7 +218,7 @@ public class MessageService implements IMessageService {
     }
     
     private String getKeyEncryptionAlg(EncryptedPrivateKeyInfo ePKInfo) {
-    	String algName = ePKInfo.getAlgName();
+    	String algName = ePKInfo.
     	logger.info("Key encryption algorithm: "+algName);
     	return algName;
     }
@@ -234,7 +236,7 @@ public class MessageService implements IMessageService {
 	 * 	JWT token
 	 */
 	private String createToken(PrivateKey signingKey, String username, Set<String> groups) {
-		Date now = new Date();
+		long now = (new Date()).getTime();
 		long validity = TimeUnit.HOURS.toMillis(10);
 
 		String token = null;
@@ -244,14 +246,24 @@ public class MessageService implements IMessageService {
 		 * 
 		 * See lectures for format of JWT Authorization header
 		 */
-
+		token = Jwts.builder()	
+				.setHeaderParam("typ", "JWT")
+				.setHeaderParam("alg", "RS256")
+				// .setHeaderParam("kid", "abc-1234567890")
+				.setIssuer(JWT_ISSUER)
+				.setSubject(username)
+				.setAudience("chat-webapp")
+				.setExpiration(new Date(now + validity))
+				.setIssuedAt(new Date(now))
+				.setId(UUID.randomUUID().toString())
+				.claim("groups", groups)
+				// .claim("upn", username)
+				.signWith(signingKey)
+				.compact();
 
 		logger.info("JWT: "+token);
 
 		return token;
-
-
-
 	}
 		
 	/**
@@ -263,8 +275,13 @@ public class MessageService implements IMessageService {
 		 * 
 		 * Use the security context to fill in username and groups.
 		 */
-
-		return null;
+		Set<String> groups = new HashSet<String>();
+		for(String role: RoleDto.INIT_ROLE_NAMES){
+			if (securityContext.isCallerInRole(role)){
+				groups.add(role);
+			}
+		}
+		return createAuthorizationHeader(securityContext.getCallerPrincipal().getName(), groups);
 	}
 	
 	/**
@@ -281,7 +298,9 @@ public class MessageService implements IMessageService {
 	 */
 	private String createAuthorizationHeader(String username, Set<String> groups) {
 		// TODO complete this
-		return null;
+		String jwt = createToken(authorizationKey, username, groups);
+		return AUTHORIZATION_HEADER_PREFIX + " " + jwt;
+
 	}
 	
 	@Override
@@ -312,6 +331,8 @@ public class MessageService implements IMessageService {
 			 * TODO set the encoded password hash to be set in the database (use
 			 * passwordHash).
 			 */
+			hashedPassword = passwordHash.generate(password.toCharArray());
+
 
 			String secret = null;
 			// if not a test user, set secret from otpAuth
@@ -326,6 +347,7 @@ public class MessageService implements IMessageService {
 			userDao.addUser(user);
 
 			// TODO Add the roles specified in the DTO to the user object (use editUser)
+			editUser(userDto);
 
 
 			userDao.sync();
@@ -345,7 +367,10 @@ public class MessageService implements IMessageService {
 		/*
 		 * TODO Generate OTP authorization (see OneTimePassword)
 		 */
-
+		if (dto == null || dto.getUsername() == null || dto.getUsername().isEmpty()){
+			throw new MessageServiceExn(Messages.admin_user_none);
+		}
+		otpAuth = OneTimePassword.generateOtpAuth(dto.getUsername(), ISSUER);
 		return addUser(dto, otpAuth);
 	}
 
@@ -368,8 +393,7 @@ public class MessageService implements IMessageService {
 					 * TODO set the encoded password hash to be set in the database (use
 					 * passwordHash).
 					 */
-					;
-
+					hashedPassword = passwordHash.generate(dto.getPassword().toCharArray());
 					user.setPassword(hashedPassword);
 				}
 
@@ -468,7 +492,7 @@ public class MessageService implements IMessageService {
 			 * TODO check that the provided OTP code matches what is in the user record,
 			 * using current time. See OneTimePassword.
 			 */
-
+			validOtp = OneTimePassword.checkCode(user.getOtpSecret(), otpCode, Instant.now().toEpochMilli());
 			if (!validOtp) {
 				throw new MessageServiceExn(Messages.login_invalid_code);
 			}
