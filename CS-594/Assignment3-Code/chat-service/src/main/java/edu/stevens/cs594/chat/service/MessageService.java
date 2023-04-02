@@ -188,6 +188,8 @@ public class MessageService implements IMessageService {
                                                       .replaceAll("\n", "")
                                                       .trim();
     		byte[] keyBytes = Base64.getDecoder().decode(key);
+
+			logger.log(Level.INFO, "inside read pricate key" + key);
     		
     		/*
     		 * Decrypt a password-protected private key (password should be defined as env variable).
