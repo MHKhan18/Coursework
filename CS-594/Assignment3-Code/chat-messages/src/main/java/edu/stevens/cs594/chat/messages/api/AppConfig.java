@@ -33,8 +33,8 @@ import edu.stevens.cs594.chat.service.dto.RoleDto;
 
 
 // TODO activate JWT authentication
-@LoginConfig(authMethod = "MP-JWT",
-			realmName = "My-MP-JWT")
+@LoginConfig(authMethod = "MP-JWT")
+			// realmName = "My-MP-JWT")
 			
 @DeclareRoles({RoleDto.ROLE_ADMIN, RoleDto.ROLE_MODERATOR, RoleDto.ROLE_POSTER})
 

@@ -45,7 +45,7 @@ public class InitBean {
 	@PostConstruct
 	private void init() {
 		
-		logger.info("Your name here: ");
+		logger.info("Mohammad Khan: ");
 
 		messageService.clearDatabase();
 		
@@ -103,6 +103,15 @@ public class InitBean {
 			messageService.addTestUser(john);
 			
 			// TODO add more testing
+
+			UserDto jack = userDtoFactory.createUserDto();
+			jack.setUsername("jack");
+			jack.setPassword("foobar!");
+			jack.setName("Jack Ross");
+			jack.getRoles().add(MODERATOR);
+			logger.info("Adding user jack");
+			messageService.addTestUser(jack);
+			
 			
 		} catch (MessageServiceExn e) {
 			throw new IllegalStateException("Failed to add user record.", e);

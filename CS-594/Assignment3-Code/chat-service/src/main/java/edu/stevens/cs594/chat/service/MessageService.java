@@ -65,7 +65,7 @@ public class MessageService implements IMessageService {
 	 */
 	
 	public static final String JWT_ISSUER = "edu.stevens.cs594";
-	public static final String AUTHORIZATION_HEADER_PREFIX = "Authorization: BEARER";
+	public static final String AUTHORIZATION_HEADER_PREFIX = "Bearer";
 
 	public static final String REQUEST_SIGNING_KEY_FILENAME = "META-INF/privateKey.pem";
 	
@@ -251,7 +251,7 @@ public class MessageService implements IMessageService {
 		token = Jwts.builder()	
 				.setHeaderParam("typ", "JWT")
 				.setHeaderParam("alg", "RS256")
-				// .setHeaderParam("kid", "abc-1234567890")
+				.setHeaderParam("kid", "abc-1234567890")
 				.setIssuer(JWT_ISSUER)
 				.setSubject(username)
 				.setAudience("chat-webapp")
@@ -302,7 +302,6 @@ public class MessageService implements IMessageService {
 		// TODO complete this
 		String jwt = createToken(authorizationKey, username, groups);
 		return AUTHORIZATION_HEADER_PREFIX + " " + jwt;
-
 	}
 	
 	@Override
@@ -372,6 +371,8 @@ public class MessageService implements IMessageService {
 		if (dto == null || dto.getUsername() == null || dto.getUsername().isEmpty()){
 			throw new MessageServiceExn(Messages.admin_user_none);
 		}
+
+		logger.info("adding user by: " + dto.getUsername() + " roles: " + dto.getRoles().toString());
 		otpAuth = OneTimePassword.generateOtpAuth(dto.getUsername(), ISSUER);
 		return addUser(dto, otpAuth);
 	}

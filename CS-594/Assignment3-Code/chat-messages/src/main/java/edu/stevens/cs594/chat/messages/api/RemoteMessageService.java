@@ -29,6 +29,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.security.enterprise.SecurityContext;
+
 @RequestScoped
 @Transactional
 @Path("/messages")
@@ -42,11 +44,19 @@ public class RemoteMessageService {
 	@Context
 	private UriInfo uriInfo;
 
+	@Inject
+	private SecurityContext securityContext;
+
+
 	@GET
 	@Produces("application/json")
 	// TODO restrict access to RoleDto.ROLE_POSTER or ROLE_MODERATOR
 	@RolesAllowed({RoleDto.ROLE_MODERATOR, RoleDto.ROLE_POSTER})
 	public Response getMessages() {
+		// logger.info("Executing  getMessages");
+		// if (!(securityContext.isCallerInRole(RoleDto.ROLE_MODERATOR) || securityContext.isCallerInRole(RoleDto.ROLE_POSTER))){
+		// 	return Response.status(401, "User is neither moderator nor poster. user: " + securityContext.getCallerPrincipal().getName()).build();
+		// }
 		logger.info("Getting a list of all messages.");
 		List<Message> messages = messageDao.getMessages();
 		List<MessageDto> messageDtos = new ArrayList<MessageDto>();
@@ -68,6 +78,10 @@ public class RemoteMessageService {
 	// TODO restrict access to RoleDto.ROLE_POSTER
 	@RolesAllowed({RoleDto.ROLE_POSTER})
 	public Response addMessage(MessageDto dto) {
+		// logger.info("Executing  addMessage");
+		// if (!(securityContext.isCallerInRole(RoleDto.ROLE_POSTER))){
+		// 	return Response.status(401, "user is not poster. User: " + securityContext.getCallerPrincipal().getName()).build();
+		// }
 		logger.info("Adding message: " + dto.getText());
 		Message message = new MessageFactory().createMessage();
 		message.setMessageId(UUID.randomUUID());
@@ -85,6 +99,10 @@ public class RemoteMessageService {
 	// TODO restrict access to RoleDto.ROLE_MODERATOR
 	@RolesAllowed({RoleDto.ROLE_MODERATOR})
 	public Response deleteMessage(@PathParam("id") UUID id) {
+		// logger.info("Executing  deleteMessage");
+		// if (!(securityContext.isCallerInRole(RoleDto.ROLE_MODERATOR))){
+		// 	return Response.status(401, "user is not moderator. User: " + securityContext.getCallerPrincipal().getName()).build();
+		// }
 		logger.info("Deleting message, id="+id);
 		if (id == null) {
 			logger.log(Level.SEVERE, "Missing message id for deleteMessage");
@@ -98,6 +116,10 @@ public class RemoteMessageService {
 	// TODO restrict access to RoleDto.ROLE_ADMIN
 	@RolesAllowed({RoleDto.ROLE_ADMIN})
 	public Response deleteMessages() {
+		// logger.info("Executing  deleteMessages");
+		// if (!(securityContext.isCallerInRole(RoleDto.ROLE_ADMIN))){
+		// 	return Response.status(401, "user is not admin. User: " + securityContext.getCallerPrincipal().getName()).build();
+		// }
 		logger.info("Deleting messages as part of initialization");
 		messageDao.deleteMessages();
 		return Response.ok().build();
