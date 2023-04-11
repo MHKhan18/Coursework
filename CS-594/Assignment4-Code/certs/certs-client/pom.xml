@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>edu.stevens.cs594</groupId>
+	<artifactId>certs-client</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+
+               	<parent>
+		<groupId>edu.stevens.cs594</groupId>
+		<artifactId>certs-root</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../certs-root/pom.xml</relativePath>
+	</parent>
+
+	<properties>
+		<!-- Where to distribute jar files (using mvn install). -->
+		<cm.name>certs-client</cm.name>
+		<cm.main>edu.stevens.cs594.certgen.client.App</cm.main>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.stevens.cs594</groupId>
+			<artifactId>certs-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk18on</artifactId>
+		</dependency>
+	</dependencies>
+</project>
