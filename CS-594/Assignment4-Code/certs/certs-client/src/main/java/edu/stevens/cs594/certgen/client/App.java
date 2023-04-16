@@ -175,7 +175,11 @@ public class App extends AppBase {
 			PKCS10CertificationRequest csr = null;
 
 			// TODO generate a CSR signed by the client's private key
-
+			PrivateCredential cred = getCredential(clientStore, Params.CLIENT_CERT_ALIAS, clientKeyPassword.toCharArray());
+			X500Name subject = CAUtils.toX500Name(cred.getCertificate()[0].getSubjectX500Principal());
+			KeyPair keyPair = new KeyPair(fromPrivateKey(cred.getPrivateKey()), cred.getPrivateKey());
+			csr = CAUtils.createCSR(subject, keyPair, clientDns);
+			
 			extern(csr, new File(clientCsrFile));
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
 			throw new GeneralSecurityException("Security exception", e);
@@ -210,6 +214,14 @@ public class App extends AppBase {
 		
 		KeyStore clientStore = load(clientKeystoreFile, clientKeystorePassword.toCharArray(), Params.CLIENT_KEYSTORE_TYPE);
 		// TODO import the cert from clientCertFile and store it in the clientStore
+		try {
+			PrivateCredential cred = getCredential(clientStore, Params.CLIENT_CERT_ALIAS, clientKeyPassword.toCharArray());
+			X509Certificate[] chain = cred.getCertificate();
+			clientStore.setKeyEntry(Params.CLIENT_CERT_ALIAS, cred.getPrivateKey(), clientKeyPassword.toCharArray(), chain);
+			save(clientKeystoreFile, clientKeystorePassword.toCharArray(), clientKeyPassword, clientStore);
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
+			throw new GeneralSecurityException("Security exception", e);
+		}
 
 	}
 	

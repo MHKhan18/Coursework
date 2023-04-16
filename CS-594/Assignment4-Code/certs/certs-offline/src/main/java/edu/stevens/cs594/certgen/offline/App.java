@@ -100,7 +100,10 @@ public class App extends AppBase {
 		FileUtils.ensureFolder(backupOnlineDir);
 
 		// TODO Initialize the online CA keystore file name, and server keytstore and truststore file names.
-
+	
+		keystoreOnlineCAFile = new File(onlineDir, Params.CA_ONLINE_KEYSTORE_FILENAME);
+		keystoreServerFile = new File(onlineDir, Params.SERVER_KEYSTORE_FILENAME);
+		truststoreServerFile = new File(onlineDir, Params.SERVER_TRUSTSTORE_FILENAME);
 
 	}
 
@@ -294,6 +297,7 @@ public class App extends AppBase {
 		X509Certificate cert = null;
 		
 		// TODO generate root CA cert (see CAUtils)
+		cert = CAUtils.createCaRootCert(certId, caRoot, kp, duration);
 
 
 		Certificate[] chain = new Certificate[]{cert};
@@ -312,7 +316,9 @@ public class App extends AppBase {
 		
 		// TODO write CA root cert to a PEM file: load the root keystore, get the root CA private credential, 
 		// convert to string (see externCertificate), then write that to the certFile
-
+		KeyStore rootKeystore = load(keystoreRootCAFile, keystorePasswordRootCA, Params.CA_ROOT_KEYSTORE_TYPE);
+		PrivateCredential rootCredential = getCredential(rootKeystore, Params.CA_ROOT_ALIAS, keyPasswordRootCA);
+		writeString(certFile, externCertificate(rootCredential.getCertificate()[0]));
 	}
 
 	/**
@@ -337,16 +343,24 @@ public class App extends AppBase {
 		X509Certificate cert = null;
 
 		// TODO create server cert and cert chain
+	
+		cert = CAUtils.createServerCert(
+			certId, root.getPrivateKey(), root.getCertificate()[0], serverCert, serverDNS, kp.getPublic(), duration);
 
 
 		Certificate[] chain = new Certificate[]{cert, root.getCertificate()[0]};
 		/*
 		 * TODO Save credential in the server keystore (use load and updateKeystore)
 		 */
-
+		KeyStore serverKeystore = load(keystoreServerFile, keystorePasswordServer, Params.SERVER_KEYSTORE_TYPE);
+		serverKeystore.setKeyEntry(Params.SERVER_CERT_ALIAS, kp.getPrivate(), keyPasswordServer, chain);
+		updateKeystore(keystoreServerFile, serverKeystore, Params.SERVER_KEYSTORE_TYPE, keystorePasswordServer);
 		/*
 		 * TODO Save certificate in the server truststore.
 		 */
+		KeyStore serverTruststore = load(truststoreServerFile, truststorePasswordServer, Params.SERVER_TRUSTSTORE_TYPE);
+		serverTruststore.setCertificateEntry(Params.SERVER_CERT_ALIAS, cert);
+		updateKeystore(truststoreServerFile, serverTruststore, Params.SERVER_TRUSTSTORE_TYPE, truststorePasswordServer);
 	}
 
 	/**
@@ -364,16 +378,21 @@ public class App extends AppBase {
 		long certId = getRandom().nextLong();
 
 		// TODO create online CA cert
-
+		X509Certificate cert = CAUtils.createOnlineCaCert(certId, root.getPrivateKey(), root.getCertificate()[0], caOnline, kp.getPublic(), duration);
+		Certificate[] chain = new Certificate[]{cert, root.getCertificate()[0]};
 
 		/*
 		 * TODO Save the credentials in the online keystore (use load and updateKeystore)
 		 */
-
-
+		KeyStore onlineCAKeystore = load(keystoreOnlineCAFile, keystorePasswordOnlineCA, Params.CA_ONLINE_KEYSTORE_TYPE);
+		onlineCAKeystore.setKeyEntry(Params.CA_ONLINE_CERT_ALIAS, kp.getPrivate(), keyPasswordOnlineCA, chain);
+		updateKeystore(keystoreOnlineCAFile, onlineCAKeystore, Params.CA_ONLINE_KEYSTORE_TYPE, keystorePasswordOnlineCA);
 		/*
 		 * TODO Save the intermediate certificate in the server truststore (for client authentication).
 		 */
+		KeyStore onlinceCATruststore = load(truststoreServerFile, truststorePasswordServer, Params.SERVER_TRUSTSTORE_TYPE);
+		onlinceCATruststore.setCertificateEntry(Params.CA_ONLINE_CERT_ALIAS, cert);
+		updateKeystore(truststoreServerFile, onlinceCATruststore, Params.SERVER_TRUSTSTORE_TYPE, truststorePasswordServer);
 	}
 
 	/**
@@ -384,6 +403,8 @@ public class App extends AppBase {
 		PrivateCredential cred = null;
 
 		// TODO get online CA cert from online CA keystore and extract credential
+		KeyStore onlineCAKeystore = load(keystoreOnlineCAFile, keystorePasswordOnlineCA, Params.CA_ONLINE_KEYSTORE_TYPE);
+		cred = getCredential(onlineCAKeystore, Params.CA_ONLINE_CERT_ALIAS, keyPasswordOnlineCA);
 
 
 		writeString(certFile, externCertificate(cred.getCertificate()[0]));

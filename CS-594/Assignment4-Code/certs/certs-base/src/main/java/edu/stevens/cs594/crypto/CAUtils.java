@@ -103,7 +103,21 @@ public class CAUtils {
 	public static X509Certificate createClientRootCert(long id, X500Name clientDn, KeyPair keyPair,
 			long durationHours) throws GeneralSecurityException {
 		// TODO generate self-signed v1 certificate
-		throw new IllegalStateException("Unimplemented createClientRootCert");
+		try {
+			ContentSigner sigGenerator = getContentSigner(keyPair.getPrivate());
+			X509v1CertificateBuilder certBuilder = new JcaX509v1CertificateBuilder(
+				clientDn,
+				BigInteger.valueOf(id),
+				DateUtils.now(),
+				DateUtils.then(durationHours * 60 * 60 * 1000),
+				clientDn,
+				keyPair.getPublic()
+			 );
+			 X509CertificateHolder certHolder = certBuilder.build(sigGenerator);
+			return new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
+		} catch (OperatorCreationException e) {
+			throw new GeneralSecurityException("Security exception", e);
+		}
 	}
 	
 	/**
@@ -112,7 +126,39 @@ public class CAUtils {
 	public static X509Certificate createCaRootCert(long id, X500Name caName, KeyPair keyPair,
 			long durationHours) throws GeneralSecurityException {
 		// TODO generate root CA self-signed v3 cert
-		throw new IllegalStateException("Unimplemented createCaRootCert");
+		try {
+			ContentSigner sigGenerator = getContentSigner(keyPair.getPrivate());
+			X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
+				caName,
+				BigInteger.valueOf(id),
+				DateUtils.now(),
+				DateUtils.then(durationHours * 60 * 60 * 1000),
+				caName,
+				keyPair.getPublic()
+			);
+			JcaX509ExtensionUtils extUtils = new JcaX509ExtensionUtils();
+			certBuilder
+				.addExtension(
+					Extension.subjectKeyIdentifier,
+		 false,
+				    extUtils.createSubjectKeyIdentifier(keyPair.getPublic())
+				)
+				.addExtension(
+					Extension.basicConstraints,
+		 true,
+					new BasicConstraints(1)
+				)
+				.addExtension(
+					Extension.keyUsage, 
+					true,
+					CA_USAGE
+				);
+			X509CertificateHolder certHolder = certBuilder.build(sigGenerator);
+			return new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
+		} catch ( CertIOException | OperatorCreationException e) {
+			throw new GeneralSecurityException("Security exception", e);
+		}
+		
 	}
 	
 	/**
@@ -122,7 +168,65 @@ public class CAUtils {
 			X500Name subjectName, PublicKey subjectKey, BasicConstraints basicConstraints, KeyUsage usage,
 			ExtendedKeyUsage extendedUsage, GeneralNames sans, long durationHours) throws GeneralSecurityException {
 		// TODO create x509v3CertificateBuilder, add extensions as described in lectures
-		throw new IllegalStateException("Unimplemented createCert");
+		
+		try {
+			ContentSigner sigGenerator = getContentSigner(issuerKey);
+			X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
+				issuerCert,
+				BigInteger.valueOf(id),
+				DateUtils.now(),
+				DateUtils.then(durationHours * 60 * 60 * 1000),
+				subjectName,
+				subjectKey
+			);
+			JcaX509ExtensionUtils extUtils = new JcaX509ExtensionUtils();
+
+			if (basicConstraints == null){
+				basicConstraints = new BasicConstraints(0);
+			}
+			if (usage == null){
+				usage = CA_USAGE;
+			}
+			
+			certBuilder
+					.addExtension(
+						Extension.subjectKeyIdentifier,
+			 false,
+						extUtils.createSubjectKeyIdentifier(subjectKey)
+					)
+					.addExtension(
+						Extension.basicConstraints,
+			 true,
+			 			basicConstraints
+					)
+					.addExtension(
+						Extension.keyUsage, 
+			 true,
+			 			usage
+					);
+
+			if (extendedUsage != null){
+				certBuilder.addExtension(
+					Extension.extendedKeyUsage,
+			false, 
+					extendedUsage
+					);
+			}
+			if (sans != null){
+				certBuilder.addExtension(
+					Extension.subjectAlternativeName,
+		 false, 
+					sans
+				);
+			}
+					
+			
+			X509CertificateHolder certHolder = certBuilder.build(sigGenerator);
+			return new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
+		} catch (OperatorCreationException | CertIOException e) {
+			throw new GeneralSecurityException("Security exception", e);
+		}
+		
 	}
 	
 	/**
@@ -152,8 +256,33 @@ public class CAUtils {
 	public static PKCS10CertificationRequest createCSR(X500Name subject, KeyPair keyPair, 
 			String dnsAddress) throws GeneralSecurityException {
 		// TODO Generate CSR
-		throw new IllegalStateException("Unimplemented createCSR");
+		
+		try {
+			List<GeneralName> names = new ArrayList<GeneralName>();
+			names.add(new GeneralName(GeneralName.dNSName, dnsAddress));
+			GeneralNames sans = new GeneralNames(names.toArray(new GeneralName[names.size()]));
+			ExtensionsGenerator extGen = new ExtensionsGenerator();
+			extGen.addExtension(
+				Extension.subjectAlternativeName,
+		false,
+				sans
+			);
+			PKCS10CertificationRequestBuilder requestBuilder = 
+				new JcaPKCS10CertificationRequestBuilder(subject, keyPair.getPublic());
+			
+			requestBuilder.addAttribute(
+				PKCSObjectIdentifiers.pkcs_9_at_extensionRequest,
+				extGen.generate()
+			);
 
+			ContentSigner sigGenerator = getContentSigner(keyPair.getPrivate());
+
+			return requestBuilder.build(sigGenerator);
+
+
+		} catch (IOException | OperatorCreationException   e) {
+			throw new GeneralSecurityException("Security exception", e);
+		}
 	}
 	
 	/**
@@ -170,11 +299,74 @@ public class CAUtils {
 			if (!csr.isSignatureValid(contentVerifier)) {
 				throw new GeneralSecurityException("Bad signature on certificate signing request: " + csr.getSubject());
 			}
-			
 			// TODO generate client cert from the CSR (add DNS SAN if dnsAddress is provided)
-			throw new IllegalStateException("Unimplemented createClientCert");
+			X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
+				issuerCert,
+				BigInteger.valueOf(id),
+				DateUtils.now(),
+				DateUtils.then(durationHours * 60 * 60 * 1000),
+				csr.getSubject(),
+				subjectKey
+			);
+			JcaX509ExtensionUtils extUtils = new JcaX509ExtensionUtils();
 
-		} catch (NoSuchAlgorithmException | OperatorCreationException | PKCSException e) {
+			certBuilder
+				.addExtension(
+					Extension.authorityKeyIdentifier, 
+		 false, 
+					extUtils .createAuthorityKeyIdentifier(issuerCert)
+				)
+				.addExtension(
+					Extension.subjectKeyIdentifier, 
+		 false,
+					extUtils.createSubjectKeyIdentifier(csr.getSubjectPublicKeyInfo())
+				)
+				.addExtension(
+					Extension.basicConstraints, 
+		 true,
+					basicConstraints
+				)
+				.addExtension(
+					Extension.keyUsage, 
+		 true, 
+					END_USAGE
+				);
+			
+			for (Attribute attr : csr.getAttributes()) {
+				// Process extension request
+				if (attr.getAttrType().equals(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest)) {
+					// We only process a SAN extension request.
+					Extensions extensions = Extensions.getInstance(attr.getAttrValues().getObjectAt(0));
+					GeneralNames sans = GeneralNames.fromExtensions(extensions, Extension.subjectAlternativeName);
+					if (sans != null) {
+						certBuilder.addExtension(
+							Extension.subjectAlternativeName,
+							false, 
+							sans
+						);
+						for (GeneralName name : sans.getNames()) {
+							switch (name.getTagNo()) {
+								case GeneralName.dNSName:
+									if (dnsAddress != null) {
+										GeneralName san = 
+										new GeneralName(GeneralName.dNSName, dnsAddress);
+										if (!san.equals(name)) {
+											// ERROR mismatch DNS address CSR and request
+											throw new GeneralSecurityException(" mismatch DNS address CSR and request");
+										}
+									}
+							}
+						}
+					}
+				}
+			}
+			ContentSigner sigGenerator = getContentSigner(issuerKey);
+			X509CertificateHolder certHolder = certBuilder.build(sigGenerator);
+			return new JcaX509CertificateConverter()
+						.setProvider("BC")
+						.getCertificate(certHolder);
+
+		} catch (CertIOException | NoSuchAlgorithmException | OperatorCreationException | PKCSException e) {
 			throw new GeneralSecurityException("Security exception", e);
 		}
 	}

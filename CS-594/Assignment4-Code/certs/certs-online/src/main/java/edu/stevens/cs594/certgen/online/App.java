@@ -89,7 +89,8 @@ public class App extends AppBase {
 		FileUtils.ensureFolder(backupOnlineDir);
 
 		// TODO Initialize the online CA keystore file and server keystore file (see offline App).
-
+		keystoreOnlineCAFile = new File(onlineDir, Params.CA_ONLINE_KEYSTORE_FILENAME);
+		keystoreServerFile = new File(onlineDir, Params.SERVER_KEYSTORE_FILENAME);
 
 	}
 
@@ -269,8 +270,8 @@ public class App extends AppBase {
 		X509Certificate cert = null;
 		
 		// TODO generate client cert from CSR using online CA key, write to certFile
-
-		
+		cert = CAUtils.createClientCert(certId, ca.getPrivateKey(), ca.getCertificate()[0], request, clientDns, duration);
+		externCertificate(cert, new File(certFile));
 	}
 	
 	/**

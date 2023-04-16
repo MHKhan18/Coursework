@@ -191,9 +191,9 @@ public abstract class AppBase implements Driver.Callback<Command, Option> {
 	protected PrivateCredential getCredential(KeyStore keystore, String alias, char[] password) throws GeneralSecurityException {
 
 		// TODO get key and cert chain from the keystore
-
-
-		throw new IllegalStateException("Unimplemented getCredential");
+		X509Certificate[] chain = toX509Certificates(keystore.getCertificateChain(alias));
+		PrivateKey key = (PrivateKey) keystore.getKey(alias, password);
+		return new PrivateCredential(chain, key);
 	}
 
 	private static final RSAKeyGenParameterSpec RSA_KEY_SPECS =
@@ -206,8 +206,9 @@ public abstract class AppBase implements Driver.Callback<Command, Option> {
 		// TODO generate a new RSA key pair (using BC as provider)
 		// RSA_KEY_SPECS specifies the specs for the key....
 
-		throw new IllegalStateException("Unimplemented generateKeyPair");
-
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
+		generator.initialize(RSA_KEY_SPECS);
+		return generator.generateKeyPair();
 	}
 
 	/**
@@ -218,8 +219,17 @@ public abstract class AppBase implements Driver.Callback<Command, Option> {
 		BigInteger modulus;
 		if (privateKey instanceof RSAPrivateKey) {
 			// TODO Generate public key from RSA private key (see lecture)
-
-			throw new IllegalStateException("Unimplemented fromPrivateKey");
+			modulus = ((RSAPrivateKey) privateKey).getModulus();
+			if (privateKey instanceof RSAPrivateCrtKey){
+				exponent = ((RSAPrivateCrtKey) privateKey).getPublicExponent();
+			}
+			else {
+				// Works just as well, assuming exponent is always 65537
+				exponent = RSA_KEY_SPECS.getPublicExponent();
+			}
+			RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, exponent);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			return keyFactory.generatePublic(publicKeySpec);
 		}
 		throw new GeneralSecurityException("Trying to get the public key from a non-RSA private key.");
 	}
