@@ -10,6 +10,6 @@
   "author": "Mohammad Khan 10438167",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.6.4"
+    "mongodb": "^3.6.10"
   }
 }
