@@ -10,6 +10,6 @@
   "author": "Mohammad Khan 10438167",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^1.6.0"
   }
 }
