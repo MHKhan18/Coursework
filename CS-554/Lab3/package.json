@@ -10,7 +10,7 @@
   "author": "Mohammad Khan 10438167",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.4",
+    "axios": "^1.6.0",
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.4",
